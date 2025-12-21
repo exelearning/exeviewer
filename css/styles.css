@@ -1,0 +1,308 @@
+/**
+ * eXeViewer - Custom Styles
+ */
+
+/* CSS Variables */
+:root {
+    --primary-color: #0d6efd;
+    --primary-dark: #0b5ed7;
+    --bg-light: #f8f9fa;
+    --bg-dark: #212529;
+    --text-muted: #6c757d;
+    --border-color: #dee2e6;
+    --shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    --shadow-md: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    --transition-fast: 0.15s ease-in-out;
+    --transition-normal: 0.3s ease-in-out;
+    --navbar-height: 56px;
+    /* eXeLearning colors */
+    --primary-color: #0ba1a1;       /* Main green */
+    --primary-dark: #088b8b;        /* Darker green for hover/active */
+    --bg-light: #f8f9fa;            /* Keep light background */
+    --bg-dark: #212529;             /* Keep dark background */
+    --text-muted: #6c757d;          /* Keep muted text */
+    --border-color: #a3d3d3;        /* Soft greenish border instead of bluish */
+    --shadow-sm: 0 0.125rem 0.25rem rgba(11, 161, 161, 0.075); /* subtle green shadow */
+    --shadow-md: 0 0.5rem 1rem rgba(11, 161, 161, 0.15);       /* medium green shadow */
+    --transition-fast: 0.15s ease-in-out;
+    --transition-normal: 0.3s ease-in-out;
+    --navbar-height: 56px;
+}
+
+
+/* Reset and Base Styles */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background-color: var(--bg-light);
+    overflow: hidden;
+}
+
+/* Main Container */
+.main-container {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Top Navbar Styles */
+#topNavbar {
+    z-index: 1030;
+    box-shadow: var(--shadow-sm);
+}
+
+#topNavbar .navbar-brand {
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.navbar-logo {
+    height: 28px;
+    width: auto;
+}
+
+#packageName {
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+@media (min-width: 768px) {
+    #packageName {
+        max-width: 400px;
+    }
+}
+
+/* Welcome Screen */
+.welcome-screen {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    text-align: center;
+}
+
+.welcome-content {
+    max-width: 600px;
+    width: 100%;
+}
+
+.logo-container {
+    display: inline-block;
+}
+
+.logo-icon {
+    width: 120px;
+    height: auto;
+}
+
+.welcome-content h1 {
+    font-weight: 700;
+    color: var(--bg-dark);
+}
+
+/* Drop Zone */
+.drop-zone {
+    border: 3px dashed var(--border-color);
+    border-radius: 1rem;
+    padding: 3rem 2rem;
+    background-color: white;
+    transition: all var(--transition-normal);
+    cursor: pointer;
+}
+
+.drop-zone:hover {
+    border-color: var(--primary-color);
+    background-color: rgba(13, 110, 253, 0.02);
+}
+
+.drop-zone.drag-over {
+    border-color: var(--primary-color);
+    background-color: rgba(13, 110, 253, 0.05);
+    transform: scale(1.02);
+    box-shadow: var(--shadow-md);
+}
+
+.drop-zone-content {
+    pointer-events: none;
+}
+
+.drop-zone label {
+    pointer-events: auto;
+}
+
+.drop-icon {
+    font-size: 3.5rem;
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+    display: block;
+    transition: color var(--transition-fast);
+}
+
+.drop-zone:hover .drop-icon,
+.drop-zone.drag-over .drop-icon {
+    color: var(--primary-color);
+}
+
+.drop-text {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+}
+
+/* Status Area */
+.status-area {
+    min-height: 60px;
+}
+
+.loading-indicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+}
+
+.loading-indicator .spinner-border {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+/* Supported Formats */
+.supported-formats {
+    color: var(--text-muted);
+}
+
+.supported-formats i {
+    color: var(--primary-color);
+}
+
+/* Viewer Container */
+.viewer-container {
+    flex: 1;
+    margin-top: var(--navbar-height);
+    overflow: hidden;
+    background-color: white;
+}
+
+.content-frame {
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 576px) {
+    .welcome-content h1 {
+        font-size: 1.75rem;
+    }
+
+    .logo-icon {
+        width: 80px;
+    }
+
+    .drop-zone {
+        padding: 2rem 1rem;
+    }
+
+    .drop-icon {
+        font-size: 2.5rem;
+    }
+
+    .drop-text {
+        font-size: 1rem;
+    }
+}
+
+/* Dark Mode Support (if user prefers) */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-light: #1a1d21;
+        --bg-dark: #f8f9fa;
+        --text-muted: #adb5bd;
+        --border-color: #495057;
+    }
+
+    body {
+        color: #e9ecef;
+    }
+
+    .drop-zone {
+        background-color: #212529;
+    }
+
+    .drop-zone:hover {
+        background-color: rgba(13, 110, 253, 0.1);
+    }
+
+    .drop-zone.drag-over {
+        background-color: rgba(13, 110, 253, 0.15);
+    }
+
+    .welcome-content h1 {
+        color: #f8f9fa;
+    }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    .logo-icon {
+        animation: none;
+    }
+
+    .drop-zone {
+        transition: none;
+    }
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: #fff; /* texto blanco */
+    transition: background-color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active,
+.btn-primary.active {
+    background-color: var(--primary-dark);
+    border-color: var(--primary-dark);
+    color: #fff;
+}
+
+/* Focus Styles */
+.btn:focus,
+input:focus,
+.drop-zone:focus-within {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+/* Utility Classes */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}

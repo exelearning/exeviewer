@@ -1,0 +1,20 @@
+{
+  "name": "exeviewer",
+  "version": "1.0.0",
+  "description": "A web application to view eXeLearning content packages (.zip/.elpx)",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "bun run server.js",
+    "start:node": "node server.js"
+  },
+  "keywords": [
+    "exelearning",
+    "viewer",
+    "educational",
+    "zip"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {}
+}
