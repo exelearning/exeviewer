@@ -7,6 +7,9 @@
     "dragDrop": "Drag and drop your <strong>.zip</strong> or <strong>.elpx</strong> file here",
     "or": "or",
     "browseFiles": "Browse Files",
+    "loadFromUrl": "You can also paste a .zip or .elpx file URL",
+    "urlPlaceholder": "https://example.com/content.zip",
+    "loadUrl": "Load",
     "supportedFormats": "Supports websites exported from eXeLearning as .zip or .elpx packages"
   },
   "navbar": {
@@ -20,7 +23,8 @@
     "initializing": "Initializing...",
     "registeringSW": "Registering Service Worker...",
     "loadingContent": "Loading content...",
-    "processingFile": "Processing file..."
+    "processingFile": "Processing file...",
+    "downloadingFile": "Downloading file..."
   },
   "errors": {
     "invalidFile": "Please select a valid .zip or .elpx file",
@@ -30,7 +34,13 @@
     "swNotSupported": "Service Workers are not supported in this browser",
     "swSecureContext": "Service Workers require a secure context (HTTPS or localhost)",
     "swTimeout": "Timeout waiting for Service Worker controller",
-    "secureContextRequired": "This application requires a secure context (HTTPS or localhost). Please access via http://localhost/..."
+    "secureContextRequired": "This application requires a secure context (HTTPS or localhost). Please access via http://localhost/...",
+    "invalidUrl": "Please enter a valid URL",
+    "downloadFailed": "Could not download the file. Please check the URL and try again.",
+    "urlAccessDenied": "Access denied. The file may be private or password protected.",
+    "urlNotFound": "File not found. Please check the URL.",
+    "invalidFileType": "The URL does not point to a valid .zip or .elpx file",
+    "networkError": "Network error. Please check your connection and try again."
   },
   "accessibility": {
     "loading": "Loading...",

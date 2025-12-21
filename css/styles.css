@@ -171,6 +171,43 @@ body {
     color: var(--text-muted);
 }
 
+/* URL Input Section */
+.url-section {
+    padding-top: 0.5rem;
+}
+
+.url-section-title {
+    font-weight: 600;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+}
+
+.url-input-group {
+    display: flex;
+    gap: 0.5rem;
+    max-width: 450px;
+    margin: 0 auto;
+}
+
+.url-input-group .form-control {
+    flex: 1;
+    font-size: 0.9rem;
+}
+
+.url-input-group .btn {
+    white-space: nowrap;
+}
+
+@media (max-width: 576px) {
+    .url-input-group {
+        flex-direction: column;
+    }
+
+    .url-input-group .btn {
+        width: 100%;
+    }
+}
+
 /* Status Area */
 .status-area {
     min-height: 60px;
@@ -287,6 +324,24 @@ body {
 .btn-primary:focus,
 .btn-primary:active,
 .btn-primary.active {
+    background-color: var(--primary-dark);
+    border-color: var(--primary-dark);
+    color: #fff;
+}
+
+.btn-outline-primary {
+    background-color: transparent;
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+    transition: background-color var(--transition-fast),
+                border-color var(--transition-fast),
+                color var(--transition-fast);
+}
+
+.btn-outline-primary:hover,
+.btn-outline-primary:focus,
+.btn-outline-primary:active,
+.btn-outline-primary.active {
     background-color: var(--primary-dark);
     border-color: var(--primary-dark);
     color: #fff;

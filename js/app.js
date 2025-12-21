@@ -23,6 +23,8 @@
         contentFrame: null,
         dropZone: null,
         fileInput: null,
+        urlInput: null,
+        btnLoadUrl: null,
         loadingIndicator: null,
         loadingText: null,
         errorAlert: null,
@@ -59,6 +61,8 @@
         elements.contentFrame = document.getElementById('contentFrame');
         elements.dropZone = document.getElementById('dropZone');
         elements.fileInput = document.getElementById('fileInput');
+        elements.urlInput = document.getElementById('urlInput');
+        elements.btnLoadUrl = document.getElementById('btnLoadUrl');
         elements.loadingIndicator = document.getElementById('loadingIndicator');
         elements.loadingText = document.getElementById('loadingText');
         elements.errorAlert = document.getElementById('errorAlert');
@@ -326,6 +330,195 @@
     }
 
     /**
+     * Convert special URLs (Google Drive, ownCloud/Nextcloud) to direct download links
+     * @param {string} url - The original URL
+     * @returns {string} The converted URL for direct download
+     */
+    function convertToDirectDownloadUrl(url) {
+        try {
+            const urlObj = new URL(url);
+
+            // Google Drive: convert /view to direct download
+            // Format: https://drive.google.com/file/d/FILE_ID/view?usp=sharing
+            // Convert to: https://drive.google.com/uc?export=download&id=FILE_ID
+            if (urlObj.hostname === 'drive.google.com') {
+                const match = url.match(/\/file\/d\/([^/]+)/);
+                if (match && match[1]) {
+                    const fileId = match[1];
+                    return `https://drive.google.com/uc?export=download&id=${fileId}`;
+                }
+            }
+
+            // Nextcloud public share links
+            // Format: https://cloud.example.org/s/SHARE_TOKEN
+            // Convert to: https://cloud.example.org/s/SHARE_TOKEN/download
+            if (urlObj.pathname.match(/^\/s\/[^/]+\/?$/)) {
+                const cleanPath = urlObj.pathname.replace(/\/$/, '');
+                return `${urlObj.origin}${cleanPath}/download`;
+            }
+
+            // Return original URL if no conversion needed
+            return url;
+        } catch (e) {
+            return url;
+        }
+    }
+
+    /**
+     * Extract filename from URL or Content-Disposition header
+     * @param {string} url - The URL
+     * @param {Response} response - The fetch response (optional)
+     * @returns {string} The filename
+     */
+    function extractFilename(url, response = null) {
+        // Try Content-Disposition header first
+        if (response) {
+            const contentDisposition = response.headers.get('Content-Disposition');
+            if (contentDisposition) {
+                const match = contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
+                if (match && match[1]) {
+                    return match[1].replace(/['"]/g, '');
+                }
+            }
+        }
+
+        // Extract from URL path
+        try {
+            const urlObj = new URL(url);
+            const pathname = urlObj.pathname;
+            const filename = pathname.split('/').pop();
+            if (filename && (filename.endsWith('.zip') || filename.endsWith('.elpx'))) {
+                return decodeURIComponent(filename);
+            }
+        } catch (e) {
+            // Ignore URL parsing errors
+        }
+
+        // Default filename
+        return 'content.zip';
+    }
+
+    /**
+     * CORS proxy URL - used as fallback when direct fetch fails
+     */
+    const CORS_PROXY = 'https://corsproxy.io/?';
+
+    /**
+     * Fetch with CORS proxy fallback
+     * @param {string} url - The URL to fetch
+     * @param {boolean} useProxy - Whether to use the CORS proxy
+     * @returns {Promise<Response>} The fetch response
+     */
+    async function fetchWithCorsProxy(url, useProxy = false) {
+        const fetchUrl = useProxy ? CORS_PROXY + encodeURIComponent(url) : url;
+
+        const response = await fetch(fetchUrl, {
+            method: 'GET',
+            mode: 'cors',
+            credentials: 'omit'
+        });
+
+        return response;
+    }
+
+    /**
+     * Download file from URL and process it
+     * @param {string} url - The URL to download from
+     */
+    async function downloadFromUrl(url) {
+        // Validate URL
+        if (!url || !url.trim()) {
+            showError(i18n.t('errors.invalidUrl'));
+            return;
+        }
+
+        try {
+            new URL(url);
+        } catch (e) {
+            showError(i18n.t('errors.invalidUrl'));
+            return;
+        }
+
+        try {
+            hideError();
+            showLoading(i18n.t('loading.downloadingFile'));
+
+            // Convert special URLs to direct download links
+            const downloadUrl = convertToDirectDownloadUrl(url.trim());
+            console.log('[App] Downloading from:', downloadUrl);
+
+            let response;
+            let usedProxy = false;
+
+            // Try direct fetch first, then fallback to CORS proxy
+            try {
+                response = await fetchWithCorsProxy(downloadUrl, false);
+                if (!response.ok) {
+                    throw new Error('Direct fetch failed');
+                }
+            } catch (directError) {
+                console.log('[App] Direct fetch failed, trying CORS proxy...');
+                usedProxy = true;
+                response = await fetchWithCorsProxy(downloadUrl, true);
+            }
+
+            if (!response.ok) {
+                if (response.status === 401 || response.status === 403) {
+                    throw new Error(i18n.t('errors.urlAccessDenied'));
+                } else if (response.status === 404) {
+                    throw new Error(i18n.t('errors.urlNotFound'));
+                } else {
+                    throw new Error(i18n.t('errors.downloadFailed'));
+                }
+            }
+
+            // Check content type
+            const contentType = response.headers.get('Content-Type') || '';
+            const isValidType = contentType.includes('application/zip') ||
+                               contentType.includes('application/x-zip') ||
+                               contentType.includes('application/octet-stream') ||
+                               contentType.includes('application/x-compressed');
+
+            // Get filename from original URL (not proxy URL)
+            const filename = extractFilename(downloadUrl, response);
+
+            // Validate file extension or content type
+            const lowerFilename = filename.toLowerCase();
+            if (!lowerFilename.endsWith('.zip') && !lowerFilename.endsWith('.elpx') && !isValidType) {
+                throw new Error(i18n.t('errors.invalidFileType'));
+            }
+
+            // Get blob data
+            const blob = await response.blob();
+
+            if (blob.size === 0) {
+                throw new Error(i18n.t('errors.emptyZip'));
+            }
+
+            // Create a File object from the blob
+            const file = new File([blob], filename, {
+                type: 'application/zip'
+            });
+
+            console.log(`[App] Downloaded ${filename} (${blob.size} bytes)${usedProxy ? ' via proxy' : ''}`);
+
+            // Process the file using existing function
+            await processFile(file);
+
+        } catch (error) {
+            console.error('[App] Error downloading from URL:', error);
+
+            // Handle network errors
+            if (error.name === 'TypeError' && error.message.includes('fetch')) {
+                showError(i18n.t('errors.networkError'));
+            } else {
+                showError(error.message || i18n.t('errors.downloadFailed'));
+            }
+            hideLoading();
+        }
+    }
+
+    /**
      * Process the selected file
      * @param {File} file - The file to process
      */
@@ -439,8 +632,9 @@
         elements.topNavbar.classList.add('d-none');
         elements.welcomeScreen.classList.remove('d-none');
 
-        // Clear file input
+        // Clear file input and URL input
         elements.fileInput.value = '';
+        elements.urlInput.value = '';
 
         // Hide any messages
         hideLoading();
@@ -587,6 +781,19 @@
         // Load new file button
         elements.btnLoadNew.addEventListener('click', () => {
             resetApplication();
+        });
+
+        // URL input - load button click
+        elements.btnLoadUrl.addEventListener('click', () => {
+            downloadFromUrl(elements.urlInput.value);
+        });
+
+        // URL input - Enter key
+        elements.urlInput.addEventListener('keypress', (event) => {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                downloadFromUrl(elements.urlInput.value);
+            }
         });
 
         // Setup language selector

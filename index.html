@@ -114,6 +114,20 @@
                     </div>
                 </div>
 
+                <!-- URL Input Section (outside drop zone) -->
+                <div class="url-section mt-4">
+                    <p class="url-section-title mb-2" data-i18n="welcome.loadFromUrl">Load from URL</p>
+                    <div class="url-input-group">
+                        <input type="url" id="urlInput" class="form-control"
+                               data-i18n-placeholder="welcome.urlPlaceholder"
+                               placeholder="https://example.com/content.zip">
+                        <button id="btnLoadUrl" class="btn btn-outline-primary" type="button">
+                            <i class="bi bi-cloud-download me-1"></i>
+                            <span data-i18n="welcome.loadUrl">Load</span>
+                        </button>
+                    </div>
+                </div>
+
                 <!-- Status Messages -->
                 <div id="statusArea" class="status-area mt-4">
                     <div id="loadingIndicator" class="loading-indicator d-none">
