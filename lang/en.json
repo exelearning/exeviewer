@@ -7,11 +7,11 @@
     "dragDrop": "Drag and drop your <strong>.zip</strong> or <strong>.elpx</strong> file here",
     "or": "or",
     "browseFiles": "Browse Files",
-    "supportedFormats": "Supports websites exported from eXeLearning as ZIP or ELPX packages"
+    "supportedFormats": "Supports websites exported from eXeLearning as .zip or .elpx packages"
   },
   "navbar": {
     "loadAnother": "Load another file",
-    "newFile": "New File"
+    "newFile": "Open…"
   },
   "loading": {
     "processing": "Processing...",

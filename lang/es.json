@@ -11,7 +11,7 @@
   },
   "navbar": {
     "loadAnother": "Cargar otro archivo",
-    "newFile": "Nuevo archivo"
+    "newFile": "Abrir…"
   },
   "loading": {
     "processing": "Procesando...",

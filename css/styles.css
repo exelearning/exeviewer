@@ -59,6 +59,7 @@ body {
 
 /* Top Navbar Styles */
 #topNavbar {
+    background: #1a1d21;
     z-index: 1030;
     box-shadow: var(--shadow-sm);
 }
@@ -71,6 +72,11 @@ body {
 .navbar-logo {
     height: 28px;
     width: auto;
+}
+
+#topNavbar button,
+#welcomeLanguageBtn {
+    min-width: 100px;
 }
 
 #packageName {
@@ -333,12 +339,9 @@ input:focus,
     background-color: #fff;
 }
 
-#topNavbar .dropdown-item {
-    color: var(--bg-dark);
-}
-
 #topNavbar .dropdown-item:hover {
     background-color: var(--bg-light);
+    color: var(--bg-dark);
 }
 
 /* Dark Mode - Language Selector */
