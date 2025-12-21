@@ -1,1 +1,13 @@
-/.claude/
+# Node modules
+node_modules/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# IDE / Editor folders
+.claude/
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project

@@ -6,15 +6,20 @@
   "type": "module",
   "scripts": {
     "start": "bun run server.js",
-    "start:node": "node server.js"
+    "start:node": "node server.js",
+    "generate-icons": "node scripts/generate-icons.js"
   },
   "keywords": [
     "exelearning",
     "viewer",
     "educational",
-    "zip"
+    "zip",
+    "pwa"
   ],
   "author": "",
   "license": "MIT",
-  "dependencies": {}
+  "devDependencies": {
+    "png-to-ico": "^3.0.1",
+    "sharp": "^0.34.5"
+  }
 }

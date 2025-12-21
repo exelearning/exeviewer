@@ -1,9 +1,33 @@
 /**
  * eXeViewer - Service Worker
- * Intercepts requests to /viewer/* and serves files from memory
+ * Handles PWA caching and serves extracted ZIP content from memory
  */
 
-const SW_VERSION = '1.0.1';
+const SW_VERSION = '1.1.0';
+const CACHE_NAME = `exeviewer-v${SW_VERSION}`;
+
+// Files to cache for offline use (app shell)
+const APP_SHELL_FILES = [
+    './',
+    './index.html',
+    './css/styles.css',
+    './js/app.js',
+    './js/i18n.js',
+    './lang/en.json',
+    './lang/es.json',
+    './img/logo.svg',
+    './img/icon.svg',
+    './img/favicon.ico',
+    './manifest.json'
+];
+
+// External resources to cache
+const EXTERNAL_RESOURCES = [
+    'https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css',
+    'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css',
+    'https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js',
+    'https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js'
+];
 
 // In-memory storage for the extracted ZIP contents
 let contentFiles = new Map();
@@ -78,21 +102,62 @@ function getViewerPathPrefix() {
 }
 
 /**
- * Install event - activate immediately
+ * Install event - cache app shell files
  */
 self.addEventListener('install', (event) => {
     console.log(`[SW] Service Worker v${SW_VERSION} installing...`);
-    // Skip waiting to activate immediately
-    self.skipWaiting();
+
+    event.waitUntil(
+        caches.open(CACHE_NAME)
+            .then(cache => {
+                console.log('[SW] Caching app shell...');
+                // Cache app shell files
+                const appShellPromise = cache.addAll(APP_SHELL_FILES).catch(err => {
+                    console.warn('[SW] Some app shell files failed to cache:', err);
+                });
+
+                // Cache external resources (best effort)
+                const externalPromise = Promise.all(
+                    EXTERNAL_RESOURCES.map(url =>
+                        cache.add(url).catch(err => {
+                            console.warn(`[SW] Failed to cache external resource: ${url}`, err);
+                        })
+                    )
+                );
+
+                return Promise.all([appShellPromise, externalPromise]);
+            })
+            .then(() => {
+                console.log('[SW] App shell cached successfully');
+                // Skip waiting to activate immediately
+                return self.skipWaiting();
+            })
+    );
 });
 
 /**
- * Activate event - claim all clients immediately
+ * Activate event - clean up old caches and claim clients
  */
 self.addEventListener('activate', (event) => {
     console.log(`[SW] Service Worker v${SW_VERSION} activated`);
-    // Claim all clients immediately
-    event.waitUntil(self.clients.claim());
+
+    event.waitUntil(
+        caches.keys()
+            .then(cacheNames => {
+                return Promise.all(
+                    cacheNames.map(cacheName => {
+                        if (cacheName !== CACHE_NAME) {
+                            console.log(`[SW] Deleting old cache: ${cacheName}`);
+                            return caches.delete(cacheName);
+                        }
+                    })
+                );
+            })
+            .then(() => {
+                // Claim all clients immediately
+                return self.clients.claim();
+            })
+    );
 });
 
 /**
@@ -149,6 +214,11 @@ self.addEventListener('message', (event) => {
             console.log('[SW] Claimed all clients');
             break;
 
+        case 'SKIP_WAITING':
+            // Skip waiting for update
+            self.skipWaiting();
+            break;
+
         default:
             if (type) {
                 console.warn(`[SW] Unknown message type: ${type}`);
@@ -157,25 +227,79 @@ self.addEventListener('message', (event) => {
 });
 
 /**
- * Fetch event - intercept requests and serve from memory
+ * Fetch event - intercept requests and serve from cache or memory
  */
 self.addEventListener('fetch', (event) => {
     const url = new URL(event.request.url);
     const pathname = url.pathname;
-    const viewerPrefix = getViewerPathPrefix();
 
-    // Only intercept requests that contain /viewer/ in the path
-    if (!pathname.includes('/viewer/')) {
-        return; // Let the request pass through to the network
+    // Handle viewer requests (from extracted ZIP)
+    if (pathname.includes('/viewer/')) {
+        const viewerIndex = pathname.indexOf('/viewer/');
+        if (viewerIndex !== -1) {
+            event.respondWith(handleViewerRequest(pathname, viewerIndex));
+            return;
+        }
     }
 
-    // Find the viewer portion of the path
-    const viewerIndex = pathname.indexOf('/viewer/');
-    if (viewerIndex === -1) {
+    // For navigation requests, use cache-first with network fallback
+    if (event.request.mode === 'navigate') {
+        event.respondWith(
+            caches.match(event.request)
+                .then(cachedResponse => {
+                    if (cachedResponse) {
+                        return cachedResponse;
+                    }
+                    return fetch(event.request)
+                        .then(response => {
+                            // Cache successful navigation responses
+                            if (response.ok) {
+                                const responseClone = response.clone();
+                                caches.open(CACHE_NAME).then(cache => {
+                                    cache.put(event.request, responseClone);
+                                });
+                            }
+                            return response;
+                        })
+                        .catch(() => {
+                            // Return cached index.html as fallback
+                            return caches.match('./index.html');
+                        });
+                })
+        );
         return;
     }
 
-    event.respondWith(handleViewerRequest(pathname, viewerIndex));
+    // For other requests, use cache-first strategy
+    event.respondWith(
+        caches.match(event.request)
+            .then(cachedResponse => {
+                if (cachedResponse) {
+                    return cachedResponse;
+                }
+
+                return fetch(event.request)
+                    .then(response => {
+                        // Don't cache non-successful responses
+                        if (!response || response.status !== 200) {
+                            return response;
+                        }
+
+                        // Cache the fetched response for future use
+                        const responseClone = response.clone();
+                        caches.open(CACHE_NAME).then(cache => {
+                            cache.put(event.request, responseClone);
+                        });
+
+                        return response;
+                    })
+                    .catch(error => {
+                        console.warn('[SW] Fetch failed:', error);
+                        // Could return a custom offline page here
+                        throw error;
+                    });
+            })
+    );
 });
 
 /**
