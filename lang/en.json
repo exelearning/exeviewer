@@ -1,0 +1,44 @@
+{
+  "app": {
+    "title": "eXeViewer",
+    "description": "View eXeLearning content packages directly in your browser"
+  },
+  "welcome": {
+    "dragDrop": "Drag and drop your <strong>.zip</strong> or <strong>.elpx</strong> file here",
+    "or": "or",
+    "browseFiles": "Browse Files",
+    "supportedFormats": "Supports websites exported from eXeLearning as ZIP or ELPX packages"
+  },
+  "navbar": {
+    "loadAnother": "Load another file",
+    "newFile": "New File"
+  },
+  "loading": {
+    "processing": "Processing...",
+    "readingZip": "Reading file...",
+    "extractingFiles": "Extracting files... ({processed}/{total})",
+    "initializing": "Initializing...",
+    "registeringSW": "Registering Service Worker...",
+    "loadingContent": "Loading content...",
+    "processingFile": "Processing file..."
+  },
+  "errors": {
+    "invalidFile": "Please select a valid .zip or .elpx file",
+    "emptyZip": "The file appears to be empty",
+    "noHtmlFiles": "No HTML files found in the package",
+    "processingFailed": "Failed to process the file",
+    "swNotSupported": "Service Workers are not supported in this browser",
+    "swSecureContext": "Service Workers require a secure context (HTTPS or localhost)",
+    "swTimeout": "Timeout waiting for Service Worker controller",
+    "secureContextRequired": "This application requires a secure context (HTTPS or localhost). Please access via http://localhost/..."
+  },
+  "accessibility": {
+    "loading": "Loading...",
+    "contentFrame": "eXeLearning Content"
+  },
+  "language": {
+    "label": "Language",
+    "en": "English",
+    "es": "Español"
+  }
+}

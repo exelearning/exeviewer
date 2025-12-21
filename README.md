@@ -14,6 +14,7 @@ eXeViewer allows users to open `.zip` or `.elpx` files exported from [eXeLearnin
 - Clean, responsive interface using Bootstrap 5
 - Service Worker-based content serving
 - Dark mode support (follows system preference)
+- Multi-language support (English, Spanish) with easy extensibility
 
 ## Requirements
 
@@ -98,6 +99,104 @@ PORT=8080 node server.js
 $env:PORT=8080; bun run server.js
 ```
 
+## Internationalization (i18n)
+
+eXeViewer supports multiple languages. The application automatically detects the user's browser language preference and will use it if available. Users can also manually switch languages using the language selector in the interface.
+
+### Currently Supported Languages
+
+- **English** (en) - Default
+- **Spanish** (es) - Español
+
+### Adding a New Language
+
+To add a new language, follow these steps:
+
+#### 1. Create the language file
+
+Copy the English language file as a template:
+
+```bash
+cp lang/en.json lang/XX.json
+```
+
+Replace `XX` with the [ISO 639-1 language code](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) (e.g., `fr` for French, `de` for German, `pt` for Portuguese).
+
+#### 2. Translate the content
+
+Edit the new file (`lang/XX.json`) and translate all the text values. The file structure looks like this:
+
+```json
+{
+  "app": {
+    "title": "eXeViewer",
+    "description": "Your translated description here"
+  },
+  "welcome": {
+    "dragDrop": "Your translated text with <strong>.zip</strong> or <strong>.elpx</strong> here",
+    "or": "or",
+    "browseFiles": "Browse Files",
+    "supportedFormats": "Your translated text here"
+  },
+  ...
+}
+```
+
+**Important notes:**
+- Keep the JSON keys unchanged (only translate the values)
+- Preserve any HTML tags like `<strong>` in the translations
+- Keep placeholders like `{processed}` and `{total}` as they are (used for variable substitution)
+
+#### 3. Register the new language
+
+Edit `js/i18n.js` and add your language code to the `AVAILABLE_LANGUAGES` array:
+
+```javascript
+const AVAILABLE_LANGUAGES = ['en', 'es', 'XX'];  // Add your code here
+```
+
+#### 4. Add the language to the UI selectors
+
+Edit `index.html` and add the new language option to both dropdown menus:
+
+In the navbar (around line 38):
+```html
+<li><a class="dropdown-item" href="#" data-lang="XX">Language Name</a></li>
+```
+
+In the welcome screen (around line 65):
+```html
+<li><a class="dropdown-item" href="#" data-lang="XX">Language Name</a></li>
+```
+
+#### 5. Add the language name translations
+
+In your new language file (`lang/XX.json`) and in all existing language files, add the language name to the `language` section:
+
+```json
+{
+  "language": {
+    "label": "Language",
+    "en": "English",
+    "es": "Español",
+    "XX": "Language Name in Native Script"
+  }
+}
+```
+
+### Translation Keys Reference
+
+| Key | Description |
+|-----|-------------|
+| `app.title` | Application title |
+| `app.description` | Main description shown on welcome screen |
+| `welcome.*` | Welcome screen texts |
+| `navbar.*` | Navigation bar texts |
+| `loading.*` | Loading status messages |
+| `errors.*` | Error messages |
+| `accessibility.*` | Screen reader texts |
+| `language.*` | Language names |
+
 ## Project Structure
 
 ```
@@ -109,8 +208,12 @@ exeviewer/
 ├── README.md           # This file
 ├── css/
 │   └── styles.css      # Custom styles
-└── js/
-    └── app.js          # Main application logic
+├── js/
+│   ├── app.js          # Main application logic
+│   └── i18n.js         # Internationalization module
+└── lang/
+    ├── en.json         # English translations (default)
+    └── es.json         # Spanish translations
 ```
 
 ## How It Works

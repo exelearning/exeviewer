@@ -1,0 +1,44 @@
+{
+  "app": {
+    "title": "eXeViewer",
+    "description": "Visualiza contenidos de eXeLearning directamente en tu navegador"
+  },
+  "welcome": {
+    "dragDrop": "Arrastra y suelta tu archivo <strong>.zip</strong> o <strong>.elpx</strong> aquí",
+    "or": "o",
+    "browseFiles": "Selecciona el fichero",
+    "supportedFormats": "Compatible con sitios web creados con eXeLearning y ficheros .elpx"
+  },
+  "navbar": {
+    "loadAnother": "Cargar otro archivo",
+    "newFile": "Nuevo archivo"
+  },
+  "loading": {
+    "processing": "Procesando...",
+    "readingZip": "Leyendo el fichero...",
+    "extractingFiles": "Extrayendo archivos... ({processed}/{total})",
+    "initializing": "Inicializando...",
+    "registeringSW": "Registrando el Service Worker...",
+    "loadingContent": "Cargando el contenido...",
+    "processingFile": "Procesando el archivo..."
+  },
+  "errors": {
+    "invalidFile": "Selecciona un archivo .zip o .elpx válido",
+    "emptyZip": "El fichero parece estar vacío",
+    "noHtmlFiles": "No se encontraron archivos HTML en el archivo",
+    "processingFailed": "Error al procesar el archivo",
+    "swNotSupported": "Este navegador no soporta Service Workers",
+    "swSecureContext": "Los Service Workers requieren un contexto seguro (HTTPS o localhost)",
+    "swTimeout": "Tiempo de espera agotado",
+    "secureContextRequired": "Esta aplicación requiere un contexto seguro (HTTPS o localhost). Por favor, accede mediante http://localhost/..."
+  },
+  "accessibility": {
+    "loading": "Cargando...",
+    "contentFrame": "Contenido de eXeLearning"
+  },
+  "language": {
+    "label": "Idioma",
+    "en": "English",
+    "es": "Español"
+  }
+}

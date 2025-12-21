@@ -77,7 +77,7 @@
 
             const timeoutId = setTimeout(() => {
                 navigator.serviceWorker.removeEventListener('controllerchange', onControllerChange);
-                reject(new Error('Timeout waiting for Service Worker controller'));
+                reject(new Error(i18n.t('errors.swTimeout')));
             }, timeout);
 
             const onControllerChange = () => {
@@ -95,11 +95,11 @@
      */
     async function registerServiceWorker() {
         if (!('serviceWorker' in navigator)) {
-            throw new Error('Service Workers are not supported in this browser');
+            throw new Error(i18n.t('errors.swNotSupported'));
         }
 
         if (!isSecureContext()) {
-            throw new Error('Service Workers require a secure context (HTTPS or localhost)');
+            throw new Error(i18n.t('errors.swSecureContext'));
         }
 
         const basePath = getBasePath();
@@ -253,7 +253,7 @@
      * @returns {Object} Map of file paths to base64-encoded contents
      */
     async function extractZipContents(file) {
-        updateLoadingText('Reading ZIP file...');
+        updateLoadingText(i18n.t('loading.readingZip'));
 
         const zip = await JSZip.loadAsync(file);
         const files = {};
@@ -317,7 +317,7 @@
 
             processed++;
             if (processed % 50 === 0) {
-                updateLoadingText(`Extracting files... (${processed}/${total})`);
+                updateLoadingText(i18n.t('loading.extractingFiles', { processed, total }));
             }
         }
 
@@ -333,17 +333,17 @@
         // Validate file type
         const fileName = file.name.toLowerCase();
         if (!fileName.endsWith('.zip') && !fileName.endsWith('.elpx')) {
-            showError('Please select a valid .zip or .elpx file');
+            showError(i18n.t('errors.invalidFile'));
             return;
         }
 
         try {
             hideError();
-            showLoading('Initializing...');
+            showLoading(i18n.t('loading.initializing'));
 
             // Ensure Service Worker is ready
             if (!state.serviceWorkerReady) {
-                updateLoadingText('Registering Service Worker...');
+                updateLoadingText(i18n.t('loading.registeringSW'));
                 await registerServiceWorker();
             }
 
@@ -354,7 +354,7 @@
             const files = await extractZipContents(file);
 
             if (Object.keys(files).length === 0) {
-                throw new Error('The ZIP file appears to be empty');
+                throw new Error(i18n.t('errors.emptyZip'));
             }
 
             // Check if index.html exists
@@ -367,13 +367,13 @@
                 );
 
                 if (!htmlFile) {
-                    throw new Error('No HTML files found in the package');
+                    throw new Error(i18n.t('errors.noHtmlFiles'));
                 }
 
                 console.log(`[App] Using ${htmlFile} as entry point`);
             }
 
-            updateLoadingText('Loading content...');
+            updateLoadingText(i18n.t('loading.loadingContent'));
 
             // Send content to Service Worker
             await sendContentToServiceWorker(files);
@@ -389,7 +389,7 @@
 
         } catch (error) {
             console.error('[App] Error processing file:', error);
-            showError(error.message || 'Failed to process the file');
+            showError(error.message || i18n.t('errors.processingFailed'));
             hideLoading();
         }
     }
@@ -451,7 +451,8 @@
      * Show loading indicator
      * @param {string} text - Loading text to display
      */
-    function showLoading(text = 'Processing...') {
+    function showLoading(text) {
+        text = text || i18n.t('loading.processing');
         elements.loadingIndicator.classList.remove('d-none');
         elements.loadingText.textContent = text;
     }
@@ -485,6 +486,57 @@
      */
     function hideError() {
         elements.errorAlert.classList.add('d-none');
+    }
+
+    /**
+     * Update language selector button text
+     */
+    function updateLanguageSelectorButtons() {
+        const currentLang = i18n.getCurrentLanguage();
+        const langName = i18n.t(`language.${currentLang}`);
+
+        // Update navbar language button
+        const navbarBtn = document.getElementById('languageDropdownBtn');
+        if (navbarBtn) {
+            navbarBtn.innerHTML = `<i class="bi bi-globe me-1"></i>${langName}`;
+        }
+
+        // Update welcome screen language button
+        const welcomeBtn = document.getElementById('welcomeLanguageBtn');
+        if (welcomeBtn) {
+            welcomeBtn.innerHTML = `<i class="bi bi-globe me-1"></i>${langName}`;
+        }
+
+        // Update active state on dropdown items
+        document.querySelectorAll('[data-lang]').forEach(item => {
+            if (item.getAttribute('data-lang') === currentLang) {
+                item.classList.add('active');
+            } else {
+                item.classList.remove('active');
+            }
+        });
+    }
+
+    /**
+     * Set up language selector event listeners
+     */
+    function setupLanguageSelector() {
+        // Handle language selection from dropdowns
+        document.querySelectorAll('[data-lang]').forEach(item => {
+            item.addEventListener('click', async (e) => {
+                e.preventDefault();
+                const lang = e.target.getAttribute('data-lang');
+                if (lang) {
+                    await i18n.setLanguage(lang);
+                    updateLanguageSelectorButtons();
+                }
+            });
+        });
+
+        // Listen for language change events
+        window.addEventListener('languagechange', () => {
+            updateLanguageSelectorButtons();
+        });
     }
 
     /**
@@ -536,6 +588,9 @@
         elements.btnLoadNew.addEventListener('click', () => {
             resetApplication();
         });
+
+        // Setup language selector
+        setupLanguageSelector();
     }
 
     /**
@@ -549,13 +604,17 @@
         // Initialize DOM elements
         initElements();
 
+        // Initialize i18n
+        await i18n.init();
+        updateLanguageSelectorButtons();
+
         // Set up event listeners
         setupEventListeners();
 
         // Check for secure context
         if (!isSecureContext()) {
             console.warn('[App] Not in a secure context. Service Workers may not work.');
-            showError('This application requires a secure context (HTTPS or localhost). Please access via http://localhost/...');
+            showError(i18n.t('errors.secureContextRequired'));
             return;
         }
 

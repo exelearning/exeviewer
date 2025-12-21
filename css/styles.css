@@ -306,3 +306,64 @@ input:focus,
     white-space: nowrap;
     border: 0;
 }
+
+/* Language Selector - Welcome Screen */
+.language-selector-welcome {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+}
+
+.welcome-screen {
+    position: relative;
+}
+
+/* Language Dropdown Styles */
+.dropdown-menu[data-bs-popper] {
+    min-width: 120px;
+}
+
+.dropdown-item:active,
+.dropdown-item.active {
+    background-color: var(--primary-color);
+}
+
+/* Navbar Language Selector */
+#topNavbar .dropdown-menu {
+    background-color: #fff;
+}
+
+#topNavbar .dropdown-item {
+    color: var(--bg-dark);
+}
+
+#topNavbar .dropdown-item:hover {
+    background-color: var(--bg-light);
+}
+
+/* Dark Mode - Language Selector */
+@media (prefers-color-scheme: dark) {
+    .language-selector-welcome .btn-outline-secondary {
+        color: #adb5bd;
+        border-color: #495057;
+    }
+
+    .language-selector-welcome .btn-outline-secondary:hover {
+        color: #fff;
+        background-color: #495057;
+        border-color: #495057;
+    }
+
+    .language-selector-welcome .dropdown-menu {
+        background-color: #2d3238;
+        border-color: #495057;
+    }
+
+    .language-selector-welcome .dropdown-item {
+        color: #e9ecef;
+    }
+
+    .language-selector-welcome .dropdown-item:hover {
+        background-color: #495057;
+    }
+}
