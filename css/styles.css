@@ -330,8 +330,8 @@ body {
 .btn-primary:focus,
 .btn-primary:active,
 .btn-primary.active {
-    background-color: var(--primary-dark);
-    border-color: var(--primary-dark);
+    background-color: var(--primary-dark) !important;
+    border-color: var(--primary-dark) !important;
     color: #fff;
 }
 
@@ -363,15 +363,14 @@ body {
 
 /* Override Bootstrap tooltip colors */
 .tooltip {
-  --bs-tooltip-bg: #26ddc7;
-  --bs-tooltip-color: #000000;
+  --bs-tooltip-bg: #34373B;
 }
 
 /* Fix arrow for bottom-placed tooltips */
 .bs-tooltip-bottom .tooltip-arrow::before {
   border-width: 0.4rem 0.4rem 0;
   border-bottom-color: transparent;
-  border-top-color: #26ddc7;
+  border-top-color: #34373B;
 }
 
 /* Focus Styles */
