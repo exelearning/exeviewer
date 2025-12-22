@@ -20,6 +20,7 @@
         packageName: null,
         btnLoadNew: null,
         btnShare: null,
+        btnNewWindow: null,
         welcomeScreen: null,
         viewerContainer: null,
         contentFrame: null,
@@ -64,6 +65,7 @@
         elements.packageName = document.getElementById('packageName');
         elements.btnLoadNew = document.getElementById('btnLoadNew');
         elements.btnShare = document.getElementById('btnShare');
+        elements.btnNewWindow = document.getElementById('btnNewWindow');
         elements.welcomeScreen = document.getElementById('welcomeScreen');
         elements.viewerContainer = document.getElementById('viewerContainer');
         elements.contentFrame = document.getElementById('contentFrame');
@@ -633,6 +635,9 @@
         // Update share button visibility
         updateShareButtonVisibility();
 
+        // Show open in new window button
+        elements.btnNewWindow.classList.remove('d-none');
+
         // Load the content in the iframe
         elements.contentFrame.src = viewerUrl;
 
@@ -657,6 +662,7 @@
         elements.viewerContainer.classList.add('d-none');
         elements.topNavbar.classList.add('d-none');
         elements.btnShare.classList.add('d-none');
+        elements.btnNewWindow.classList.add('d-none');
         elements.welcomeScreen.classList.remove('d-none');
 
         // Clear file input and URL input
@@ -837,9 +843,17 @@
             copyShareUrl();
         });
 
-        // Initialize share button tooltip
+        // New window button - open content in new window
+        elements.btnNewWindow.addEventListener('click', () => {
+            openInNewWindow();
+        });
+
+        // Initialize tooltips for navbar buttons
         if (elements.btnShare) {
             new bootstrap.Tooltip(elements.btnShare);
+        }
+        if (elements.btnNewWindow) {
+            new bootstrap.Tooltip(elements.btnNewWindow);
         }
 
         // Setup language selector
@@ -909,6 +923,16 @@
             console.error('[App] Failed to copy URL:', err);
             // Fallback: select the text for manual copy
             elements.shareUrlInput.select();
+        }
+    }
+
+    /**
+     * Open the content in a new window/tab
+     */
+    function openInNewWindow() {
+        const contentUrl = elements.contentFrame.src;
+        if (contentUrl && contentUrl !== 'about:blank') {
+            window.open(contentUrl, '_blank');
         }
     }
 

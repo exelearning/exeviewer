@@ -7,14 +7,15 @@
     "dragDrop": "Arrastra y suelta tu archivo <strong>.zip</strong> o <strong>.elpx</strong> aquí",
     "or": "o",
     "browseFiles": "Selecciona el fichero",
-    "loadFromUrl": "También puedes pegar la URL de un archivo .zip o .elpx",
+    "loadFromUrl": "Cargar desde URL (admite enlaces de Nextcloud, ownCloud y Drive)",
     "urlPlaceholder": "https://ejemplo.com/contenido.zip",
     "loadUrl": "Cargar",
     "supportedFormats": "Compatible con sitios web creados con eXeLearning y ficheros .elpx"
   },
   "navbar": {
     "loadAnother": "Cargar otro archivo",
-    "newFile": "Abrir…"
+    "newFile": "Salir",
+    "openNewWindow": "Abrir en ventana nueva"
   },
   "loading": {
     "processing": "Procesando...",

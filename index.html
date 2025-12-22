@@ -58,6 +58,13 @@
                     <span class="visually-hidden" data-i18n="share.tooltip">Share link</span>
                 </button>
 
+                <!-- Open in New Window Button (hidden by default, shown when content is loaded) -->
+                <button id="btnNewWindow" class="btn btn-outline-light btn-sm me-2 d-none" type="button"
+                        data-bs-toggle="tooltip" data-bs-placement="bottom" data-i18n-title="navbar.openNewWindow">
+                    <i class="bi bi-box-arrow-up-right"></i>
+                    <span class="visually-hidden" data-i18n="navbar.openNewWindow">Open in new window</span>
+                </button>
+
                 <!-- Language Selector -->
                 <div class="dropdown me-2">
                     <button id="languageDropdownBtn" class="btn btn-outline-light btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -70,8 +77,8 @@
                 </div>
 
                 <button id="btnLoadNew" class="btn btn-outline-light btn-sm" type="button" data-i18n-title="navbar.loadAnother">
-                    <i class="bi bi-folder2-open me-1"></i>
-                    <span class="d-none d-sm-inline" data-i18n="navbar.newFile">New File</span>
+                    <i class="bi bi-escape me-1"></i>
+                    <span class="d-none d-sm-inline" data-i18n="navbar.newFile">Exit</span>
                 </button>
             </div>
         </div>

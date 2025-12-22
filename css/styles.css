@@ -72,8 +72,16 @@ body {
 #welcomeLanguageBtn {
     min-width: 100px;
 }
-#topNavbar #btnShare {
+#topNavbar #btnShare,
+#topNavbar #btnNewWindow {
     min-width: 0;
+    border-color: transparent;
+}
+#topNavbar #btnShare:hover,
+#topNavbar #btnNewWindow:hover,
+#topNavbar #btnShare:focus,
+#topNavbar #btnNewWindow:focus {
+    border-color: var(--bs-btn-hover-bg);
 }
 
 #packageName {
@@ -310,7 +318,7 @@ body {
     }
 }
 
-/* Boostrap elements */
+/* Bootstrap elements */
 .btn-primary {
     background-color: var(--primary-color);
     border-color: var(--primary-color);
@@ -351,6 +359,19 @@ body {
 
 .modal-header {
     color: #1a1d21;
+}
+
+/* Override Bootstrap tooltip colors */
+.tooltip {
+  --bs-tooltip-bg: #26ddc7;
+  --bs-tooltip-color: #000000;
+}
+
+/* Fix arrow for bottom-placed tooltips */
+.bs-tooltip-bottom .tooltip-arrow::before {
+  border-width: 0.4rem 0.4rem 0;
+  border-bottom-color: transparent;
+  border-top-color: #26ddc7;
 }
 
 /* Focus Styles */
