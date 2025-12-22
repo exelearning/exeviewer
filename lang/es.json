@@ -51,5 +51,12 @@
     "label": "Idioma",
     "en": "English",
     "es": "Español"
+  },
+  "share": {
+    "tooltip": "Compartir enlace",
+    "modalTitle": "Compartir enlace",
+    "description": "El enlace funcionará solo mientras el .zip o .elpx se encuentre en la dirección especificada.",
+    "copy": "Copiar",
+    "copied": "Enlace copiado al portapapeles."
   }
 }

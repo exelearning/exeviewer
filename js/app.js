@@ -10,7 +10,8 @@
     const state = {
         serviceWorkerReady: false,
         serviceWorkerRegistration: null,
-        currentPackageName: null
+        currentPackageName: null,
+        contentFromUrl: null  // Stores the source URL when content is loaded from URL
     };
 
     // DOM Elements
@@ -18,6 +19,7 @@
         topNavbar: null,
         packageName: null,
         btnLoadNew: null,
+        btnShare: null,
         welcomeScreen: null,
         viewerContainer: null,
         contentFrame: null,
@@ -28,7 +30,12 @@
         loadingIndicator: null,
         loadingText: null,
         errorAlert: null,
-        errorMessage: null
+        errorMessage: null,
+        // Share modal elements
+        shareModal: null,
+        shareUrlInput: null,
+        btnCopyShareUrl: null,
+        copySuccess: null
     };
 
     /**
@@ -56,6 +63,7 @@
         elements.topNavbar = document.getElementById('topNavbar');
         elements.packageName = document.getElementById('packageName');
         elements.btnLoadNew = document.getElementById('btnLoadNew');
+        elements.btnShare = document.getElementById('btnShare');
         elements.welcomeScreen = document.getElementById('welcomeScreen');
         elements.viewerContainer = document.getElementById('viewerContainer');
         elements.contentFrame = document.getElementById('contentFrame');
@@ -67,6 +75,11 @@
         elements.loadingText = document.getElementById('loadingText');
         elements.errorAlert = document.getElementById('errorAlert');
         elements.errorMessage = document.getElementById('errorMessage');
+        // Share modal elements
+        elements.shareModal = document.getElementById('shareModal');
+        elements.shareUrlInput = document.getElementById('shareUrlInput');
+        elements.btnCopyShareUrl = document.getElementById('btnCopyShareUrl');
+        elements.copySuccess = document.getElementById('copySuccess');
     }
 
     /**
@@ -502,6 +515,9 @@
 
             console.log(`[App] Downloaded ${filename} (${blob.size} bytes)${usedProxy ? ' via proxy' : ''}`);
 
+            // Store the source URL for sharing functionality
+            state.contentFromUrl = url.trim();
+
             // Process the file using existing function
             await processFile(file);
 
@@ -614,6 +630,9 @@
             elements.packageName.title = state.currentPackageName;
         }
 
+        // Update share button visibility
+        updateShareButtonVisibility();
+
         // Load the content in the iframe
         elements.contentFrame.src = viewerUrl;
 
@@ -629,6 +648,7 @@
 
         // Reset state
         state.currentPackageName = null;
+        state.contentFromUrl = null;
 
         // Clear iframe
         elements.contentFrame.src = 'about:blank';
@@ -636,6 +656,7 @@
         // Reset UI
         elements.viewerContainer.classList.add('d-none');
         elements.topNavbar.classList.add('d-none');
+        elements.btnShare.classList.add('d-none');
         elements.welcomeScreen.classList.remove('d-none');
 
         // Clear file input and URL input
@@ -747,6 +768,8 @@
         elements.fileInput.addEventListener('change', (event) => {
             const file = event.target.files[0];
             if (file) {
+                // Reset URL source since this is a local file
+                state.contentFromUrl = null;
                 processFile(file);
             }
         });
@@ -771,6 +794,8 @@
 
             const files = event.dataTransfer.files;
             if (files.length > 0) {
+                // Reset URL source since this is a local file
+                state.contentFromUrl = null;
                 processFile(files[0]);
             }
         });
@@ -802,8 +827,89 @@
             }
         });
 
+        // Share button - open modal
+        elements.btnShare.addEventListener('click', () => {
+            openShareModal();
+        });
+
+        // Copy share URL button
+        elements.btnCopyShareUrl.addEventListener('click', () => {
+            copyShareUrl();
+        });
+
+        // Initialize share button tooltip
+        if (elements.btnShare) {
+            new bootstrap.Tooltip(elements.btnShare);
+        }
+
         // Setup language selector
         setupLanguageSelector();
+    }
+
+    /**
+     * Check if the app is running as an installed PWA
+     * @returns {boolean} True if running as installed app
+     */
+    function isInstalledPWA() {
+        // Check for standalone display mode (installed PWA)
+        return window.matchMedia('(display-mode: standalone)').matches ||
+               window.matchMedia('(display-mode: fullscreen)').matches ||
+               window.navigator.standalone === true; // iOS Safari
+    }
+
+    /**
+     * Generate the share URL for the current content
+     * @returns {string} The share URL
+     */
+    function generateShareUrl() {
+        const baseUrl = window.location.origin + window.location.pathname;
+        const resourceUrl = state.contentFromUrl;
+        return `${baseUrl}?url=${encodeURIComponent(resourceUrl)}`;
+    }
+
+    /**
+     * Show or hide the share button based on conditions
+     */
+    function updateShareButtonVisibility() {
+        // Show only if: content loaded from URL AND not installed PWA
+        const shouldShow = state.contentFromUrl && !isInstalledPWA();
+
+        if (shouldShow) {
+            elements.btnShare.classList.remove('d-none');
+        } else {
+            elements.btnShare.classList.add('d-none');
+        }
+    }
+
+    /**
+     * Open the share modal with the generated URL
+     */
+    function openShareModal() {
+        const shareUrl = generateShareUrl();
+        elements.shareUrlInput.value = shareUrl;
+        elements.copySuccess.classList.add('d-none');
+
+        const modal = new bootstrap.Modal(elements.shareModal);
+        modal.show();
+    }
+
+    /**
+     * Copy the share URL to clipboard
+     */
+    async function copyShareUrl() {
+        try {
+            await navigator.clipboard.writeText(elements.shareUrlInput.value);
+            elements.copySuccess.classList.remove('d-none');
+
+            // Hide success message after 3 seconds
+            setTimeout(() => {
+                elements.copySuccess.classList.add('d-none');
+            }, 3000);
+        } catch (err) {
+            console.error('[App] Failed to copy URL:', err);
+            // Fallback: select the text for manual copy
+            elements.shareUrlInput.select();
+        }
     }
 
     /**
@@ -841,14 +947,14 @@
         }
 
         // Check for URL parameter and auto-load if present
-        checkUrlParameter();
+        await checkUrlParameter();
     }
 
     /**
      * Check for URL parameter and auto-load content if present
      * Supports: ?url=... query parameter
      */
-    function checkUrlParameter() {
+    async function checkUrlParameter() {
         const urlParams = new URLSearchParams(window.location.search);
         const urlToLoad = urlParams.get('url');
 
@@ -856,8 +962,8 @@
             console.log('[App] URL parameter detected:', urlToLoad);
             // Set the URL in the input field
             elements.urlInput.value = urlToLoad;
-            // Trigger the download
-            downloadFromUrl(urlToLoad);
+            // Trigger the download and wait for completion
+            await downloadFromUrl(urlToLoad);
         }
     }
 

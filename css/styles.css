@@ -18,15 +18,9 @@
     /* eXeLearning colors */
     --primary-color: #0ba1a1;       /* Main green */
     --primary-dark: #088b8b;        /* Darker green for hover/active */
-    --bg-light: #f8f9fa;            /* Keep light background */
-    --bg-dark: #212529;             /* Keep dark background */
-    --text-muted: #6c757d;          /* Keep muted text */
     --border-color: #a3d3d3;        /* Soft greenish border instead of bluish */
     --shadow-sm: 0 0.125rem 0.25rem rgba(11, 161, 161, 0.075); /* subtle green shadow */
     --shadow-md: 0 0.5rem 1rem rgba(11, 161, 161, 0.15);       /* medium green shadow */
-    --transition-fast: 0.15s ease-in-out;
-    --transition-normal: 0.3s ease-in-out;
-    --navbar-height: 56px;
 }
 
 
@@ -77,6 +71,9 @@ body {
 #topNavbar button,
 #welcomeLanguageBtn {
     min-width: 100px;
+}
+#topNavbar #btnShare {
+    min-width: 0;
 }
 
 #packageName {
@@ -313,6 +310,7 @@ body {
     }
 }
 
+/* Boostrap elements */
 .btn-primary {
     background-color: var(--primary-color);
     border-color: var(--primary-color);
@@ -345,6 +343,14 @@ body {
     background-color: var(--primary-dark);
     border-color: var(--primary-dark);
     color: #fff;
+}
+
+.modal-body {
+    min-height: 160px;
+}
+
+.modal-header {
+    color: #1a1d21;
 }
 
 /* Focus Styles */

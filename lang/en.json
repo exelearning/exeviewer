@@ -51,5 +51,12 @@
     "label": "Language",
     "en": "English",
     "es": "Español"
+  },
+  "share": {
+    "tooltip": "Share link",
+    "modalTitle": "Share link",
+    "description": "The link will work as long as the .zip or .elpx file remains at the specified address.",
+    "copy": "Copy",
+    "copied": "Link copied to clipboard!"
   }
 }

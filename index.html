@@ -51,6 +51,13 @@
             <div class="d-flex align-items-center">
                 <span id="packageName" class="text-light me-3 d-none d-sm-inline"></span>
 
+                <!-- Share Button (hidden by default, shown only for URL-loaded content in browser) -->
+                <button id="btnShare" class="btn btn-outline-light btn-sm me-2 d-none" type="button"
+                        data-bs-toggle="tooltip" data-bs-placement="bottom" data-i18n-title="share.tooltip">
+                    <i class="bi bi-share"></i>
+                    <span class="visually-hidden" data-i18n="share.tooltip">Share link</span>
+                </button>
+
                 <!-- Language Selector -->
                 <div class="dropdown me-2">
                     <button id="languageDropdownBtn" class="btn btn-outline-light btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -159,6 +166,32 @@
         </div>
 
     </main>
+
+    <!-- Share Modal -->
+    <div class="modal fade" id="shareModal" tabindex="-1" aria-labelledby="shareModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="shareModalLabel" data-i18n="share.modalTitle">Share link</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-muted small mb-3" data-i18n="share.description">
+                        The link will work as long as the .zip or .elpx file remains at the specified address.
+                    </p>
+                    <div class="input-group">
+                        <input type="text" id="shareUrlInput" class="form-control" readonly>
+                        <button id="btnCopyShareUrl" class="btn btn-primary" type="button" data-i18n="share.copy">
+                            Copy
+                        </button>
+                    </div>
+                    <div id="copySuccess" class="text-success small mt-2 d-none" data-i18n="share.copied">
+                        Link copied to clipboard!
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- JSZip Library -->
     <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
