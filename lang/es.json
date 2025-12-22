@@ -40,7 +40,8 @@
     "urlAccessDenied": "Acceso denegado. El archivo puede ser privado o estar protegido con contraseña.",
     "urlNotFound": "Archivo no encontrado. Comprueba la URL.",
     "invalidFileType": "La URL no apunta a un archivo .zip o .elpx válido",
-    "networkError": "Error de red. Comprueba tu conexión e inténtalo de nuevo."
+    "networkError": "Error de red. Comprueba tu conexión e inténtalo de nuevo.",
+    "notAZipFile": "No se pudo procesar el archivo. Tal vez no sea un archivo .zip o .elpx válido."
   },
   "accessibility": {
     "loading": "Cargando...",

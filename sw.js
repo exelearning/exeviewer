@@ -3,7 +3,7 @@
  * Handles PWA caching and serves extracted ZIP content from memory
  */
 
-const SW_VERSION = '1.1.0';
+const SW_VERSION = '1.2.0';
 const CACHE_NAME = `exeviewer-v${SW_VERSION}`;
 
 // Files to cache for offline use (app shell)
@@ -266,6 +266,24 @@ self.addEventListener('fetch', (event) => {
                             return caches.match('./index.html');
                         });
                 })
+        );
+        return;
+    }
+
+    // For language files, use network-first to ensure translations are up to date
+    if (pathname.endsWith('.json') && pathname.includes('/lang/')) {
+        event.respondWith(
+            fetch(event.request)
+                .then(response => {
+                    if (response.ok) {
+                        const responseClone = response.clone();
+                        caches.open(CACHE_NAME).then(cache => {
+                            cache.put(event.request, responseClone);
+                        });
+                    }
+                    return response;
+                })
+                .catch(() => caches.match(event.request))
         );
         return;
     }

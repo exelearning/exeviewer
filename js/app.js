@@ -582,7 +582,13 @@
 
         } catch (error) {
             console.error('[App] Error processing file:', error);
-            showError(error.message || i18n.t('errors.processingFailed'));
+
+            // Check for JSZip error (not a valid ZIP file)
+            if (error.message && error.message.includes('central directory')) {
+                showError(i18n.t('errors.notAZipFile'));
+            } else {
+                showError(error.message || i18n.t('errors.processingFailed'));
+            }
             hideLoading();
         }
     }
