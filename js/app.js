@@ -839,6 +839,26 @@
             console.warn('[App] Service Worker registration deferred:', error.message);
             // Will try again when a file is selected
         }
+
+        // Check for URL parameter and auto-load if present
+        checkUrlParameter();
+    }
+
+    /**
+     * Check for URL parameter and auto-load content if present
+     * Supports: ?url=... query parameter
+     */
+    function checkUrlParameter() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlToLoad = urlParams.get('url');
+
+        if (urlToLoad) {
+            console.log('[App] URL parameter detected:', urlToLoad);
+            // Set the URL in the input field
+            elements.urlInput.value = urlToLoad;
+            // Trigger the download
+            downloadFromUrl(urlToLoad);
+        }
     }
 
     // Start the application when DOM is ready
