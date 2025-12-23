@@ -1,156 +1,118 @@
 # eXeViewer
 
-A lightweight web application to view eXeLearning content packages directly in your browser.
+View eXeLearning content packages directly in your browser.
 
 ## Overview
 
-eXeViewer allows users to open `.zip` or `.elpx` files exported from [eXeLearning](https://exelearning.net/) and navigate through the content as if it were hosted on a web server. The content is extracted in memory (no files written to disk) and served via a Service Worker.
+eXeViewer is a client-side web application that lets you view content exported from [eXeLearning](https://exelearning.net/) without needing your own web hosting.
+
+The application runs entirely in your browser. When you load a file from your device, nothing is uploaded to any server. The content is extracted in memory and displayed using a Service Worker.
 
 ## Features
 
-- Drag and drop or browse to select `.zip`/`.elpx` files
-- In-memory ZIP extraction (no disk writes)
+- Load `.zip` or `.elpx` files from your device (drag and drop or file browser)
+- Load content from a URL (direct links to `.zip` or `.elpx` files)
+- Support for shared links from Nextcloud, ownCloud and Google Drive
+- Generate shareable links when viewing URL-loaded content
+- In-memory extraction (no files written to disk)
 - Full navigation support for HTML, CSS, JavaScript, images, and media
-- Clean, responsive interface using Bootstrap 5
-- Service Worker-based content serving
-- Dark mode support (follows system preference)
-- Multi-language support (English, Spanish) with easy extensibility
-- **Installable as a Progressive Web App (PWA)** for offline use
+- Responsive interface
+- Dark mode (follows system preference)
+- Multi-language support
+- Installable as a Progressive Web App (PWA) for offline use
 
-## Requirements
+## Use
 
-- **Bun** (recommended) or **Node.js** (v18 or higher)
-- A modern web browser with Service Worker support (Chrome, Firefox, Edge, Safari)
+### Loading content from your device
+
+1. Open eXeViewer in your browser
+2. Drag and drop a `.zip` or `.elpx` file onto the drop zone, or click "Browse Files" to select one
+3. The content will be extracted and displayed
+
+The file never leaves your device. All processing happens in your browser.
+
+### Loading content from a URL
+
+1. Paste a direct link to a `.zip` or `.elpx` file in the URL field
+2. Click "Load"
+3. The file will be downloaded and displayed
+
+This works with:
+- Direct links to files on any server
+- Shared links from Nextcloud and ownCloud
+- Shared links from Google Drive
+
+### Sharing content
+
+When you load content from a URL, a "Share" button appears in the top bar. Click it to get a direct link that anyone can use to view the content through eXeViewer.
+
+**This solves a common problem**: many eXeLearning users create content but don't know how to publish it. With eXeViewer:
+
+1. Upload your `.zip` or `.elpx` file to a cloud service (Nextcloud, ownCloud, Google Drive, or any file hosting)
+2. Generate a share link from your cloud service
+3. Paste the link in eXeViewer
+4. Click the "Share" button to get a viewer URL
+5. Share that URL with anyone
+
+The link will work as long as the original file remains at the specified address.
 
 ## Installation
 
-### Option 1: Using Bun (Recommended)
+eXeViewer is a static HTML/CSS/JavaScript application. It runs entirely in the browser and does not require Node.js, Bun, or any server-side runtime in production.
 
-1. Install Bun if you haven't already:
-   ```bash
-   # Windows (PowerShell)
-   powershell -c "irm bun.sh/install.ps1 | iex"
+### Deploying to a web server
 
-   # macOS/Linux
-   curl -fsSL https://bun.sh/install | bash
-   ```
-
-2. Clone or download this project:
-   ```bash
-   cd exeviewer
-   ```
-
-3. Start the server:
-   ```bash
-   bun run start
-   ```
-
-### Option 2: Using Node.js
-
-1. Ensure Node.js v18+ is installed:
-   ```bash
-   node --version
-   ```
-
-2. Navigate to the project directory:
-   ```bash
-   cd exeviewer
-   ```
-
-3. Start the server:
-   ```bash
-   npm run start:node
-   # or directly:
-   node server.js
-   ```
-
-## Usage
-
-1. Start the server (see Installation above)
-
-2. Open your browser and navigate to:
-   ```
-   http://localhost:3000
-   ```
-
-3. Either:
-   - **Drag and drop** a `.zip` or `.elpx` file onto the drop zone
-   - **Click "Browse Files"** to select a file from your device
-
-4. The content will be extracted and displayed in the viewer
-
-5. Navigate through the content using the links in the displayed page
-
-6. Click **"New File"** in the top bar to load a different package
-
-## Installing as a Progressive Web App (PWA)
-
-eXeViewer can be installed as a standalone application on your device. Once installed, it will:
-
-- Appear in your app launcher/start menu with its own icon
-- Open in its own window (without browser UI)
-- Work offline (the app shell is cached)
-- Be accessible like any other native application
-
-### Installation Instructions
-
-#### Desktop (Chrome, Edge)
-
-1. Open eXeViewer in your browser (e.g., `http://localhost:3000`)
-2. Look for the **install icon** in the address bar (usually a "+" or computer icon)
-3. Click it and confirm the installation
-4. The app will be added to your desktop/start menu
-
-Alternatively:
-- Click the **three-dot menu** (⋮) in the browser
-- Select **"Install eXeViewer"** or **"Install app"**
-
-#### Desktop (Firefox)
-
-Firefox doesn't support PWA installation natively. Consider using:
-- [PWAs for Firefox](https://addons.mozilla.org/firefox/addon/pwas-for-firefox/) extension
-- Chrome or Edge for installation
-
-#### Mobile (Android - Chrome)
-
-1. Open eXeViewer in Chrome
-2. Tap the **three-dot menu** (⋮)
-3. Select **"Add to Home screen"** or **"Install app"**
-4. Confirm the installation
-5. The app icon will appear on your home screen
-
-#### Mobile (iOS - Safari)
-
-1. Open eXeViewer in Safari
-2. Tap the **Share button** (square with arrow)
-3. Scroll down and tap **"Add to Home Screen"**
-4. Tap **"Add"** to confirm
-5. The app icon will appear on your home screen
-
-### Hosting for PWA Installation
-
-For users to install eXeViewer as a PWA, it must be served over HTTPS (except for localhost). Options include:
-
-1. **Local development**: `http://localhost:3000` works for testing
-2. **GitHub Pages**: Free HTTPS hosting for static sites
-3. **Netlify/Vercel**: Free tier with automatic HTTPS
-4. **Your own server**: Configure HTTPS with Let's Encrypt
-
-### Sharing the Installation Link
-
-To let others install eXeViewer, simply share your hosted URL:
+Upload the following files and folders to any web server:
 
 ```
-https://your-domain.com/exeviewer/
+index.html
+manifest.json
+sw.js
+css/
+js/
+lang/
+img/
+vendor/
 ```
 
-Users can visit this link and follow the installation instructions above for their platform.
+The application will work on:
+- Apache (XAMPP, shared hosting, etc.)
+- Nginx
+- GitHub Pages
+- Netlify
+- Vercel
+- Any server that can serve static files over HTTP/HTTPS
 
-## Configuration
+For the share functionality to work, the application must be served over HTTPS (or HTTP on localhost).
 
-### Changing the Port
+### Running locally without a web server
 
-By default, the server runs on port 3000. To use a different port:
+If you don't have a web server installed, you can use the included `server.js`:
+
+#### Using Bun
+
+```bash
+# Install Bun (if not installed)
+# Windows (PowerShell)
+powershell -c "irm bun.sh/install.ps1 | iex"
+
+# macOS/Linux
+curl -fsSL https://bun.sh/install | bash
+
+# Start the server
+bun run start
+```
+
+#### Using Node.js
+
+```bash
+# Requires Node.js v18+
+node server.js
+```
+
+Then open `http://localhost:3000` in your browser.
+
+### Changing the port
 
 ```bash
 # Bun
@@ -163,180 +125,119 @@ PORT=8080 node server.js
 $env:PORT=8080; bun run server.js
 ```
 
-## Internationalization (i18n)
+## Installing as a Progressive Web App (PWA)
 
-eXeViewer supports multiple languages. The application automatically detects the user's browser language preference and will use it if available. Users can also manually switch languages using the language selector in the interface.
+eXeViewer can be installed as a standalone application on your device. Once installed:
 
-### Currently Supported Languages
+- It appears in your app launcher/start menu
+- It opens in its own window (without browser UI)
+- It works offline
 
-- **English** (en) - Default
-- **Spanish** (es) - Español
+**Note**: When running as an installed PWA, the application runs locally on your device. This means you cannot generate shareable links, since those links need to point to a publicly accessible eXeViewer instance. For sharing functionality, use eXeViewer through a web browser on a hosted version.
 
-### Adding a New Language
+### Desktop (Chrome, Edge)
 
-To add a new language, follow these steps:
+1. Open eXeViewer in your browser
+2. Click the install icon in the address bar (or the three-dot menu > "Install eXeViewer")
+3. Confirm the installation
 
-#### 1. Create the language file
+### Desktop (Firefox)
 
-Copy the English language file as a template:
+Firefox doesn't support PWA installation natively. Use the [PWAs for Firefox](https://addons.mozilla.org/firefox/addon/pwas-for-firefox/) extension, or use Chrome/Edge.
 
-```bash
-cp lang/en.json lang/XX.json
-```
+### Android (Chrome)
 
-Replace `XX` with the [ISO 639-1 language code](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) (e.g., `fr` for French, `de` for German, `pt` for Portuguese).
+1. Open eXeViewer in Chrome
+2. Tap the three-dot menu
+3. Select "Add to Home screen" or "Install app"
 
-#### 2. Translate the content
+### iOS (Safari)
 
-Edit the new file (`lang/XX.json`) and translate all the text values. The file structure looks like this:
+1. Open eXeViewer in Safari
+2. Tap the Share button
+3. Tap "Add to Home Screen"
 
-```json
-{
-  "app": {
-    "title": "eXeViewer",
-    "description": "Your translated description here"
-  },
-  "welcome": {
-    "dragDrop": "Your translated text with <strong>.zip</strong> or <strong>.elpx</strong> here",
-    "or": "or",
-    "browseFiles": "Browse Files",
-    "supportedFormats": "Your translated text here"
-  },
-  ...
-}
-```
+## For developers
 
-**Important notes:**
-- Keep the JSON keys unchanged (only translate the values)
-- Preserve any HTML tags like `<strong>` in the translations
-- Keep placeholders like `{processed}` and `{total}` as they are (used for variable substitution)
+### How it works
 
-#### 3. Register the new language
+1. **Service Worker** (`sw.js`): Handles two functions:
+   - Caches the application shell for offline use
+   - Intercepts requests to `/viewer/*` and serves extracted ZIP content from memory
 
-Edit `js/i18n.js` and add your language code to the `AVAILABLE_LANGUAGES` array:
+2. **ZIP processing** (`js/app.js`): Uses JSZip to extract content in memory. Files are sent to the Service Worker as base64-encoded strings.
 
-```javascript
-const AVAILABLE_LANGUAGES = ['en', 'es', 'XX'];  // Add your code here
-```
+3. **Content display**: An iframe loads `/viewer/index.html`. The Service Worker intercepts this request and serves the corresponding file from the extracted content.
 
-#### 4. Add the language to the UI selectors
+4. **URL handling**: For cloud service links, the application transforms share URLs into direct download URLs before fetching.
 
-Edit `index.html` and add the new language option to both dropdown menus:
+### Adding a new language
 
-In the navbar (around line 38):
-```html
-<li><a class="dropdown-item" href="#" data-lang="XX">Language Name</a></li>
-```
+1. Copy `lang/en.json` to `lang/XX.json` (where `XX` is the ISO 639-1 code)
 
-In the welcome screen (around line 65):
-```html
-<li><a class="dropdown-item" href="#" data-lang="XX">Language Name</a></li>
-```
+2. Translate the values in the new file (keep the keys unchanged)
 
-#### 5. Add the language name translations
+3. Add the language code to `AVAILABLE_LANGUAGES` in `js/i18n.js`:
+   ```javascript
+   const AVAILABLE_LANGUAGES = ['en', 'es', 'XX'];
+   ```
 
-In your new language file (`lang/XX.json`) and in all existing language files, add the language name to the `language` section:
+4. Add the language option to both dropdown menus in `index.html`:
+   ```html
+   <li><a class="dropdown-item" href="#" data-lang="XX">Language Name</a></li>
+   ```
 
-```json
-{
-  "language": {
-    "label": "Language",
-    "en": "English",
-    "es": "Español",
-    "XX": "Language Name in Native Script"
-  }
-}
-```
+5. Add the language name to the `language` section in all language files:
+   ```json
+   "language": {
+     "XX": "Language Name"
+   }
+   ```
 
-### Translation Keys Reference
-
-| Key | Description |
-|-----|-------------|
-| `app.title` | Application title |
-| `app.description` | Main description shown on welcome screen |
-| `welcome.*` | Welcome screen texts |
-| `navbar.*` | Navigation bar texts |
-| `loading.*` | Loading status messages |
-| `errors.*` | Error messages |
-| `accessibility.*` | Screen reader texts |
-| `language.*` | Language names |
-
-## Project Structure
+### Project structure
 
 ```
 exeviewer/
 ├── index.html          # Main application page
-├── manifest.json       # PWA Web App Manifest
-├── server.js           # HTTP server (Bun/Node.js compatible)
-├── sw.js               # Service Worker (PWA caching + content serving)
+├── manifest.json       # PWA manifest
+├── sw.js               # Service Worker
+├── server.js           # Development server (Bun/Node.js)
 ├── package.json        # Project configuration
-├── README.md           # This file
 ├── css/
 │   └── styles.css      # Custom styles
 ├── js/
 │   ├── app.js          # Main application logic
 │   └── i18n.js         # Internationalization module
 ├── lang/
-│   ├── en.json         # English translations (default)
+│   ├── en.json         # English translations
 │   └── es.json         # Spanish translations
-├── img/
-│   ├── logo.svg        # Application logo
-│   ├── icon.svg        # Square icon for PWA
-│   ├── icon-*.png      # PNG icons for various sizes
-│   └── favicon.ico     # Browser favicon
+├── img/                # Icons and images
+├── vendor/             # Third-party libraries
+│   ├── bootstrap/      # Bootstrap 5.3.2
+│   ├── bootstrap-icons/# Bootstrap Icons 1.11.1
+│   └── jszip/          # JSZip 3.10.1
 └── scripts/
-    └── generate-icons.js   # Script to regenerate PWA icons
+    └── generate-icons.js   # Icon generation script (requires Node.js + sharp)
 ```
-
-## How It Works
-
-1. **Server**: A lightweight HTTP server (compatible with Bun and Node.js) serves the static files for the application.
-
-2. **Service Worker**: The Service Worker handles two main functions:
-   - **PWA Caching**: Caches the app shell (HTML, CSS, JS, icons) for offline use
-   - **Content Serving**: Intercepts requests to `/viewer/*` paths and serves extracted ZIP content from memory
-
-3. **ZIP Processing**: When a user selects a file, JSZip extracts the contents in memory. The extracted files are sent to the Service Worker as base64-encoded strings.
-
-4. **Content Display**: The viewer loads an iframe pointing to `/viewer/index.html`. The Service Worker intercepts this request and serves the corresponding file from the extracted content.
-
-5. **PWA Installation**: The Web App Manifest (`manifest.json`) enables browsers to offer installation of eXeViewer as a standalone app with its own icon and window.
-
-## Browser Compatibility
-
-| Browser | Minimum Version |
-|---------|-----------------|
-| Chrome  | 60+             |
-| Firefox | 57+             |
-| Edge    | 79+             |
-| Safari  | 11.1+           |
-
-## Troubleshooting
-
-### Service Worker not registering
-
-- Ensure you're accessing the application via `http://localhost` or `https://`
-- Service Workers don't work with `file://` URLs
-- Check the browser console for errors
-
-### Content not loading
-
-- Verify the ZIP file contains an `index.html` at the root
-- Check the browser console for 404 errors
-- Try refreshing the page after the first load
-
-### Port already in use
-
-- Change the port using the `PORT` environment variable
-- Or find and stop the process using that port
 
 ## License
 
-MIT License
+Copyright (C) 2026 [Ignacio Gros](https://www.gros.es)
+
+This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 ## Credits
 
-- [eXeLearning](https://exelearning.net/) - Open source authoring tool
-- [Bootstrap](https://getbootstrap.com/) - UI framework
-- [JSZip](https://stuk.github.io/jszip/) - ZIP file processing
-- [Bootstrap Icons](https://icons.getbootstrap.com/) - Icon library
+### Third-party libraries
+
+- [Bootstrap](https://getbootstrap.com/) v5.3.2 - Copyright 2011-2023 The Bootstrap Authors - MIT License
+- [Bootstrap Icons](https://icons.getbootstrap.com/) v1.11.1 - Copyright 2019-2023 The Bootstrap Authors - MIT License
+- [JSZip](https://stuk.github.io/jszip/) v3.10.1 - Copyright 2009-2016 Stuart Knightley - MIT License or GPLv3
+
+### Related projects
+
+- [eXeLearning](https://exelearning.net/) - Open source authoring tool for creating educational content
