@@ -1,63 +1,63 @@
 {
-  "app": {
-    "title": "eXeViewer",
-    "description": "View eXeLearning content packages directly in your browser"
-  },
-  "welcome": {
-    "dragDrop": "Drag and drop your <strong>.zip</strong> or <strong>.elpx</strong> file here",
-    "or": "or",
-    "browseFiles": "Browse Files",
-    "loadFromUrl": "Load from URL (supports Nextcloud, ownCloud, and Google Drive links)",
-    "urlPlaceholder": "https://example.com/content.zip",
-    "loadUrl": "Load",
-    "supportedFormats": "Supports websites exported from eXeLearning as .zip or .elpx packages"
-  },
-  "navbar": {
-    "loadAnother": "Load another file",
-    "newFile": "Exit",
-    "openNewWindow": "Open in new window"
-  },
-  "loading": {
-    "processing": "Processing...",
-    "readingZip": "Reading file...",
-    "extractingFiles": "Extracting files... ({processed}/{total})",
-    "initializing": "Initializing...",
-    "registeringSW": "Registering Service Worker...",
-    "loadingContent": "Loading content...",
-    "processingFile": "Processing file...",
-    "downloadingFile": "Downloading file..."
-  },
-  "errors": {
-    "invalidFile": "Please select a valid .zip or .elpx file",
-    "emptyZip": "The file appears to be empty",
-    "noHtmlFiles": "No HTML files found in the package",
-    "processingFailed": "Failed to process the file",
-    "swNotSupported": "Service Workers are not supported in this browser",
-    "swSecureContext": "Service Workers require a secure context (HTTPS or localhost)",
-    "swTimeout": "Timeout waiting for Service Worker controller",
-    "secureContextRequired": "This application requires a secure context (HTTPS or localhost). Please access via http://localhost/...",
-    "invalidUrl": "Please enter a valid URL",
-    "downloadFailed": "Could not download the file. Please check the URL and try again.",
-    "urlAccessDenied": "Access denied. The file may be private or password protected.",
-    "urlNotFound": "File not found. Please check the URL.",
-    "invalidFileType": "The URL does not point to a valid .zip or .elpx file",
-    "networkError": "Network error. Please check your connection and try again.",
-    "notAZipFile": "Could not process the file. It may not be a valid .zip or .elpx file."
-  },
-  "accessibility": {
-    "loading": "Loading...",
-    "contentFrame": "eXeLearning Content"
-  },
-  "language": {
-    "label": "Language",
-    "en": "English",
-    "es": "Español"
-  },
-  "share": {
-    "tooltip": "Share link",
-    "modalTitle": "Share link",
-    "description": "The link will work as long as the .zip or .elpx file remains at the specified address.",
-    "copy": "Copy",
-    "copied": "Link copied to clipboard!"
-  }
+    "app": {
+        "title": "eXeViewer",
+        "description": "View eXeLearning content packages directly in your browser"
+    },
+    "welcome": {
+        "dragDrop": "Drag and drop your <strong>.zip</strong> or <strong>.elpx</strong> file here",
+        "or": "or",
+        "browseFiles": "Browse Files",
+        "loadFromUrl": "Load from URL (supports Nextcloud, ownCloud, and Google Drive links)",
+        "urlPlaceholder": "https://example.com/content.zip",
+        "loadUrl": "Load",
+        "supportedFormats": "Supports websites exported from eXeLearning as .zip or .elpx packages"
+    },
+    "navbar": {
+        "loadAnother": "Load another file",
+        "newFile": "Exit",
+        "openNewWindow": "Open in new window"
+    },
+    "loading": {
+        "processing": "Processing...",
+        "readingZip": "Reading file...",
+        "extractingFiles": "Extracting files... ({processed}/{total})",
+        "initializing": "Initializing...",
+        "registeringSW": "Registering Service Worker...",
+        "loadingContent": "Loading content...",
+        "processingFile": "Processing file...",
+        "downloadingFile": "Downloading file..."
+    },
+    "errors": {
+        "invalidFile": "Please select a valid .zip or .elpx file",
+        "emptyZip": "The file appears to be empty",
+        "noHtmlFiles": "No HTML files found in the package",
+        "processingFailed": "Failed to process the file",
+        "swNotSupported": "Service Workers are not supported in this browser",
+        "swSecureContext": "Service Workers require a secure context (HTTPS or localhost)",
+        "swTimeout": "Timeout waiting for Service Worker controller",
+        "secureContextRequired": "This application requires a secure context (HTTPS or localhost). Please access via http://localhost/...",
+        "invalidUrl": "Please enter a valid URL",
+        "downloadFailed": "Could not download the file. Please check the URL and try again.",
+        "urlAccessDenied": "Access denied. The file may be private or password protected.",
+        "urlNotFound": "File not found. Please check the URL.",
+        "invalidFileType": "The URL does not point to a valid .zip or .elpx file",
+        "networkError": "Network error. Please check your connection and try again.",
+        "notAZipFile": "Could not process the file. It may not be a valid .zip or .elpx file."
+    },
+    "accessibility": {
+        "loading": "Loading...",
+        "contentFrame": "eXeLearning Content"
+    },
+    "language": {
+        "label": "Language",
+        "en": "English",
+        "es": "Español"
+    },
+    "share": {
+        "tooltip": "Share link",
+        "modalTitle": "Share link",
+        "description": "The link will work as long as the .zip or .elpx file remains at the specified address.",
+        "copy": "Copy",
+        "copied": "Link copied to clipboard!"
+    }
 }

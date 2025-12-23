@@ -1,25 +1,25 @@
 {
-  "name": "exeviewer",
-  "version": "1.0.0",
-  "description": "A web application to view eXeLearning content packages (.zip/.elpx)",
-  "main": "server.js",
-  "type": "module",
-  "scripts": {
-    "start": "bun run server.js",
-    "start:node": "node server.js",
-    "generate-icons": "node scripts/generate-icons.js"
-  },
-  "keywords": [
-    "exelearning",
-    "viewer",
-    "educational",
-    "zip",
-    "pwa"
-  ],
-  "author": "",
-  "license": "MIT",
-  "devDependencies": {
-    "png-to-ico": "^3.0.1",
-    "sharp": "^0.34.5"
-  }
+    "name": "exeviewer",
+    "version": "1.0.0",
+    "description": "A web application to view eXeLearning content packages (.zip/.elpx)",
+    "main": "server.js",
+    "type": "module",
+    "scripts": {
+        "start": "bun run server.js",
+        "start:node": "node server.js",
+        "generate-icons": "node scripts/generate-icons.js"
+    },
+    "keywords": [
+        "exelearning",
+        "viewer",
+        "educational",
+        "zip",
+        "pwa"
+    ],
+    "author": "",
+    "license": "MIT",
+    "devDependencies": {
+        "png-to-ico": "^3.0.1",
+        "sharp": "^0.34.5"
+    }
 }
