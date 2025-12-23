@@ -6,6 +6,12 @@
 (function() {
     'use strict';
 
+    // Configuration
+    const config = {
+        // Automatically restore and display content from IndexedDB on page load
+        autoRestoreContent: true
+    };
+
     // Application state
     const state = {
         serviceWorkerReady: false,
@@ -1002,7 +1008,45 @@
         }
 
         // Check for URL parameter and auto-load if present
-        await checkUrlParameter();
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('url')) {
+            await checkUrlParameter();
+        } else if (config.autoRestoreContent) {
+            // Check for saved content in IndexedDB
+            await checkSavedContent();
+        }
+    }
+
+    /**
+     * Check if there's saved content in the Service Worker and display it
+     */
+    async function checkSavedContent() {
+        if (!state.serviceWorkerReady || !navigator.serviceWorker.controller) {
+            return;
+        }
+
+        return new Promise((resolve) => {
+            const messageChannel = new MessageChannel();
+
+            messageChannel.port1.onmessage = (event) => {
+                const { type, ready, fileCount } = event.data || {};
+
+                if (type === 'STATUS' && ready && fileCount > 0) {
+                    console.log(`[App] Restored content found: ${fileCount} files`);
+                    state.currentPackageName = 'Restored content';
+                    showViewer();
+                }
+                resolve();
+            };
+
+            navigator.serviceWorker.controller.postMessage(
+                { type: 'GET_STATUS' },
+                [messageChannel.port2]
+            );
+
+            // Timeout after 1 second
+            setTimeout(resolve, 1000);
+        });
     }
 
     /**

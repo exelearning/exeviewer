@@ -1,10 +1,15 @@
 /**
  * eXeViewer - Service Worker
- * Handles PWA caching and serves extracted ZIP content from memory
+ * Handles PWA caching and serves extracted ZIP content from memory/IndexedDB
  */
 
-const SW_VERSION = '1.3.0';
+const SW_VERSION = '1.4.0';
 const CACHE_NAME = `exeviewer-v${SW_VERSION}`;
+
+// IndexedDB configuration
+const DB_NAME = 'exeviewer-content';
+const DB_VERSION = 1;
+const STORE_NAME = 'files';
 
 // Files to cache for offline use (app shell)
 const APP_SHELL_FILES = [
@@ -30,6 +35,111 @@ const APP_SHELL_FILES = [
 // In-memory storage for the extracted ZIP contents
 let contentFiles = new Map();
 let contentReady = false;
+
+/**
+ * Open IndexedDB database
+ * @returns {Promise<IDBDatabase>}
+ */
+function openDB() {
+    return new Promise((resolve, reject) => {
+        const request = indexedDB.open(DB_NAME, DB_VERSION);
+
+        request.onerror = () => reject(request.error);
+        request.onsuccess = () => resolve(request.result);
+
+        request.onupgradeneeded = (event) => {
+            const db = event.target.result;
+            if (!db.objectStoreNames.contains(STORE_NAME)) {
+                db.createObjectStore(STORE_NAME);
+            }
+        };
+    });
+}
+
+/**
+ * Save content to IndexedDB
+ * @param {Object} files - Files object to save
+ * @returns {Promise<void>}
+ */
+async function saveToIndexedDB(files) {
+    try {
+        const db = await openDB();
+        const tx = db.transaction(STORE_NAME, 'readwrite');
+        const store = tx.objectStore(STORE_NAME);
+
+        // Clear existing content and save new
+        store.clear();
+        store.put(files, 'content');
+
+        return new Promise((resolve, reject) => {
+            tx.oncomplete = () => {
+                db.close();
+                console.log('[SW] Content saved to IndexedDB');
+                resolve();
+            };
+            tx.onerror = () => {
+                db.close();
+                reject(tx.error);
+            };
+        });
+    } catch (err) {
+        console.warn('[SW] Failed to save to IndexedDB:', err);
+    }
+}
+
+/**
+ * Load content from IndexedDB
+ * @returns {Promise<Object|null>}
+ */
+async function loadFromIndexedDB() {
+    try {
+        const db = await openDB();
+        const tx = db.transaction(STORE_NAME, 'readonly');
+        const store = tx.objectStore(STORE_NAME);
+        const request = store.get('content');
+
+        return new Promise((resolve, reject) => {
+            request.onsuccess = () => {
+                db.close();
+                resolve(request.result || null);
+            };
+            request.onerror = () => {
+                db.close();
+                reject(request.error);
+            };
+        });
+    } catch (err) {
+        console.warn('[SW] Failed to load from IndexedDB:', err);
+        return null;
+    }
+}
+
+/**
+ * Clear content from IndexedDB
+ * @returns {Promise<void>}
+ */
+async function clearIndexedDB() {
+    try {
+        const db = await openDB();
+        const tx = db.transaction(STORE_NAME, 'readwrite');
+        const store = tx.objectStore(STORE_NAME);
+        store.clear();
+
+        return new Promise((resolve, reject) => {
+            tx.oncomplete = () => {
+                db.close();
+                console.log('[SW] IndexedDB cleared');
+                resolve();
+            };
+            tx.onerror = () => {
+                db.close();
+                reject(tx.error);
+            };
+        });
+    } catch (err) {
+        console.warn('[SW] Failed to clear IndexedDB:', err);
+    }
+}
 
 // The base path will be determined from the registration scope
 let basePath = '/';
@@ -122,7 +232,7 @@ self.addEventListener('install', (event) => {
 });
 
 /**
- * Activate event - clean up old caches and claim clients
+ * Activate event - clean up old caches, restore content from IndexedDB, and claim clients
  */
 self.addEventListener('activate', (event) => {
     console.log(`[SW] Service Worker v${SW_VERSION} activated`);
@@ -138,6 +248,17 @@ self.addEventListener('activate', (event) => {
                         }
                     })
                 );
+            })
+            .then(() => {
+                // Restore content from IndexedDB if available
+                return loadFromIndexedDB();
+            })
+            .then(storedContent => {
+                if (storedContent) {
+                    contentFiles = new Map(Object.entries(storedContent));
+                    contentReady = true;
+                    console.log(`[SW] Content restored from IndexedDB: ${contentFiles.size} files`);
+                }
             })
             .then(() => {
                 // Claim all clients immediately
@@ -160,6 +281,9 @@ self.addEventListener('message', (event) => {
             console.log(`[SW] Content loaded: ${contentFiles.size} files`);
             console.log('[SW] Sample files:', Array.from(contentFiles.keys()).slice(0, 5));
 
+            // Persist to IndexedDB
+            saveToIndexedDB(data.files);
+
             // Notify the client that content is ready
             if (event.source) {
                 event.source.postMessage({
@@ -175,6 +299,9 @@ self.addEventListener('message', (event) => {
             contentReady = false;
             console.log('[SW] Content cleared');
 
+            // Clear from IndexedDB
+            clearIndexedDB();
+
             if (event.source) {
                 event.source.postMessage({
                     type: 'CONTENT_CLEARED'
@@ -184,13 +311,18 @@ self.addEventListener('message', (event) => {
 
         case 'GET_STATUS':
             // Return the current status
-            if (event.source) {
-                event.source.postMessage({
-                    type: 'STATUS',
-                    ready: contentReady,
-                    fileCount: contentFiles.size,
-                    version: SW_VERSION
-                });
+            const statusResponse = {
+                type: 'STATUS',
+                ready: contentReady,
+                fileCount: contentFiles.size,
+                version: SW_VERSION
+            };
+
+            // Respond via MessageChannel port if available, otherwise via source
+            if (event.ports && event.ports[0]) {
+                event.ports[0].postMessage(statusResponse);
+            } else if (event.source) {
+                event.source.postMessage(statusResponse);
             }
             break;
 
