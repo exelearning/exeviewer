@@ -173,6 +173,13 @@ Firefox doesn't support PWA installation natively. Use the [PWAs for Firefox](ht
 
 4. **URL handling**: For cloud service links, the application transforms share URLs into direct download URLs before fetching.
 
+5. **Content persistence**: Extracted content is stored in IndexedDB and automatically restored on page reload. This behavior can be disabled in `js/app.js`:
+   ```javascript
+   const config = {
+       autoRestoreContent: false  // Set to false to disable
+   };
+   ```
+
 ### Adding a new language
 
 1. Copy `lang/en.json` to `lang/XX.json` (where `XX` is the ISO 639-1 code)

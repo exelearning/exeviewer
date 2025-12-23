@@ -173,6 +173,13 @@ Firefox no soporta la instalación de PWA de forma nativa. Usa la extensión [PW
 
 4. **Gestión de URLs**: Para enlaces de servicios en la nube, la aplicación transforma las URLs de compartir en URLs de descarga directa antes de hacer la petición.
 
+5. **Persistencia del contenido**: El contenido extraído se guarda en IndexedDB y se restaura automáticamente al recargar la página. Este comportamiento se puede deshabilitar en `js/app.js`:
+   ```javascript
+   const config = {
+       autoRestoreContent: false  // Cambiar a false para deshabilitar
+   };
+   ```
+
 ### Añadir un nuevo idioma
 
 1. Copia `lang/en.json` a `lang/XX.json` (donde `XX` es el código ISO 639-1)
