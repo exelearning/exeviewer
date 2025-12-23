@@ -1,5 +1,7 @@
 # eXeViewer
 
+[Versión en español](README_es.md)
+
 View eXeLearning content packages directly in your browser.
 
 ## Overview
@@ -46,7 +48,7 @@ This works with:
 
 When you load content from a URL, a "Share" button appears in the top bar. Click it to get a direct link that anyone can use to view the content through eXeViewer.
 
-**This solves a common problem**: many eXeLearning users create content but don't know how to publish it. With eXeViewer:
+**This solves a common problem**: many eXeLearning users create content but don’t have a place to publish it. With eXeViewer:
 
 1. Upload your `.zip` or `.elpx` file to a cloud service (Nextcloud, ownCloud, Google Drive, or any file hosting)
 2. Generate a share link from your cloud service
@@ -143,7 +145,7 @@ eXeViewer can be installed as a standalone application on your device. Once inst
 
 ### Desktop (Firefox)
 
-Firefox doesn't support PWA installation natively. Use the [PWAs for Firefox](https://addons.mozilla.org/firefox/addon/pwas-for-firefox/) extension, or use Chrome/Edge.
+Firefox doesn't support PWA installation natively. Use the [PWAs for Firefox](https://addons.mozilla.org/firefox/addon/pwas-for-firefox/) extension.
 
 ### Android (Chrome)
 
@@ -162,8 +164,8 @@ Firefox doesn't support PWA installation natively. Use the [PWAs for Firefox](ht
 ### How it works
 
 1. **Service Worker** (`sw.js`): Handles two functions:
-   - Caches the application shell for offline use
-   - Intercepts requests to `/viewer/*` and serves extracted ZIP content from memory
+   - Caches the application shell for offline use.
+   - Intercepts requests to `/viewer/*` and serves extracted ZIP content from memory.
 
 2. **ZIP processing** (`js/app.js`): Uses JSZip to extract content in memory. Files are sent to the Service Worker as base64-encoded strings.
 
@@ -240,4 +242,4 @@ You should have received a copy of the GNU Affero General Public License along w
 
 ### Related projects
 
-- [eXeLearning](https://exelearning.net/) - Open source authoring tool for creating educational content
+- [eXeLearning](https://exelearning.net/) - Your free and open source editor for interactive educational resources
