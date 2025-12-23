@@ -414,26 +414,57 @@
     }
 
     /**
-     * CORS proxy URL - used as fallback when direct fetch fails
+     * CORS proxies - used as fallback when direct fetch fails
+     * Each proxy has a different URL format
      */
-    const CORS_PROXY = 'https://corsproxy.io/?';
+    const CORS_PROXIES = [
+        { url: 'https://corsproxy.io/?', encode: true },
+        { url: 'https://api.allorigins.win/raw?url=', encode: true },
+        { url: 'https://cors.eu.org/', encode: false }
+    ];
 
     /**
      * Fetch with CORS proxy fallback
      * @param {string} url - The URL to fetch
-     * @param {boolean} useProxy - Whether to use the CORS proxy
+     * @param {boolean} useProxy - Whether to use a CORS proxy
      * @returns {Promise<Response>} The fetch response
      */
     async function fetchWithCorsProxy(url, useProxy = false) {
-        const fetchUrl = useProxy ? CORS_PROXY + encodeURIComponent(url) : url;
+        if (!useProxy) {
+            return fetch(url, {
+                method: 'GET',
+                mode: 'cors',
+                credentials: 'omit'
+            });
+        }
 
-        const response = await fetch(fetchUrl, {
-            method: 'GET',
-            mode: 'cors',
-            credentials: 'omit'
-        });
+        // Try each proxy until one works
+        let lastError;
+        for (const proxy of CORS_PROXIES) {
+            try {
+                const proxyUrl = proxy.encode
+                    ? proxy.url + encodeURIComponent(url)
+                    : proxy.url + url;
 
-        return response;
+                console.log(`[App] Trying proxy: ${proxy.url}`);
+                const response = await fetch(proxyUrl, {
+                    method: 'GET',
+                    mode: 'cors',
+                    credentials: 'omit'
+                });
+
+                if (response.ok) {
+                    console.log(`[App] Proxy ${proxy.url} succeeded`);
+                    return response;
+                }
+            } catch (err) {
+                console.warn(`[App] Proxy ${proxy.url} failed:`, err.message);
+                lastError = err;
+            }
+        }
+
+        // All proxies failed
+        throw lastError || new Error('All CORS proxies failed');
     }
 
     /**
