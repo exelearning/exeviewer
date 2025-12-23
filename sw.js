@@ -3,7 +3,7 @@
  * Handles PWA caching and serves extracted ZIP content from memory
  */
 
-const SW_VERSION = '1.2.0';
+const SW_VERSION = '1.3.0';
 const CACHE_NAME = `exeviewer-v${SW_VERSION}`;
 
 // Files to cache for offline use (app shell)
@@ -18,15 +18,13 @@ const APP_SHELL_FILES = [
     './img/logo.svg',
     './img/icon.svg',
     './img/favicon.ico',
-    './manifest.json'
-];
-
-// External resources to cache
-const EXTERNAL_RESOURCES = [
-    'https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css',
-    'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css',
-    'https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js',
-    'https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js'
+    './manifest.json',
+    './vendor/bootstrap/css/bootstrap.min.css',
+    './vendor/bootstrap/js/bootstrap.bundle.min.js',
+    './vendor/bootstrap-icons/bootstrap-icons.min.css',
+    './vendor/bootstrap-icons/fonts/bootstrap-icons.woff2',
+    './vendor/bootstrap-icons/fonts/bootstrap-icons.woff',
+    './vendor/jszip/jszip.min.js'
 ];
 
 // In-memory storage for the extracted ZIP contents
@@ -111,21 +109,9 @@ self.addEventListener('install', (event) => {
         caches.open(CACHE_NAME)
             .then(cache => {
                 console.log('[SW] Caching app shell...');
-                // Cache app shell files
-                const appShellPromise = cache.addAll(APP_SHELL_FILES).catch(err => {
+                return cache.addAll(APP_SHELL_FILES).catch(err => {
                     console.warn('[SW] Some app shell files failed to cache:', err);
                 });
-
-                // Cache external resources (best effort)
-                const externalPromise = Promise.all(
-                    EXTERNAL_RESOURCES.map(url =>
-                        cache.add(url).catch(err => {
-                            console.warn(`[SW] Failed to cache external resource: ${url}`, err);
-                        })
-                    )
-                );
-
-                return Promise.all([appShellPromise, externalPromise]);
             })
             .then(() => {
                 console.log('[SW] App shell cached successfully');
