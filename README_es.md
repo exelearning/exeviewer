@@ -180,6 +180,13 @@ Firefox no soporta la instalación de PWA de forma nativa. Usa la extensión [PW
    };
    ```
 
+6. **Gestión de enlaces externos**: Los enlaces externos del contenido se abren por defecto en ventana/pestaña nueva. Eso evita problemas cuando el contenido se muestra en un iframe. El comportamiento se puede cambiar en `js/app.js`:
+   ```javascript
+   const config = {
+       openExternalLinksInNewWindow: false  // Cambiar a false para deshabilitar
+   };
+   ```
+
 ### Añadir un nuevo idioma
 
 1. Copia `lang/en.json` a `lang/XX.json` (donde `XX` es el código ISO 639-1)

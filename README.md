@@ -180,6 +180,13 @@ Firefox doesn't support PWA installation natively. Use the [PWAs for Firefox](ht
    };
    ```
 
+6. **External links handling**: External links inside the displayed content are opened in a new window/tab by default. This prevents navigation issues when content is displayed in an iframe. This behavior can be disabled in `js/app.js`:
+   ```javascript
+   const config = {
+       openExternalLinksInNewWindow: false  // Set to false to disable
+   };
+   ```
+
 ### Adding a new language
 
 1. Copy `lang/en.json` to `lang/XX.json` (where `XX` is the ISO 639-1 code)

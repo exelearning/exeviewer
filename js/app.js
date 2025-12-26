@@ -9,7 +9,9 @@
     // Configuration
     const config = {
         // Automatically restore and display content from IndexedDB on page load
-        autoRestoreContent: true
+        autoRestoreContent: true,
+        // Open external links in a new window/tab (prevents navigation issues in iframes)
+        openExternalLinksInNewWindow: true
     };
 
     // Application state
@@ -241,7 +243,12 @@
             console.log('[App] Sending content to Service Worker...');
             navigator.serviceWorker.controller.postMessage({
                 type: 'SET_CONTENT',
-                data: { files }
+                data: {
+                    files,
+                    options: {
+                        openExternalLinksInNewWindow: config.openExternalLinksInNewWindow
+                    }
+                }
             });
         });
     }

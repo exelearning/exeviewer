@@ -3,7 +3,7 @@
  * Handles PWA caching and serves extracted ZIP content from memory/IndexedDB
  */
 
-const SW_VERSION = '1.4.0';
+const SW_VERSION = '1.5.0';
 const CACHE_NAME = `exeviewer-v${SW_VERSION}`;
 
 // IndexedDB configuration
@@ -36,6 +36,11 @@ const APP_SHELL_FILES = [
 let contentFiles = new Map();
 let contentReady = false;
 
+// Content options
+let contentOptions = {
+    openExternalLinksInNewWindow: true
+};
+
 /**
  * Open IndexedDB database
  * @returns {Promise<IDBDatabase>}
@@ -59,9 +64,10 @@ function openDB() {
 /**
  * Save content to IndexedDB
  * @param {Object} files - Files object to save
+ * @param {Object} options - Content options to save
  * @returns {Promise<void>}
  */
-async function saveToIndexedDB(files) {
+async function saveToIndexedDB(files, options = {}) {
     try {
         const db = await openDB();
         const tx = db.transaction(STORE_NAME, 'readwrite');
@@ -70,6 +76,7 @@ async function saveToIndexedDB(files) {
         // Clear existing content and save new
         store.clear();
         store.put(files, 'content');
+        store.put(options, 'options');
 
         return new Promise((resolve, reject) => {
             tx.oncomplete = () => {
@@ -89,28 +96,32 @@ async function saveToIndexedDB(files) {
 
 /**
  * Load content from IndexedDB
- * @returns {Promise<Object|null>}
+ * @returns {Promise<{files: Object|null, options: Object|null}>}
  */
 async function loadFromIndexedDB() {
     try {
         const db = await openDB();
         const tx = db.transaction(STORE_NAME, 'readonly');
         const store = tx.objectStore(STORE_NAME);
-        const request = store.get('content');
+        const contentRequest = store.get('content');
+        const optionsRequest = store.get('options');
 
         return new Promise((resolve, reject) => {
-            request.onsuccess = () => {
+            tx.oncomplete = () => {
                 db.close();
-                resolve(request.result || null);
+                resolve({
+                    files: contentRequest.result || null,
+                    options: optionsRequest.result || null
+                });
             };
-            request.onerror = () => {
+            tx.onerror = () => {
                 db.close();
-                reject(request.error);
+                reject(tx.error);
             };
         });
     } catch (err) {
         console.warn('[SW] Failed to load from IndexedDB:', err);
-        return null;
+        return { files: null, options: null };
     }
 }
 
@@ -253,11 +264,15 @@ self.addEventListener('activate', (event) => {
                 // Restore content from IndexedDB if available
                 return loadFromIndexedDB();
             })
-            .then(storedContent => {
-                if (storedContent) {
-                    contentFiles = new Map(Object.entries(storedContent));
+            .then(stored => {
+                if (stored.files) {
+                    contentFiles = new Map(Object.entries(stored.files));
                     contentReady = true;
                     console.log(`[SW] Content restored from IndexedDB: ${contentFiles.size} files`);
+                }
+                if (stored.options) {
+                    contentOptions = { ...contentOptions, ...stored.options };
+                    console.log('[SW] Options restored from IndexedDB:', contentOptions);
                 }
             })
             .then(() => {
@@ -281,8 +296,14 @@ self.addEventListener('message', (event) => {
             console.log(`[SW] Content loaded: ${contentFiles.size} files`);
             console.log('[SW] Sample files:', Array.from(contentFiles.keys()).slice(0, 5));
 
-            // Persist to IndexedDB
-            saveToIndexedDB(data.files);
+            // Store options
+            if (data.options) {
+                contentOptions = { ...contentOptions, ...data.options };
+                console.log('[SW] Options:', contentOptions);
+            }
+
+            // Persist to IndexedDB (including options)
+            saveToIndexedDB(data.files, contentOptions);
 
             // Notify the client that content is ready
             if (event.source) {
@@ -439,6 +460,77 @@ self.addEventListener('fetch', (event) => {
 });
 
 /**
+ * Script to inject into HTML files to handle external links
+ * Opens external links in a new tab to avoid navigation issues in iframes
+ */
+const EXTERNAL_LINK_HANDLER_SCRIPT = `
+<script data-injected-by="eXeViewer">
+(function() {
+    document.addEventListener('click', function(e) {
+        var link = e.target.closest('a[href]');
+        if (!link) return;
+
+        var href = link.getAttribute('href');
+        if (!href) return;
+
+        // Check if it's an external link (starts with http:// or https:// and different origin)
+        try {
+            var url = new URL(href, window.location.href);
+            var isExternal = (url.protocol === 'http:' || url.protocol === 'https:') &&
+                             url.origin !== window.location.origin;
+
+            if (isExternal) {
+                e.preventDefault();
+                e.stopPropagation();
+                window.open(href, '_blank', 'noopener,noreferrer');
+            }
+        } catch (err) {
+            // Invalid URL, let browser handle it
+        }
+    }, true);
+})();
+</script>
+`;
+
+/**
+ * Inject external link handler script into HTML content
+ * @param {Uint8Array} body - The HTML content as bytes
+ * @returns {Uint8Array} The modified HTML content
+ */
+function injectExternalLinkHandler(body) {
+    try {
+        // Convert bytes to string
+        const decoder = new TextDecoder('utf-8');
+        let html = decoder.decode(body);
+
+        // Find insertion point (before </body> or </html>)
+        const bodyCloseIndex = html.lastIndexOf('</body>');
+        const htmlCloseIndex = html.lastIndexOf('</html>');
+
+        let insertIndex = -1;
+        if (bodyCloseIndex !== -1) {
+            insertIndex = bodyCloseIndex;
+        } else if (htmlCloseIndex !== -1) {
+            insertIndex = htmlCloseIndex;
+        }
+
+        if (insertIndex !== -1) {
+            html = html.substring(0, insertIndex) + EXTERNAL_LINK_HANDLER_SCRIPT + html.substring(insertIndex);
+        } else {
+            // No closing tag found, append at the end
+            html += EXTERNAL_LINK_HANDLER_SCRIPT;
+        }
+
+        // Convert back to bytes
+        const encoder = new TextEncoder();
+        return encoder.encode(html);
+    } catch (err) {
+        console.warn('[SW] Failed to inject external link handler:', err);
+        return body;
+    }
+}
+
+/**
  * Handle requests to the viewer path
  * @param {string} pathname - The request pathname
  * @param {number} viewerIndex - Index where /viewer/ starts in pathname
@@ -510,6 +602,11 @@ async function handleViewerRequest(pathname, viewerIndex) {
             body = bytes;
         } else {
             body = fileData;
+        }
+
+        // For HTML files, inject a script to handle external links (if enabled)
+        if (mimeType.startsWith('text/html') && contentOptions.openExternalLinksInNewWindow) {
+            body = injectExternalLinkHandler(body);
         }
 
         return new Response(body, {
