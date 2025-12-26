@@ -719,6 +719,9 @@
         text = text || i18n.t('loading.processing');
         elements.loadingIndicator.classList.remove('d-none');
         elements.loadingText.textContent = text;
+        // Add loading state to input areas
+        elements.dropZone.classList.add('loading-state');
+        document.querySelector('.url-section')?.classList.add('loading-state');
     }
 
     /**
@@ -734,6 +737,9 @@
      */
     function hideLoading() {
         elements.loadingIndicator.classList.add('d-none');
+        // Remove loading state from input areas
+        elements.dropZone.classList.remove('loading-state');
+        document.querySelector('.url-section')?.classList.remove('loading-state');
     }
 
     /**

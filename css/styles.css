@@ -213,6 +213,14 @@ body {
     }
 }
 
+/* Loading State - Visual feedback when loading external content */
+.drop-zone.loading-state,
+.url-section.loading-state {
+    opacity: 0.4;
+    pointer-events: none;
+    transition: opacity var(--transition-normal);
+}
+
 /* Status Area */
 .status-area {
     min-height: 60px;
