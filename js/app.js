@@ -17,7 +17,8 @@
         serviceWorkerReady: false,
         serviceWorkerRegistration: null,
         currentPackageName: null,
-        contentFromUrl: null  // Stores the source URL when content is loaded from URL
+        contentFromUrl: null,  // Stores the source URL when content is loaded from URL
+        historyNavigationCount: 0  // Counter to track pending history navigations
     };
 
     // DOM Elements
@@ -675,6 +676,18 @@
         // Show open in new window button
         elements.btnNewWindow.classList.remove('d-none');
 
+        // Set up history states: first mark current state as welcome, then push viewer state
+        const welcomeState = { isWelcome: true };
+        const viewerState = { iframePath: 'index.html', isViewer: true };
+
+        // Replace current state with welcome state (so going back returns here)
+        history.replaceState(welcomeState, '', window.location.pathname + window.location.search);
+        // Push the viewer state
+        history.pushState(viewerState, '', window.location.pathname + window.location.search);
+
+        // Increment counter to ignore the upcoming iframe load event
+        state.historyNavigationCount++;
+
         // Load the content in the iframe
         elements.contentFrame.src = viewerUrl;
 
@@ -901,6 +914,9 @@
 
         // Setup language selector
         setupLanguageSelector();
+
+        // Setup iframe history tracking for browser back/forward navigation
+        setupIframeHistoryTracking();
     }
 
     /**
@@ -977,6 +993,120 @@
         if (contentUrl && contentUrl !== 'about:blank') {
             window.open(contentUrl, '_blank');
         }
+    }
+
+    /**
+     * Get the relative path from the iframe URL (relative to /viewer/)
+     * @param {string} url - The full iframe URL
+     * @returns {string} The relative path within the viewer
+     */
+    function getIframeRelativePath(url) {
+        try {
+            const urlObj = new URL(url);
+            const pathname = urlObj.pathname;
+            const viewerIndex = pathname.indexOf('/viewer/');
+            if (viewerIndex !== -1) {
+                return pathname.substring(viewerIndex + 8) || 'index.html';
+            }
+            return 'index.html';
+        } catch (e) {
+            return 'index.html';
+        }
+    }
+
+    /**
+     * Handle navigation within the iframe and update browser history
+     */
+    function handleIframeNavigation() {
+        // If we're in the middle of a history navigation, decrement counter and skip
+        if (state.historyNavigationCount > 0) {
+            state.historyNavigationCount--;
+            console.log('[App] Skipping history update (history navigation pending:', state.historyNavigationCount, ')');
+            return;
+        }
+
+        try {
+            const iframeSrc = elements.contentFrame.contentWindow?.location.href;
+            if (!iframeSrc || iframeSrc === 'about:blank') {
+                return;
+            }
+
+            const relativePath = getIframeRelativePath(iframeSrc);
+            const currentState = history.state;
+
+            // Update history state to track current iframe path
+            // Use replaceState because the iframe navigation already added a history entry
+            if (!currentState || !currentState.isViewer || currentState.iframePath !== relativePath) {
+                const newState = {
+                    iframePath: relativePath,
+                    isViewer: true
+                };
+                history.replaceState(newState, '', window.location.pathname + window.location.search);
+                console.log('[App] History state replaced:', relativePath);
+            }
+        } catch (e) {
+            // Cross-origin or other access errors - ignore silently
+            console.warn('[App] Could not access iframe location:', e.message);
+        }
+    }
+
+    /**
+     * Handle browser back/forward navigation
+     */
+    function handlePopState(event) {
+        const historyState = event.state;
+
+        // If we have a viewer state with an iframe path, navigate the iframe
+        if (historyState && historyState.isViewer && historyState.iframePath) {
+            // Make sure viewer is visible
+            if (elements.viewerContainer.classList.contains('d-none')) {
+                elements.welcomeScreen.classList.add('d-none');
+                elements.viewerContainer.classList.remove('d-none');
+                elements.topNavbar.classList.remove('d-none');
+                elements.btnNewWindow.classList.remove('d-none');
+                updateShareButtonVisibility();
+            }
+            // Increment counter to ignore the upcoming iframe load event
+            state.historyNavigationCount++;
+            const basePath = getBasePath();
+            const targetUrl = basePath + 'viewer/' + historyState.iframePath;
+            console.log('[App] Navigating iframe to:', targetUrl);
+            elements.contentFrame.src = targetUrl;
+        } else if (historyState && historyState.isWelcome) {
+            // Going back to welcome screen
+            console.log('[App] Returning to welcome screen');
+            showWelcomeScreen();
+        } else if (!historyState && !elements.viewerContainer.classList.contains('d-none')) {
+            // No state but viewer is visible - going back before the app started
+            console.log('[App] No history state, returning to welcome screen');
+            showWelcomeScreen();
+        }
+    }
+
+    /**
+     * Show welcome screen (used when navigating back in history)
+     */
+    function showWelcomeScreen() {
+        elements.viewerContainer.classList.add('d-none');
+        elements.topNavbar.classList.add('d-none');
+        elements.btnShare.classList.add('d-none');
+        elements.btnNewWindow.classList.add('d-none');
+        elements.welcomeScreen.classList.remove('d-none');
+        // Don't change iframe.src here - it would invalidate forward history
+    }
+
+    /**
+     * Set up iframe navigation tracking
+     */
+    function setupIframeHistoryTracking() {
+        // Listen for iframe load events to track navigation
+        elements.contentFrame.addEventListener('load', () => {
+            // Small delay to ensure the iframe URL is updated
+            setTimeout(handleIframeNavigation, 50);
+        });
+
+        // Listen for browser back/forward buttons
+        window.addEventListener('popstate', handlePopState);
     }
 
     /**
