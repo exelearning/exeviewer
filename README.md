@@ -187,6 +187,13 @@ Firefox doesn't support PWA installation natively. Use the [PWAs for Firefox](ht
    };
    ```
 
+7. **Content validation**: By default, the application validates that ZIP files contain eXeLearning content before displaying them. It recognizes both legacy exports (eXeLearning 2.x) and modern exports (eXeLearning 3.x). This validation can be disabled in `js/app.js`:
+   ```javascript
+   const config = {
+       validateExeContent: false  // Set to false to allow any ZIP with an index.html
+   };
+   ```
+
 ### Adding a new language
 
 1. Copy `lang/en.json` to `lang/XX.json` (where `XX` is the ISO 639-1 code)

@@ -42,7 +42,8 @@
         "urlNotFound": "Archivo no encontrado. Comprueba la URL.",
         "invalidFileType": "La URL no apunta a un archivo .zip o .elpx válido",
         "networkError": "Error de red. Comprueba tu conexión e inténtalo de nuevo.",
-        "notAZipFile": "No se pudo procesar el archivo. Tal vez no sea un archivo .zip o .elpx válido."
+        "notAZipFile": "No se pudo procesar el archivo. Tal vez no sea un archivo .zip o .elpx válido.",
+        "notExeContent": "No parece un contenido generado con eXeLearning. Selecciona un .zip o .elpx válido exportado desde eXeLearning."
     },
     "accessibility": {
         "loading": "Cargando...",

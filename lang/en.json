@@ -42,7 +42,8 @@
         "urlNotFound": "File not found. Please check the URL.",
         "invalidFileType": "The URL does not point to a valid .zip or .elpx file",
         "networkError": "Network error. Please check your connection and try again.",
-        "notAZipFile": "Could not process the file. It may not be a valid .zip or .elpx file."
+        "notAZipFile": "Could not process the file. It may not be a valid .zip or .elpx file.",
+        "notExeContent": "The file does not appear to be an eXeLearning package. Please select a valid .zip or .elpx file exported from eXeLearning."
     },
     "accessibility": {
         "loading": "Loading...",

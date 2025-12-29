@@ -11,7 +11,9 @@
         // Automatically restore and display content from IndexedDB on page load
         autoRestoreContent: true,
         // Open external links in a new window/tab (prevents navigation issues in iframes)
-        openExternalLinksInNewWindow: true
+        openExternalLinksInNewWindow: true,
+        // Validate that the ZIP contains eXeLearning content before displaying
+        validateExeContent: true
     };
 
     // Application state
@@ -359,6 +361,47 @@
     }
 
     /**
+     * Validate that the extracted files are from an eXeLearning package
+     * @param {Object} files - Map of file paths to file contents
+     * @returns {boolean} True if the content is valid eXeLearning content
+     */
+    function isValidExeContent(files) {
+        const fileList = Object.keys(files);
+
+        // Helper to check if a file exists (case-insensitive)
+        const hasFile = (path) => {
+            const normalizedPath = path.toLowerCase().replace(/\\/g, '/');
+            return fileList.some(f => f.toLowerCase().replace(/\\/g, '/') === normalizedPath);
+        };
+
+        // Type 1 (legacy): index.html, base.css, nav.css, common.js, exe_jquery.js
+        const isType1 = hasFile('index.html') &&
+                        hasFile('base.css') &&
+                        hasFile('nav.css') &&
+                        hasFile('common.js') &&
+                        hasFile('exe_jquery.js');
+
+        if (isType1) {
+            console.log('[App] Detected eXeLearning content type 1 (legacy)');
+            return true;
+        }
+
+        // Type 2 (modern/.elpx): index.html, content/css/base.css, libs/exe_export.js, libs/common.js
+        const isType2 = hasFile('index.html') &&
+                        hasFile('content/css/base.css') &&
+                        hasFile('libs/exe_export.js') &&
+                        hasFile('libs/common.js');
+
+        if (isType2) {
+            console.log('[App] Detected eXeLearning content type 2 (modern)');
+            return true;
+        }
+
+        console.warn('[App] Content does not match eXeLearning package structure');
+        return false;
+    }
+
+    /**
      * Convert special URLs (Google Drive, ownCloud/Nextcloud) to direct download links
      * @param {string} url - The original URL
      * @returns {string} The converted URL for direct download
@@ -611,6 +654,11 @@
 
             if (Object.keys(files).length === 0) {
                 throw new Error(i18n.t('errors.emptyZip'));
+            }
+
+            // Validate eXeLearning content (if enabled)
+            if (config.validateExeContent && !isValidExeContent(files)) {
+                throw new Error(i18n.t('errors.notExeContent'));
             }
 
             // Check if index.html exists

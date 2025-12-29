@@ -187,6 +187,13 @@ Firefox no soporta la instalación de PWA de forma nativa. Usa la extensión [PW
    };
    ```
 
+7. **Validación del contenido**: Por defecto, la aplicación valida que los ZIP tengan contenido de eXeLearning. Reconoce tanto las exportaciones antiguas (eXeLearning 2.x) como las modernas (eXeLearning 3.x). Esta validación se puede deshabilitar en `js/app.js`:
+   ```javascript
+   const config = {
+       validateExeContent: false  // Cambiar a false para permitir cualquier ZIP con index.html
+   };
+   ```
+
 ### Añadir un nuevo idioma
 
 1. Copia `lang/en.json` a `lang/XX.json` (donde `XX` es el código ISO 639-1)
