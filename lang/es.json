@@ -42,13 +42,20 @@
         "urlAccessDenied": "Acceso denegado. El archivo puede ser privado o estar protegido con contraseña.",
         "urlNotFound": "Archivo no encontrado. Comprueba la URL.",
         "invalidFileType": "La URL no apunta a un archivo .zip o .elpx válido",
-        "networkError": "Error de red. Comprueba tu conexión e inténtalo de nuevo.",
+        "networkError": "Comprueba tu conexión e inténtalo de nuevo.",
         "notAZipFile": "No se pudo procesar el archivo. Tal vez no sea un archivo .zip o .elpx válido.",
         "notExeContent": "No parece un contenido generado con eXeLearning. Selecciona un .zip o .elpx válido exportado desde eXeLearning."
     },
     "accessibility": {
         "loading": "Cargando...",
-        "contentFrame": "Contenido de eXeLearning"
+        "contentFrame": "Contenido de eXeLearning",
+        "dropZone": "Zona de carga: arrastra un archivo o pulsa Enter para seleccionar",
+        "languageSelector": "Seleccionar idioma",
+        "closeModal": "Cerrar",
+        "shareUrl": "URL para compartir"
+    },
+    "status": {
+        "offline": "Sin conexión"
     },
     "language": {
         "label": "Idioma",

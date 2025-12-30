@@ -42,13 +42,20 @@
         "urlAccessDenied": "Access denied. The file may be private or password protected.",
         "urlNotFound": "File not found. Please check the URL.",
         "invalidFileType": "The URL does not point to a valid .zip or .elpx file",
-        "networkError": "Network error. Please check your connection and try again.",
+        "networkError": "Please check your connection and try again.",
         "notAZipFile": "Could not process the file. It may not be a valid .zip or .elpx file.",
         "notExeContent": "The file does not appear to be an eXeLearning package. Please select a valid .zip or .elpx file exported from eXeLearning."
     },
     "accessibility": {
         "loading": "Loading...",
-        "contentFrame": "eXeLearning Content"
+        "contentFrame": "eXeLearning Content",
+        "dropZone": "Drop zone: drag and drop a file or press Enter to browse",
+        "languageSelector": "Select language",
+        "closeModal": "Close",
+        "shareUrl": "Share URL"
+    },
+    "status": {
+        "offline": "Offline"
     },
     "language": {
         "label": "Language",

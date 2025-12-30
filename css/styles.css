@@ -406,9 +406,32 @@ body {
 /* Focus Styles */
 .btn:focus,
 input:focus,
+.drop-zone:focus,
 .drop-zone:focus-within {
     outline: 2px solid var(--primary-color);
     outline-offset: 2px;
+}
+
+/* Offline Indicator */
+.offline-indicator {
+    position: fixed;
+    bottom: 12px;
+    left: 12px;
+    background: rgba(0, 0, 0, 0.75);
+    color: #fff;
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    z-index: 1050;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+@media (prefers-color-scheme: dark) {
+    .offline-indicator {
+        background: rgba(255, 255, 255, 0.15);
+    }
 }
 
 /* Utility Classes */

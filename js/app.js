@@ -919,6 +919,14 @@
             }
         });
 
+        // Drop zone keyboard activation (Enter/Space)
+        elements.dropZone.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                elements.fileInput.click();
+            }
+        });
+
         // Prevent default drag behavior on document
         document.addEventListener('dragover', (event) => {
             event.preventDefault();
@@ -974,6 +982,27 @@
 
         // Setup iframe history tracking for browser back/forward navigation
         setupIframeHistoryTracking();
+
+        // Setup offline/online status indicator
+        setupOfflineIndicator();
+    }
+
+    /**
+     * Setup offline/online status indicator
+     */
+    function setupOfflineIndicator() {
+        const indicator = document.getElementById('offlineIndicator');
+        if (!indicator) return;
+
+        function updateStatus() {
+            indicator.classList.toggle('d-none', navigator.onLine);
+        }
+
+        window.addEventListener('online', updateStatus);
+        window.addEventListener('offline', updateStatus);
+
+        // Check initial status
+        updateStatus();
     }
 
     /**

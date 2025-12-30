@@ -40,6 +40,12 @@
 </head>
 <body>
 
+    <!-- Offline Indicator -->
+    <div id="offlineIndicator" class="offline-indicator d-none" role="status" aria-live="polite">
+        <i class="bi bi-wifi-off me-1"></i>
+        <span data-i18n="status.offline">Offline</span>
+    </div>
+
     <!-- Top Navigation Bar (hidden until content is loaded) -->
     <nav id="topNavbar" class="navbar navbar-expand navbar-dark fixed-top d-none">
         <div class="container-fluid">
@@ -67,7 +73,7 @@
 
                 <!-- Language Selector -->
                 <div class="dropdown me-2">
-                    <button id="languageDropdownBtn" class="btn btn-outline-light btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <button id="languageDropdownBtn" class="btn btn-outline-light btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Select language" data-i18n-aria="accessibility.languageSelector">
                         <i class="bi bi-globe me-1"></i><span data-i18n="language.en">English</span>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end">
@@ -93,7 +99,7 @@
                 <!-- Language Selector for Welcome Screen -->
                 <div class="language-selector-welcome">
                     <div class="dropdown">
-                        <button id="welcomeLanguageBtn" class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <button id="welcomeLanguageBtn" class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Select language" data-i18n-aria="accessibility.languageSelector">
                             <i class="bi bi-globe me-1"></i><span data-i18n="language.en">English</span>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end">
@@ -113,15 +119,15 @@
                 </p>
 
                 <!-- Drop Zone -->
-                <div id="dropZone" class="drop-zone">
+                <div id="dropZone" class="drop-zone" tabindex="0" role="button" aria-label="Drop zone for files" data-i18n-aria="accessibility.dropZone">
                     <div class="drop-zone-content">
-                        <i class="bi bi-cloud-arrow-up drop-icon"></i>
+                        <i class="bi bi-cloud-arrow-up drop-icon" aria-hidden="true"></i>
                         <p class="drop-text mb-2" data-i18n="welcome.dragDrop">
                             Drag and drop your <strong>.zip</strong> or <strong>.elpx</strong> file here
                         </p>
                         <p class="text-muted small mb-3" data-i18n="welcome.or">or</p>
                         <label class="btn btn-primary">
-                            <i class="bi bi-folder2-open me-2"></i>
+                            <i class="bi bi-folder2-open me-2" aria-hidden="true"></i>
                             <span data-i18n="welcome.browseFiles">Browse Files</span>
                             <input type="file" id="fileInput" accept=".zip,.elpx" hidden>
                         </label>
@@ -130,20 +136,21 @@
 
                 <!-- URL Input Section (outside drop zone) -->
                 <div class="url-section mt-4">
-                    <p class="url-section-title mb-2" data-i18n="welcome.loadFromUrl">Load from URL (supports Nextcloud, ownCloud, and Google Drive links)</p>
+                    <label id="urlLabel" for="urlInput" class="url-section-title mb-2" data-i18n="welcome.loadFromUrl">Load from URL (supports Nextcloud, ownCloud, and Google Drive links)</label>
                     <div class="url-input-group">
                         <input type="url" id="urlInput" class="form-control"
+                               aria-describedby="urlLabel"
                                data-i18n-placeholder="welcome.urlPlaceholder"
                                placeholder="https://example.com/content.zip">
                         <button id="btnLoadUrl" class="btn btn-outline-primary" type="button">
-                            <i class="bi bi-cloud-download me-1"></i>
+                            <i class="bi bi-cloud-download me-1" aria-hidden="true"></i>
                             <span data-i18n="welcome.loadUrl">Load</span>
                         </button>
                     </div>
                 </div>
 
                 <!-- Status Messages -->
-                <div id="statusArea" class="status-area mt-4">
+                <div id="statusArea" class="status-area mt-4" aria-live="polite">
                     <div id="loadingIndicator" class="loading-indicator d-none">
                         <div class="spinner-border text-primary me-2" role="status">
                             <span class="visually-hidden" data-i18n="accessibility.loading">Loading...</span>
@@ -152,7 +159,7 @@
                     </div>
 
                     <div id="errorAlert" class="alert alert-danger d-none" role="alert">
-                        <i class="bi bi-exclamation-triangle me-2"></i>
+                        <i class="bi bi-exclamation-triangle me-2" aria-hidden="true"></i>
                         <span id="errorMessage"></span>
                     </div>
                 </div>
@@ -160,7 +167,7 @@
                 <!-- Supported Formats Info -->
                 <div class="supported-formats mt-5">
                     <small id="footerInfo">
-                        <i class="bi bi-info-circle me-1"></i>
+                        <i class="bi bi-info-circle me-1" aria-hidden="true"></i>
                         <span data-i18n="welcome.supportedFormats">Supports .zip or .elpx from eXeLearning</span>
                     </small>
                 </div>
@@ -175,24 +182,24 @@
     </main>
 
     <!-- Share Modal -->
-    <div class="modal fade" id="shareModal" tabindex="-1" aria-labelledby="shareModalLabel" aria-hidden="true">
+    <div class="modal fade" id="shareModal" tabindex="-1" aria-labelledby="shareModalLabel" aria-hidden="true" aria-modal="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="shareModalLabel" data-i18n="share.modalTitle">Share link</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" data-i18n-aria="accessibility.closeModal"></button>
                 </div>
                 <div class="modal-body">
                     <p class="text-muted small mb-3" data-i18n="share.description">
                         The link will work as long as the .zip or .elpx file remains at the specified address.
                     </p>
                     <div class="input-group">
-                        <input type="text" id="shareUrlInput" class="form-control" readonly>
+                        <input type="text" id="shareUrlInput" class="form-control" readonly aria-label="Share URL" data-i18n-aria="accessibility.shareUrl">
                         <button id="btnCopyShareUrl" class="btn btn-primary" type="button" data-i18n="share.copy">
                             Copy
                         </button>
                     </div>
-                    <div id="copySuccess" class="text-success small mt-2 d-none" data-i18n="share.copied">
+                    <div id="copySuccess" class="text-success small mt-2 d-none" role="status" data-i18n="share.copied">
                         Link copied to clipboard!
                     </div>
                 </div>
