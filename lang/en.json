@@ -10,7 +10,7 @@
         "loadFromUrl": "Load from URL (supports Nextcloud, ownCloud, and Google Drive links)",
         "urlPlaceholder": "https://example.com/content.zip",
         "loadUrl": "Load",
-        "supportedFormats": "Supports websites and .elpx from eXeLearning"
+        "supportedFormats": "eXeViewer %s supports websites and .elpx from eXeLearning"
     },
     "navbar": {
         "loadAnother": "Load another file",
