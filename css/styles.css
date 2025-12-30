@@ -247,6 +247,18 @@ body {
     color: var(--primary-color);
 }
 
+/* Footer links */
+.supported-formats a {
+    color: var(--bs-body-color);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+}
+
+.supported-formats a:hover,
+.supported-formats a:focus {
+    color: #000;
+}
+
 /* Viewer Container */
 .viewer-container {
     flex: 1;
@@ -312,6 +324,15 @@ body {
 
     .welcome-content h1 {
         color: #f8f9fa;
+    }
+
+    .supported-formats a {
+        color: #e9ecef;
+    }
+
+    .supported-formats a:hover,
+    .supported-formats a:focus {
+        color: #fff;
     }
 }
 

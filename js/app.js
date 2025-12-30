@@ -8,6 +8,8 @@
 
     // Configuration
     const config = {
+        // Application version (displayed in footer)
+        version: '1.0.0',
         // Automatically restore and display content from IndexedDB on page load
         autoRestoreContent: true,
         // Open external links in a new window/tab (prevents navigation issues in iframes)
@@ -49,7 +51,9 @@
         shareModal: null,
         shareUrlInput: null,
         btnCopyShareUrl: null,
-        copySuccess: null
+        copySuccess: null,
+        // Footer element
+        footerInfo: null
     };
 
     /**
@@ -95,6 +99,30 @@
         elements.shareUrlInput = document.getElementById('shareUrlInput');
         elements.btnCopyShareUrl = document.getElementById('btnCopyShareUrl');
         elements.copySuccess = document.getElementById('copySuccess');
+        // Footer element
+        elements.footerInfo = document.getElementById('footerInfo');
+    }
+
+    /**
+     * Update the footer with dynamic links
+     * Replaces "eXeLearning" with a link and adds "eXeViewer X.X.X" link
+     */
+    function updateFooter() {
+        if (!elements.footerInfo) return;
+
+        // Get the translated text
+        let text = i18n.t('welcome.supportedFormats');
+
+        // Replace "eXeLearning" with a link
+        text = text.replace(
+            /eXeLearning/g,
+            '<a href="https://exelearning.net/" target="_blank" rel="noopener">eXeLearning</a>'
+        );
+
+        // Build the footer HTML with both links (prefix "v" for user-facing version)
+        const footerHtml = `<i class="bi bi-info-circle me-1"></i>${text} - <a href="https://github.com/exelearning/exeviewer/" target="_blank" rel="noopener">eXeViewer v${config.version}</a>`;
+
+        elements.footerInfo.innerHTML = footerHtml;
     }
 
     /**
@@ -1145,6 +1173,12 @@
 
         // Initialize i18n with available languages from config
         await i18n.init(config.availableLanguages);
+
+        // Update footer with dynamic links (after i18n is ready)
+        updateFooter();
+
+        // Listen for language changes to update footer
+        window.addEventListener('languagechange', updateFooter);
 
         // Set up event listeners
         setupEventListeners();
