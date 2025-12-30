@@ -8,10 +8,11 @@ const i18n = (function() {
 
     const STORAGE_KEY = 'exeviewer-language';
     const DEFAULT_LANGUAGE = 'en';
-    const AVAILABLE_LANGUAGES = ['en', 'es'];
 
+    let availableLanguages = [DEFAULT_LANGUAGE];
     let currentLanguage = DEFAULT_LANGUAGE;
     let translations = {};
+    let languageNames = {}; // Cache for language names (code -> native name)
     let isLoaded = false;
 
     /**
@@ -28,7 +29,7 @@ const i18n = (function() {
     function detectLanguage() {
         // Check localStorage first
         const stored = localStorage.getItem(STORAGE_KEY);
-        if (stored && AVAILABLE_LANGUAGES.includes(stored)) {
+        if (stored && availableLanguages.includes(stored)) {
             return stored;
         }
 
@@ -36,7 +37,7 @@ const i18n = (function() {
         const browserLang = navigator.language || navigator.userLanguage;
         const shortLang = browserLang.split('-')[0].toLowerCase();
 
-        if (AVAILABLE_LANGUAGES.includes(shortLang)) {
+        if (availableLanguages.includes(shortLang)) {
             return shortLang;
         }
 
@@ -48,7 +49,7 @@ const i18n = (function() {
      * @param {string} lang - Language code (e.g., 'en', 'es')
      */
     async function loadLanguage(lang) {
-        if (!AVAILABLE_LANGUAGES.includes(lang)) {
+        if (!availableLanguages.includes(lang)) {
             console.warn(`[i18n] Language '${lang}' not available, using default`);
             lang = DEFAULT_LANGUAGE;
         }
@@ -170,9 +171,45 @@ const i18n = (function() {
         // Update dropdown button text if using dropdown
         const dropdownBtn = document.getElementById('languageDropdownBtn');
         if (dropdownBtn) {
-            const langName = t(`language.${currentLanguage}`);
+            const langName = languageNames[currentLanguage] || currentLanguage;
             dropdownBtn.innerHTML = `<i class="bi bi-globe me-1"></i>${langName}`;
         }
+
+        // Update welcome screen dropdown button
+        const welcomeBtn = document.getElementById('welcomeLanguageBtn');
+        if (welcomeBtn) {
+            const langName = languageNames[currentLanguage] || currentLanguage;
+            welcomeBtn.innerHTML = `<i class="bi bi-globe me-1"></i>${langName}`;
+        }
+    }
+
+    /**
+     * Generate language dropdown menus dynamically
+     */
+    function generateLanguageDropdowns() {
+        const dropdownMenus = document.querySelectorAll('#languageDropdownBtn + .dropdown-menu, #welcomeLanguageBtn + .dropdown-menu');
+
+        dropdownMenus.forEach(menu => {
+            // Clear existing items
+            menu.innerHTML = '';
+
+            // Add an item for each available language
+            availableLanguages.forEach(langCode => {
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.className = 'dropdown-item';
+                a.href = '#';
+                a.setAttribute('data-lang', langCode);
+                a.textContent = languageNames[langCode] || langCode;
+
+                if (langCode === currentLanguage) {
+                    a.classList.add('active');
+                }
+
+                li.appendChild(a);
+                menu.appendChild(li);
+            });
+        });
     }
 
     /**
@@ -186,11 +223,25 @@ const i18n = (function() {
 
         await loadLanguage(lang);
         updateDOM();
+        updateActiveLanguageInDropdowns();
 
         // Dispatch custom event for components that need to react
         window.dispatchEvent(new CustomEvent('languagechange', {
             detail: { language: currentLanguage }
         }));
+    }
+
+    /**
+     * Update active state in language dropdown items
+     */
+    function updateActiveLanguageInDropdowns() {
+        document.querySelectorAll('[data-lang]').forEach(item => {
+            if (item.getAttribute('data-lang') === currentLanguage) {
+                item.classList.add('active');
+            } else {
+                item.classList.remove('active');
+            }
+        });
     }
 
     /**
@@ -204,7 +255,27 @@ const i18n = (function() {
      * Get available languages
      */
     function getAvailableLanguages() {
-        return [...AVAILABLE_LANGUAGES];
+        return [...availableLanguages];
+    }
+
+    /**
+     * Load native names for all available languages
+     */
+    async function loadLanguageNames() {
+        const basePath = getBasePath();
+
+        for (const langCode of availableLanguages) {
+            try {
+                const response = await fetch(`${basePath}lang/${langCode}.json`);
+                if (response.ok) {
+                    const data = await response.json();
+                    languageNames[langCode] = data.language?.name || langCode;
+                }
+            } catch (error) {
+                console.warn(`[i18n] Could not load language name for '${langCode}'`);
+                languageNames[langCode] = langCode;
+            }
+        }
     }
 
     /**
@@ -216,11 +287,25 @@ const i18n = (function() {
 
     /**
      * Initialize the i18n system
+     * @param {string[]} languages - Array of available language codes
      */
-    async function init() {
+    async function init(languages) {
+        // Set available languages from config
+        if (languages && Array.isArray(languages) && languages.length > 0) {
+            availableLanguages = languages;
+        }
+
+        // Load native names for all available languages
+        await loadLanguageNames();
+
+        // Generate language dropdown menus
+        generateLanguageDropdowns();
+
+        // Load the detected/preferred language
         const lang = detectLanguage();
         await loadLanguage(lang);
         updateDOM();
+
         return currentLanguage;
     }
 

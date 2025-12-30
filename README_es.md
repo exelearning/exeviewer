@@ -198,23 +198,19 @@ Firefox no soporta la instalación de PWA de forma nativa. Usa la extensión [PW
 
 1. Copia `lang/en.json` a `lang/XX.json` (donde `XX` es el código ISO 639-1)
 
-2. Traduce los valores en el nuevo fichero (mantén las claves sin cambios)
-
-3. Añade el código del idioma a `AVAILABLE_LANGUAGES` en `js/i18n.js`:
-   ```javascript
-   const AVAILABLE_LANGUAGES = ['en', 'es', 'XX'];
-   ```
-
-4. Añade la opción del idioma a ambos menús desplegables en `index.html`:
-   ```html
-   <li><a class="dropdown-item" href="#" data-lang="XX">Nombre del idioma</a></li>
-   ```
-
-5. Añade el nombre del idioma a la sección `language` en todos los ficheros de idioma:
+2. Traduce los valores en el nuevo fichero (mantén las claves sin cambios). El campo `language.name` debe contener el nombre del idioma en su forma nativa (por ejemplo, "Français" para francés):
    ```json
    "language": {
-     "XX": "Nombre del idioma"
+       "label": "Langue",
+       "name": "Français"
    }
+   ```
+
+3. Añade el código del idioma a `availableLanguages` en `js/app.js`:
+   ```javascript
+   const config = {
+       availableLanguages: ['en', 'es', 'XX']
+   };
    ```
 
 ### Estructura del proyecto

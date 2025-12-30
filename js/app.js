@@ -13,7 +13,9 @@
         // Open external links in a new window/tab (prevents navigation issues in iframes)
         openExternalLinksInNewWindow: true,
         // Validate that the ZIP contains eXeLearning content before displaying
-        validateExeContent: true
+        validateExeContent: true,
+        // Available languages (ISO 639-1 codes). Each language must have a corresponding lang/XX.json file.
+        availableLanguages: ['en', 'es']
     };
 
     // Application state
@@ -827,53 +829,19 @@
     }
 
     /**
-     * Update language selector button text
-     */
-    function updateLanguageSelectorButtons() {
-        const currentLang = i18n.getCurrentLanguage();
-        const langName = i18n.t(`language.${currentLang}`);
-
-        // Update navbar language button
-        const navbarBtn = document.getElementById('languageDropdownBtn');
-        if (navbarBtn) {
-            navbarBtn.innerHTML = `<i class="bi bi-globe me-1"></i>${langName}`;
-        }
-
-        // Update welcome screen language button
-        const welcomeBtn = document.getElementById('welcomeLanguageBtn');
-        if (welcomeBtn) {
-            welcomeBtn.innerHTML = `<i class="bi bi-globe me-1"></i>${langName}`;
-        }
-
-        // Update active state on dropdown items
-        document.querySelectorAll('[data-lang]').forEach(item => {
-            if (item.getAttribute('data-lang') === currentLang) {
-                item.classList.add('active');
-            } else {
-                item.classList.remove('active');
-            }
-        });
-    }
-
-    /**
      * Set up language selector event listeners
      */
     function setupLanguageSelector() {
-        // Handle language selection from dropdowns
-        document.querySelectorAll('[data-lang]').forEach(item => {
-            item.addEventListener('click', async (e) => {
+        // Handle language selection from dropdowns (using event delegation since items are generated dynamically)
+        document.addEventListener('click', async (e) => {
+            const langItem = e.target.closest('[data-lang]');
+            if (langItem) {
                 e.preventDefault();
-                const lang = e.target.getAttribute('data-lang');
+                const lang = langItem.getAttribute('data-lang');
                 if (lang) {
                     await i18n.setLanguage(lang);
-                    updateLanguageSelectorButtons();
                 }
-            });
-        });
-
-        // Listen for language change events
-        window.addEventListener('languagechange', () => {
-            updateLanguageSelectorButtons();
+            }
         });
     }
 
@@ -1175,9 +1143,8 @@
         // Initialize DOM elements
         initElements();
 
-        // Initialize i18n
-        await i18n.init();
-        updateLanguageSelectorButtons();
+        // Initialize i18n with available languages from config
+        await i18n.init(config.availableLanguages);
 
         // Set up event listeners
         setupEventListeners();

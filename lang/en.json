@@ -51,8 +51,7 @@
     },
     "language": {
         "label": "Language",
-        "en": "English",
-        "es": "Español"
+        "name": "English"
     },
     "share": {
         "tooltip": "Share link",
