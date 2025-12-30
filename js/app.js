@@ -1231,7 +1231,7 @@
 
                 if (type === 'STATUS' && ready && fileCount > 0) {
                     console.log(`[App] Restored content found: ${fileCount} files`);
-                    state.currentPackageName = 'Restored content';
+                    state.currentPackageName = i18n.t('navbar.restoredContent');
                     showViewer();
                 }
                 resolve();

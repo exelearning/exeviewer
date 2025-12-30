@@ -15,7 +15,8 @@
     "navbar": {
         "loadAnother": "Load another file",
         "newFile": "Exit",
-        "openNewWindow": "Open in new window"
+        "openNewWindow": "Open in new window",
+        "restoredContent": "Restored content"
     },
     "loading": {
         "processing": "Processing...",
