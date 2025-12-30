@@ -262,7 +262,7 @@ body {
 
 /* Viewer Container */
 .viewer-container {
-    flex: 1;
+    height: calc(100vh - var(--navbar-height));
     margin-top: var(--navbar-height);
     overflow: hidden;
     background-color: white;
