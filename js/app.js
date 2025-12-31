@@ -78,6 +78,56 @@
     }
 
     /**
+     * Format bytes to human readable string
+     * @param {number} bytes - Number of bytes
+     * @returns {string} Formatted string (e.g., "1.5 MB")
+     */
+    function formatBytes(bytes) {
+        if (bytes === 0) return '0 B';
+        const k = 1024;
+        const sizes = ['B', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+    }
+
+    /**
+     * Estimate storage quota and usage
+     * @returns {Promise<{quota: number, usage: number, available: number}|null>}
+     */
+    async function estimateStorage() {
+        if (navigator.storage && navigator.storage.estimate) {
+            try {
+                const estimate = await navigator.storage.estimate();
+                return {
+                    quota: estimate.quota || 0,
+                    usage: estimate.usage || 0,
+                    available: (estimate.quota || 0) - (estimate.usage || 0)
+                };
+            } catch (err) {
+                console.warn('[App] Storage estimation failed:', err);
+                return null;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Calculate approximate size of extracted files object
+     * @param {Object} files - Map of file paths to base64-encoded contents
+     * @returns {number} Approximate size in bytes
+     */
+    function calculateFilesSize(files) {
+        let totalSize = 0;
+        for (const path in files) {
+            // Base64 string: actual binary size is about 3/4 of string length
+            // But we're storing the base64 string, so use full length
+            totalSize += path.length + files[path].length;
+        }
+        // Add some overhead for object structure
+        return Math.ceil(totalSize * 1.1);
+    }
+
+    /**
      * Initialize DOM element references
      */
     function initElements() {
@@ -256,6 +306,7 @@
     /**
      * Send content to the Service Worker using a more reliable method
      * @param {Object} files - Map of file paths to file contents
+     * @returns {Promise<{fileCount: number, storageWarning?: string, storageError?: string}>}
      */
     async function sendContentToServiceWorker(files) {
         // Ensure we have a controller
@@ -264,10 +315,28 @@
             await waitForController();
         }
 
+        // Preventive storage check
+        let storageWarning = null;
+        const filesSize = calculateFilesSize(files);
+        const storageEstimate = await estimateStorage();
+
+        if (storageEstimate) {
+            console.log(`[App] Storage: ${formatBytes(storageEstimate.available)} available, file needs ~${formatBytes(filesSize)}`);
+
+            // Warn if file size is more than 80% of available space
+            if (filesSize > storageEstimate.available * 0.8) {
+                storageWarning = i18n.t('errors.storageQuotaWarning', {
+                    fileSize: formatBytes(filesSize),
+                    available: formatBytes(storageEstimate.available)
+                });
+                console.warn('[App] Storage warning:', storageWarning);
+            }
+        }
+
         return new Promise((resolve) => {
             const timeout = setTimeout(() => {
                 console.warn('[App] Content send timeout, continuing anyway');
-                resolve();
+                resolve({ fileCount: Object.keys(files).length, storageWarning });
             }, 10000);
 
             const messageHandler = (event) => {
@@ -275,7 +344,13 @@
                     clearTimeout(timeout);
                     navigator.serviceWorker.removeEventListener('message', messageHandler);
                     console.log('[App] Content ready, files:', event.data.fileCount);
-                    resolve(event.data);
+
+                    // Include storage warning and any error from SW
+                    resolve({
+                        fileCount: event.data.fileCount,
+                        storageWarning,
+                        storageError: event.data.storageError
+                    });
                 }
             };
 
@@ -720,7 +795,17 @@
             updateLoadingText(i18n.t('loading.loadingContent'));
 
             // Send content to Service Worker
-            await sendContentToServiceWorker(files);
+            const result = await sendContentToServiceWorker(files);
+
+            // Handle storage errors - content is still in memory but won't persist
+            if (result.storageError === 'QUOTA_EXCEEDED') {
+                console.error('[App] Storage quota exceeded');
+                // Show error but still display content (it's in memory)
+                showError(i18n.t('errors.storageQuotaExceeded'));
+            } else if (result.storageWarning) {
+                // Log warning but continue
+                console.warn('[App] Storage warning:', result.storageWarning);
+            }
 
             // Store package name
             state.currentPackageName = file.name;

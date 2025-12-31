@@ -65,7 +65,7 @@ function openDB() {
  * Save content to IndexedDB
  * @param {Object} files - Files object to save
  * @param {Object} options - Content options to save
- * @returns {Promise<void>}
+ * @returns {Promise<{success: boolean, error?: string}>}
  */
 async function saveToIndexedDB(files, options = {}) {
     try {
@@ -82,15 +82,29 @@ async function saveToIndexedDB(files, options = {}) {
             tx.oncomplete = () => {
                 db.close();
                 console.log('[SW] Content saved to IndexedDB');
-                resolve();
+                resolve({ success: true });
             };
-            tx.onerror = () => {
+            tx.onerror = (event) => {
                 db.close();
-                reject(tx.error);
+                const error = event.target.error || tx.error;
+                console.error('[SW] Transaction error:', error);
+                reject(error);
+            };
+            tx.onabort = (event) => {
+                db.close();
+                const error = event.target.error || tx.error;
+                console.error('[SW] Transaction aborted:', error);
+                reject(error);
             };
         });
     } catch (err) {
-        console.warn('[SW] Failed to save to IndexedDB:', err);
+        console.error('[SW] Failed to save to IndexedDB:', err);
+        // Check for quota exceeded error
+        if (err.name === 'QuotaExceededError' ||
+            (err.message && err.message.includes('quota'))) {
+            return { success: false, error: 'QUOTA_EXCEEDED' };
+        }
+        return { success: false, error: err.message || 'UNKNOWN_ERROR' };
     }
 }
 
@@ -303,15 +317,37 @@ self.addEventListener('message', (event) => {
             }
 
             // Persist to IndexedDB (including options)
-            saveToIndexedDB(data.files, contentOptions);
-
-            // Notify the client that content is ready
-            if (event.source) {
-                event.source.postMessage({
-                    type: 'CONTENT_READY',
-                    fileCount: contentFiles.size
-                });
-            }
+            saveToIndexedDB(data.files, contentOptions).then(result => {
+                // Notify the client of the result
+                if (event.source) {
+                    if (result && result.success === false) {
+                        // Storage failed (likely quota exceeded)
+                        event.source.postMessage({
+                            type: 'CONTENT_READY',
+                            fileCount: contentFiles.size,
+                            storageError: result.error
+                        });
+                    } else {
+                        event.source.postMessage({
+                            type: 'CONTENT_READY',
+                            fileCount: contentFiles.size
+                        });
+                    }
+                }
+            }).catch(err => {
+                console.error('[SW] Error saving to IndexedDB:', err);
+                // Still notify content is ready (in memory), but with storage error
+                if (event.source) {
+                    const errorType = (err.name === 'QuotaExceededError' ||
+                        (err.message && err.message.includes('quota')))
+                        ? 'QUOTA_EXCEEDED' : 'STORAGE_ERROR';
+                    event.source.postMessage({
+                        type: 'CONTENT_READY',
+                        fileCount: contentFiles.size,
+                        storageError: errorType
+                    });
+                }
+            });
             break;
 
         case 'CLEAR_CONTENT':

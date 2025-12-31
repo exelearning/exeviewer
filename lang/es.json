@@ -44,7 +44,9 @@
         "invalidFileType": "La URL no apunta a un archivo .zip o .elpx válido",
         "networkError": "Comprueba tu conexión e inténtalo de nuevo.",
         "notAZipFile": "No se pudo procesar el archivo. Tal vez no sea un archivo .zip o .elpx válido.",
-        "notExeContent": "No parece un contenido generado con eXeLearning. Selecciona un .zip o .elpx válido exportado desde eXeLearning."
+        "notExeContent": "No parece un contenido generado con eXeLearning. Selecciona un .zip o .elpx válido exportado desde eXeLearning.",
+        "storageQuotaExceeded": "El archivo es demasiado grande para el límite de tu navegador. Intenta cerrar otras pestañas o borrar datos de navegación.",
+        "storageQuotaWarning": "El archivo ({fileSize}) podría exceder el almacenamiento disponible ({available}). El guardado podría fallar."
     },
     "accessibility": {
         "loading": "Cargando...",
