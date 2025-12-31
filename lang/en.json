@@ -1,13 +1,14 @@
 {
     "app": {
         "title": "eXeViewer",
-        "description": "View eXeLearning content packages directly in your browser"
+        "description": "View eXeLearning content packages in your browser"
     },
     "welcome": {
         "dragDrop": "Drag and drop your <strong>.zip</strong> or <strong>.elpx</strong> file here",
         "or": "or",
         "browseFiles": "Browse Files",
         "loadFromUrl": "Load from URL (supports Nextcloud, ownCloud, and Google Drive links)",
+        "shareHint": "You will be able to generate a direct link to share the content.",
         "urlPlaceholder": "https://example.com/content.zip",
         "loadUrl": "Load",
         "supportedFormats": "eXeViewer %s supports websites and .elpx from eXeLearning"
