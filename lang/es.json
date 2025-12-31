@@ -67,5 +67,8 @@
         "description": "El enlace funcionará solo mientras el .zip o .elpx se encuentre en la dirección especificada.",
         "copy": "Copiar",
         "copied": "Enlace copiado al portapapeles."
+    },
+    "download": {
+        "tooltip": "Descargar fichero original"
     }
 }

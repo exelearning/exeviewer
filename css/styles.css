@@ -73,6 +73,7 @@ body {
 #welcomeLanguageBtn {
     min-width: 100px;
 }
+#topNavbar #btnDownload,
 #topNavbar #btnShare,
 #topNavbar #btnNewWindow {
     min-width: 0;

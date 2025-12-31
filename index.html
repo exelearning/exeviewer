@@ -57,6 +57,13 @@
             <div class="d-flex align-items-center">
                 <span id="packageName" class="text-light me-3 d-none d-sm-inline"></span>
 
+                <!-- Download Button (hidden by default, shown only for URL-loaded content in browser) -->
+                <button id="btnDownload" class="btn btn-outline-light btn-sm me-2 d-none" type="button"
+                        data-bs-toggle="tooltip" data-bs-placement="bottom" data-i18n-title="download.tooltip">
+                    <i class="bi bi-download"></i>
+                    <span class="visually-hidden" data-i18n="download.tooltip">Download original file</span>
+                </button>
+
                 <!-- Share Button (hidden by default, shown only for URL-loaded content in browser) -->
                 <button id="btnShare" class="btn btn-outline-light btn-sm me-2 d-none" type="button"
                         data-bs-toggle="tooltip" data-bs-placement="bottom" data-i18n-title="share.tooltip">

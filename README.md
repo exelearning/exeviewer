@@ -44,9 +44,11 @@ This works with:
 - Shared links from Nextcloud and ownCloud
 - Shared links from Google Drive
 
-### Sharing content
+### Downloading and sharing content
 
-When you load content from a URL, a "Share" button appears in the top bar. Click it to get a direct link that anyone can use to view the content through eXeViewer.
+When you load content from a URL, two buttons appear in the top bar:
+- **Download**: Downloads the original file (.zip or .elpx) from the source URL
+- **Share**: Generates a direct link that anyone can use to view the content through eXeViewer
 
 **This solves a common problem**: many eXeLearning users create content but don’t have a place to publish it. With eXeViewer:
 
@@ -161,7 +163,7 @@ Firefox doesn't support PWA installation natively. Use the [PWAs for Firefox](ht
 
 ## For developers
 
-### How it works
+### How it works and how to configure it
 
 1. **Service Worker** (`sw.js`): Handles two functions:
    - Caches the application shell for offline use.
@@ -191,6 +193,13 @@ Firefox doesn't support PWA installation natively. Use the [PWAs for Firefox](ht
    ```javascript
    const config = {
        validateExeContent: false  // Set to false to allow any ZIP with an index.html
+   };
+   ```
+
+8. **Download button**: When content is loaded from a URL, a download button appears in the navigation bar, allowing users to download the original file. This can be disabled in `js/app.js`:
+   ```javascript
+   const config = {
+       showDownloadButton: false  // Set to false to hide the download button
    };
    ```
 

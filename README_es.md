@@ -44,9 +44,11 @@ Funciona con:
 - Enlaces compartidos de Nextcloud y ownCloud
 - Enlaces compartidos de Google Drive
 
-### Compartir contenido
+### Descargar y compartir contenido
 
-Cuando cargas contenido desde una URL, aparece un botón "Compartir" en la barra superior. Haz clic en él para obtener un enlace directo que cualquiera puede usar para ver el contenido completo a través de eXeViewer.
+Cuando cargas contenido desde una URL, aparecen dos botones en la barra superior:
+- **Descargar**: Descarga el fichero original (.zip o .elpx) desde la URL de origen
+- **Compartir**: Genera un enlace directo que cualquiera puede usar para ver el contenido a través de eXeViewer
 
 **Esto resuelve un problema común**: muchos usuarios de eXeLearning crean contenido pero no tienen dónde publicarlo. Con eXeViewer:
 
@@ -161,7 +163,7 @@ Firefox no soporta la instalación de PWA de forma nativa. Usa la extensión [PW
 
 ## Para desarrolladores
 
-### Cómo funciona
+### Funcionamiento y configuración
 
 1. **Service Worker** (`sw.js`): Realiza dos funciones:
    - Almacena en caché la estructura de la aplicación para uso sin conexión.
@@ -191,6 +193,13 @@ Firefox no soporta la instalación de PWA de forma nativa. Usa la extensión [PW
    ```javascript
    const config = {
        validateExeContent: false  // Cambiar a false para permitir cualquier ZIP con index.html
+   };
+   ```
+
+8. **Botón de descarga**: Cuando el contenido se carga desde una URL, se muestra un botón en la barra de navegación que permite descargar el fichero original. Se puede deshabilitar en `js/app.js`:
+   ```javascript
+   const config = {
+       showDownloadButton: false  // Cambiar a false para ocultar el botón de descarga
    };
    ```
 

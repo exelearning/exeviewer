@@ -67,5 +67,8 @@
         "description": "The link will work as long as the .zip or .elpx file remains at the specified address.",
         "copy": "Copy",
         "copied": "Link copied to clipboard!"
+    },
+    "download": {
+        "tooltip": "Download original file"
     }
 }

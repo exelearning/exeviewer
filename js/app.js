@@ -17,7 +17,9 @@
         // Validate that the ZIP contains eXeLearning content before displaying
         validateExeContent: true,
         // Available languages (ISO 639-1 codes). Each language must have a corresponding lang/XX.json file.
-        availableLanguages: ['en', 'es']
+        availableLanguages: ['en', 'es'],
+        // Show download button for URL-loaded content (allows downloading the original file)
+        showDownloadButton: true
     };
 
     // Application state
@@ -34,6 +36,7 @@
         topNavbar: null,
         packageName: null,
         btnLoadNew: null,
+        btnDownload: null,
         btnShare: null,
         btnNewWindow: null,
         welcomeScreen: null,
@@ -81,6 +84,7 @@
         elements.topNavbar = document.getElementById('topNavbar');
         elements.packageName = document.getElementById('packageName');
         elements.btnLoadNew = document.getElementById('btnLoadNew');
+        elements.btnDownload = document.getElementById('btnDownload');
         elements.btnShare = document.getElementById('btnShare');
         elements.btnNewWindow = document.getElementById('btnNewWindow');
         elements.welcomeScreen = document.getElementById('welcomeScreen');
@@ -761,8 +765,9 @@
             elements.packageName.title = state.currentPackageName;
         }
 
-        // Update share button visibility
+        // Update share and download button visibility
         updateShareButtonVisibility();
+        updateDownloadButtonVisibility();
 
         // Show open in new window button
         elements.btnNewWindow.classList.remove('d-none');
@@ -802,6 +807,7 @@
         // Reset UI
         elements.viewerContainer.classList.add('d-none');
         elements.topNavbar.classList.add('d-none');
+        elements.btnDownload.classList.add('d-none');
         elements.btnShare.classList.add('d-none');
         elements.btnNewWindow.classList.add('d-none');
         elements.welcomeScreen.classList.remove('d-none');
@@ -954,6 +960,11 @@
             }
         });
 
+        // Download button - download original file
+        elements.btnDownload.addEventListener('click', () => {
+            downloadOriginalFile();
+        });
+
         // Share button - open modal
         elements.btnShare.addEventListener('click', () => {
             openShareModal();
@@ -970,6 +981,9 @@
         });
 
         // Initialize tooltips for navbar buttons
+        if (elements.btnDownload) {
+            new bootstrap.Tooltip(elements.btnDownload);
+        }
         if (elements.btnShare) {
             new bootstrap.Tooltip(elements.btnShare);
         }
@@ -1038,6 +1052,48 @@
         } else {
             elements.btnShare.classList.add('d-none');
         }
+    }
+
+    /**
+     * Show or hide the download button based on conditions
+     */
+    function updateDownloadButtonVisibility() {
+        // Show only if: config enabled AND content loaded from URL AND not installed PWA
+        const shouldShow = config.showDownloadButton && state.contentFromUrl && !isInstalledPWA();
+
+        if (shouldShow) {
+            elements.btnDownload.classList.remove('d-none');
+        } else {
+            elements.btnDownload.classList.add('d-none');
+        }
+    }
+
+    /**
+     * Download the original file from the source URL
+     */
+    function downloadOriginalFile() {
+        if (!state.contentFromUrl) {
+            return;
+        }
+
+        // Get the direct download URL
+        const downloadUrl = convertToDirectDownloadUrl(state.contentFromUrl);
+
+        // Create a temporary link and click it to trigger the download
+        const link = document.createElement('a');
+        link.href = downloadUrl;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+
+        // Try to extract filename for the download attribute
+        const filename = extractFilename(state.contentFromUrl);
+        if (filename) {
+            link.download = filename;
+        }
+
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
     }
 
     /**
@@ -1151,6 +1207,7 @@
                 elements.topNavbar.classList.remove('d-none');
                 elements.btnNewWindow.classList.remove('d-none');
                 updateShareButtonVisibility();
+                updateDownloadButtonVisibility();
             }
             // Increment counter to ignore the upcoming iframe load event
             state.historyNavigationCount++;
@@ -1175,6 +1232,7 @@
     function showWelcomeScreen() {
         elements.viewerContainer.classList.add('d-none');
         elements.topNavbar.classList.add('d-none');
+        elements.btnDownload.classList.add('d-none');
         elements.btnShare.classList.add('d-none');
         elements.btnNewWindow.classList.add('d-none');
         elements.welcomeScreen.classList.remove('d-none');
