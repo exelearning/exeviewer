@@ -28,7 +28,8 @@
         serviceWorkerRegistration: null,
         currentPackageName: null,
         contentFromUrl: null,  // Stores the source URL when content is loaded from URL
-        historyNavigationCount: 0  // Counter to track pending history navigations
+        historyNavigationCount: 0,  // Counter to track pending history navigations
+        zipWorker: null  // Web Worker for ZIP extraction
     };
 
     // DOM Elements
@@ -358,6 +359,11 @@
 
             // Send content to Service Worker
             console.log('[App] Sending content to Service Worker...');
+
+            // Collect ArrayBuffers for transfer (zero-copy)
+            const transferables = Object.values(files).filter(v => v instanceof ArrayBuffer);
+            console.log(`[App] Transferring ${transferables.length} ArrayBuffers`);
+
             navigator.serviceWorker.controller.postMessage({
                 type: 'SET_CONTENT',
                 data: {
@@ -366,7 +372,7 @@
                         openExternalLinksInNewWindow: config.openExternalLinksInNewWindow
                     }
                 }
-            });
+            }, transferables);
         });
     }
 
@@ -398,81 +404,56 @@
     }
 
     /**
-     * Extract ZIP file contents
+     * Extract ZIP file contents using Web Worker
      * @param {File} file - The ZIP file to extract
-     * @returns {Object} Map of file paths to base64-encoded contents
+     * @returns {Object} Map of file paths to ArrayBuffer contents
      */
     async function extractZipContents(file) {
         updateLoadingText(i18n.t('loading.readingZip'));
 
-        const zip = await JSZip.loadAsync(file);
-        const files = {};
-        const fileList = Object.keys(zip.files);
+        return new Promise((resolve, reject) => {
+            // Create worker if it doesn't exist
+            if (!state.zipWorker) {
+                const workerPath = getBasePath() + 'js/zip.worker.js';
+                console.log('[App] Creating ZIP Worker at:', workerPath);
+                state.zipWorker = new Worker(workerPath);
+            }
 
-        console.log(`[App] ZIP contains ${fileList.length} entries`);
+            const worker = state.zipWorker;
 
-        // Find common prefix (if files are in a subdirectory)
-        let commonPrefix = '';
-        const htmlFiles = fileList.filter(f => f.endsWith('.html') || f.endsWith('.htm'));
+            worker.onmessage = (e) => {
+                const { type, files, fileCount, message, processed, total } = e.data;
 
-        if (htmlFiles.length > 0) {
-            // Check if there's an index.html at root or in a subfolder
-            const indexFile = htmlFiles.find(f =>
-                f === 'index.html' ||
-                f.endsWith('/index.html')
-            );
+                switch (type) {
+                    case 'progress':
+                        if (message === 'reading') {
+                            updateLoadingText(i18n.t('loading.readingZip'));
+                        } else if (message === 'extracting') {
+                            updateLoadingText(i18n.t('loading.extractingFiles', { processed, total }));
+                        }
+                        break;
 
-            if (indexFile && indexFile.includes('/')) {
-                // Get the prefix (folder containing index.html)
-                const parts = indexFile.split('/');
-                if (parts.length === 2) {
-                    commonPrefix = parts[0] + '/';
+                    case 'complete':
+                        console.log(`[App] Extracted ${fileCount} files via Worker`);
+                        resolve(files);
+                        break;
+
+                    case 'error':
+                        console.error('[App] Worker error:', message);
+                        reject(new Error(message));
+                        break;
                 }
-            }
-        }
+            };
 
-        console.log(`[App] Common prefix: "${commonPrefix}"`);
+            worker.onerror = (error) => {
+                console.error('[App] Worker error:', error);
+                reject(new Error(error.message || i18n.t('errors.processingFailed')));
+            };
 
-        let processed = 0;
-        const total = fileList.length;
-
-        for (const relativePath of fileList) {
-            const zipEntry = zip.files[relativePath];
-
-            // Skip directories
-            if (zipEntry.dir) {
-                processed++;
-                continue;
-            }
-
-            // Get the normalized path (remove common prefix if exists)
-            let normalizedPath = relativePath;
-            if (commonPrefix && relativePath.startsWith(commonPrefix)) {
-                normalizedPath = relativePath.substring(commonPrefix.length);
-            }
-
-            // Skip empty paths
-            if (!normalizedPath) {
-                processed++;
-                continue;
-            }
-
-            // Read file as base64
-            try {
-                const content = await zipEntry.async('base64');
-                files[normalizedPath] = content;
-            } catch (error) {
-                console.warn(`[App] Error reading ${relativePath}:`, error);
-            }
-
-            processed++;
-            if (processed % 50 === 0) {
-                updateLoadingText(i18n.t('loading.extractingFiles', { processed, total }));
-            }
-        }
-
-        console.log(`[App] Extracted ${Object.keys(files).length} files`);
-        return files;
+            // Send file to worker for processing
+            console.log('[App] Sending file to Worker for extraction');
+            worker.postMessage({ file });
+        });
     }
 
     /**

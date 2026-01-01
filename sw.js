@@ -3,7 +3,7 @@
  * Handles PWA caching and serves extracted ZIP content from memory/IndexedDB
  */
 
-const SW_VERSION = '1.5.0';
+const SW_VERSION = '1.6.0';
 const CACHE_NAME = `exeviewer-v${SW_VERSION}`;
 
 // IndexedDB configuration
@@ -18,6 +18,7 @@ const APP_SHELL_FILES = [
     './css/styles.css',
     './js/app.js',
     './js/i18n.js',
+    './js/zip.worker.js',
     './lang/en.json',
     './lang/es.json',
     './img/logo.svg',
@@ -626,16 +627,21 @@ async function handleViewerRequest(pathname, viewerIndex) {
         const mimeType = getMimeType(filePath);
         console.log(`[SW] Serving: ${filePath} (${mimeType})`);
 
-        // Convert base64 data back to binary
+        // Convert data to Uint8Array for Response
         let body;
-        if (typeof fileData === 'string') {
-            // Base64 encoded data
+        if (fileData instanceof ArrayBuffer) {
+            // ArrayBuffer data (new optimized format)
+            body = new Uint8Array(fileData);
+        } else if (typeof fileData === 'string') {
+            // Base64 encoded data (legacy fallback for old IndexedDB data)
             const binaryString = atob(fileData);
             const bytes = new Uint8Array(binaryString.length);
             for (let i = 0; i < binaryString.length; i++) {
                 bytes[i] = binaryString.charCodeAt(i);
             }
             body = bytes;
+        } else if (fileData instanceof Uint8Array) {
+            body = fileData;
         } else {
             body = fileData;
         }
