@@ -169,7 +169,7 @@ Firefox no soporta la instalación de PWA de forma nativa. Usa la extensión [PW
    - Almacena en caché la estructura de la aplicación para uso sin conexión.
    - Intercepta las peticiones a `/viewer/*` y sirve el contenido ZIP extraído desde memoria.
 
-2. **Procesamiento ZIP** (`js/app.js`): Usa JSZip para extraer el contenido en memoria. Los ficheros se envían al Service Worker codificados en base64.
+2. **Procesamiento ZIP** (`js/app.js` + `js/zip.worker.js`): Usa JSZip en un Web Worker para extraer el contenido en un hilo secundario sin bloquear la interfaz. Los ficheros se envían al Service Worker como ArrayBuffers usando objetos Transferable (transferencia sin copia).
 
 3. **Visualización del contenido**: Un iframe carga `/viewer/index.html`. El Service Worker intercepta esta petición y sirve el fichero correspondiente del contenido extraído.
 
@@ -235,7 +235,8 @@ exeviewer/
 │   └── styles.css      # Estilos personalizados
 ├── js/
 │   ├── app.js          # Lógica principal de la aplicación
-│   └── i18n.js         # Módulo de internacionalización
+│   ├── i18n.js         # Módulo de internacionalización
+│   └── zip.worker.js   # Web Worker para extracción ZIP
 ├── lang/
 │   ├── en.json         # Traducciones en inglés
 │   └── es.json         # Traducciones en español

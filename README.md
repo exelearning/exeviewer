@@ -169,7 +169,7 @@ Firefox doesn't support PWA installation natively. Use the [PWAs for Firefox](ht
    - Caches the application shell for offline use.
    - Intercepts requests to `/viewer/*` and serves extracted ZIP content from memory.
 
-2. **ZIP processing** (`js/app.js`): Uses JSZip to extract content in memory. Files are sent to the Service Worker as base64-encoded strings.
+2. **ZIP processing** (`js/app.js` + `js/zip.worker.js`): Uses JSZip in a Web Worker to extract content in a background thread without blocking the UI. Files are sent to the Service Worker as ArrayBuffers using Transferable objects (zero-copy transfer).
 
 3. **Content display**: An iframe loads `/viewer/index.html`. The Service Worker intercepts this request and serves the corresponding file from the extracted content.
 
@@ -235,7 +235,8 @@ exeviewer/
 │   └── styles.css      # Custom styles
 ├── js/
 │   ├── app.js          # Main application logic
-│   └── i18n.js         # Internationalization module
+│   ├── i18n.js         # Internationalization module
+│   └── zip.worker.js   # Web Worker for ZIP extraction
 ├── lang/
 │   ├── en.json         # English translations
 │   └── es.json         # Spanish translations
