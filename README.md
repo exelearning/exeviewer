@@ -269,3 +269,4 @@ You should have received a copy of the GNU Affero General Public License along w
 ### Related projects
 
 - [eXeLearning](https://exelearning.net/) - Your free and open source editor for interactive educational resources
+- The eXeViewer logo belongs to eXeLearning.

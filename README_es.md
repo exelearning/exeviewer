@@ -269,3 +269,4 @@ Deberías haber recibido una copia de la Licencia Pública General Affero de GNU
 ### Proyectos relacionados
 
 - [eXeLearning](https://exelearning.net/) - Tu editor de recursos educativos interactivos gratuito y de código abierto
+- El logotipo de eXeViewer pertenece a eXeLearning
