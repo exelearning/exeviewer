@@ -143,10 +143,17 @@ const i18n = (function() {
             element.placeholder = t(key);
         });
 
-        // Update titles
+        // Update titles and Bootstrap tooltips
         document.querySelectorAll('[data-i18n-title]').forEach(element => {
             const key = element.getAttribute('data-i18n-title');
-            element.title = t(key);
+            const newTitle = t(key);
+            element.title = newTitle;
+
+            // Update Bootstrap tooltip instance if it exists
+            const tooltipInstance = bootstrap.Tooltip.getInstance(element);
+            if (tooltipInstance) {
+                tooltipInstance.setContent({ '.tooltip-inner': newTitle });
+            }
         });
 
         // Update aria-labels

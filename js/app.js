@@ -1092,6 +1092,9 @@
         if (elements.btnNewWindow) {
             new bootstrap.Tooltip(elements.btnNewWindow);
         }
+        if (elements.btnLoadNew) {
+            new bootstrap.Tooltip(elements.btnLoadNew);
+        }
 
         // Setup language selector
         setupLanguageSelector();
