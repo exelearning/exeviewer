@@ -259,12 +259,12 @@ const i18n = (function() {
     }
 
     /**
-     * Load native names for all available languages
+     * Load native names for all available languages (parallel loading)
      */
     async function loadLanguageNames() {
         const basePath = getBasePath();
 
-        for (const langCode of availableLanguages) {
+        await Promise.all(availableLanguages.map(async (langCode) => {
             try {
                 const response = await fetch(`${basePath}lang/${langCode}.json`);
                 if (response.ok) {
@@ -275,7 +275,7 @@ const i18n = (function() {
                 console.warn(`[i18n] Could not load language name for '${langCode}'`);
                 languageNames[langCode] = langCode;
             }
-        }
+        }));
     }
 
     /**
