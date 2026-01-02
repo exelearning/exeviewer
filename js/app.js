@@ -687,8 +687,40 @@
                 throw new Error(i18n.t('errors.invalidFileType'));
             }
 
-            // Get blob data
-            const blob = await response.blob();
+            // Get content length for progress tracking
+            const contentLength = response.headers.get('Content-Length');
+            const totalBytes = contentLength ? parseInt(contentLength, 10) : 0;
+
+            let blob;
+            if (response.body) {
+                // Stream download with progress
+                const reader = response.body.getReader();
+                const chunks = [];
+                let receivedBytes = 0;
+
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+
+                    chunks.push(value);
+                    receivedBytes += value.length;
+
+                    // Update progress
+                    const size = formatBytes(receivedBytes);
+                    if (totalBytes > 0) {
+                        const percent = Math.round((receivedBytes / totalBytes) * 100);
+                        updateLoadingText(`${i18n.t('loading.downloading')} ${percent}% (${size})`);
+                    } else {
+                        updateLoadingText(`${i18n.t('loading.downloading')} ${size}`);
+                    }
+                }
+
+                // Combine chunks into blob
+                blob = new Blob(chunks);
+            } else {
+                // Fallback: streaming not available
+                blob = await response.blob();
+            }
 
             if (blob.size === 0) {
                 throw new Error(i18n.t('errors.emptyZip'));

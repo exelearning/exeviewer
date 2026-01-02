@@ -27,7 +27,8 @@
         "registeringSW": "Registrando el Service Worker...",
         "loadingContent": "Cargando el contenido...",
         "processingFile": "Procesando el archivo...",
-        "downloadingFile": "Descargando archivo..."
+        "downloadingFile": "Descargando archivo...",
+        "downloading": "Descargando...",
     },
     "errors": {
         "invalidFile": "Selecciona un archivo .zip o .elpx válido",

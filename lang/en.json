@@ -27,7 +27,8 @@
         "registeringSW": "Registering Service Worker...",
         "loadingContent": "Loading content...",
         "processingFile": "Processing file...",
-        "downloadingFile": "Downloading file..."
+        "downloadingFile": "Downloading file...",
+        "downloading": "Downloading...",
     },
     "errors": {
         "invalidFile": "Please select a valid .zip or .elpx file",
