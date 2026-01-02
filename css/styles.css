@@ -430,6 +430,17 @@ body {
     min-height: 250px;
 }
 
+/* Success text with good contrast in both modes */
+.alert-success-text {
+    color: #0a7a5a;  /* Darker green for better contrast on light backgrounds */
+}
+
+@media (prefers-color-scheme: dark) {
+    .alert-success-text {
+        color: #5dd39e;  /* Lighter green for dark backgrounds - WCAG AA compliant */
+    }
+}
+
 /* Override Bootstrap tooltip colors */
 .tooltip {
   --bs-tooltip-bg: #34373B;
