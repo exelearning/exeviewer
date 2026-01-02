@@ -196,10 +196,10 @@ Firefox no soporta la instalación de PWA de forma nativa. Usa la extensión [PW
    };
    ```
 
-8. **Botón de descarga**: Cuando el contenido se carga desde una URL, se muestra un botón en la barra de navegación que permite descargar el fichero original. Se puede deshabilitar en `js/app.js`:
+8. **Botón de descarga**: Cuando el contenido se carga desde una URL y se genera un enlace para compartir, los usuarios pueden habilitar opcionalmente un botón de descarga para los destinatarios. La casilla "Botón de descarga" del modal para compartir añade un parámetro `download=1` a la URL compartida. Puedes establecer el estado inicial de la casilla en `js/app.js`:
    ```javascript
    const config = {
-       showDownloadButton: false  // Cambiar a false para ocultar el botón de descarga
+       allowDownloadByDefault: true  // Cambiar a false para que esté desmarcada por defecto
    };
    ```
 

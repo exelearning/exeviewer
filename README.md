@@ -196,10 +196,10 @@ Firefox doesn't support PWA installation natively. Use the [PWAs for Firefox](ht
    };
    ```
 
-8. **Download button**: When content is loaded from a URL, a download button appears in the navigation bar, allowing users to download the original file. This can be disabled in `js/app.js`:
+8. **Download button**: When content is loaded from a URL and shared, users can optionally enable a download button for recipients. In the share modal, there's a checkbox "Download button" that adds a `download=1` parameter to the shared URL. You can set the default state of this checkbox in `js/app.js`:
    ```javascript
    const config = {
-       showDownloadButton: false  // Set to false to hide the download button
+       allowDownloadByDefault: true  // Set to false to uncheck by default
    };
    ```
 

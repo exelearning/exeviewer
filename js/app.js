@@ -18,8 +18,8 @@
         validateExeContent: true,
         // Available languages (ISO 639-1 codes). Each language must have a corresponding lang/XX.json file.
         availableLanguages: ['en', 'es'],
-        // Show download button for URL-loaded content (allows downloading the original file)
-        showDownloadButton: true
+        // Default state of "Download button" checkbox in share modal
+        allowDownloadByDefault: true
     };
 
     // Application state
@@ -56,6 +56,8 @@
         shareUrlInput: null,
         btnCopyShareUrl: null,
         copySuccess: null,
+        linkUpdated: null,
+        allowDownloadCheck: null,
         // Footer element
         footerInfo: null
     };
@@ -154,6 +156,8 @@
         elements.shareUrlInput = document.getElementById('shareUrlInput');
         elements.btnCopyShareUrl = document.getElementById('btnCopyShareUrl');
         elements.copySuccess = document.getElementById('copySuccess');
+        elements.linkUpdated = document.getElementById('linkUpdated');
+        elements.allowDownloadCheck = document.getElementById('allowDownloadCheck');
         // Footer element
         elements.footerInfo = document.getElementById('footerInfo');
     }
@@ -1130,12 +1134,17 @@
 
     /**
      * Generate the share URL for the current content
+     * @param {boolean} allowDownload - Whether to include the download parameter
      * @returns {string} The share URL
      */
-    function generateShareUrl() {
+    function generateShareUrl(allowDownload = false) {
         const baseUrl = window.location.origin + window.location.pathname;
         const resourceUrl = state.contentFromUrl;
-        return `${baseUrl}?url=${encodeURIComponent(resourceUrl)}`;
+        let url = `${baseUrl}?url=${encodeURIComponent(resourceUrl)}`;
+        if (allowDownload) {
+            url += '&download=1';
+        }
+        return url;
     }
 
     /**
@@ -1156,8 +1165,12 @@
      * Show or hide the download button based on conditions
      */
     function updateDownloadButtonVisibility() {
-        // Show only if: config enabled AND content loaded from URL AND not installed PWA
-        const shouldShow = config.showDownloadButton && state.contentFromUrl && !isInstalledPWA();
+        // Check if download is enabled via URL parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const downloadEnabled = urlParams.get('download') === '1';
+
+        // Show only if: download enabled via URL AND content loaded from URL AND not installed PWA
+        const shouldShow = downloadEnabled && state.contentFromUrl && !isInstalledPWA();
 
         if (shouldShow) {
             elements.btnDownload.classList.remove('d-none');
@@ -1198,9 +1211,36 @@
      * Open the share modal with the generated URL
      */
     function openShareModal() {
-        const shareUrl = generateShareUrl();
+        // Initialize checkbox state based on config
+        elements.allowDownloadCheck.checked = config.allowDownloadByDefault;
+
+        // Generate URL with current checkbox state
+        const shareUrl = generateShareUrl(elements.allowDownloadCheck.checked);
         elements.shareUrlInput.value = shareUrl;
+
+        // Hide feedback messages
         elements.copySuccess.classList.add('d-none');
+        elements.linkUpdated.classList.add('d-none');
+
+        // Remove any previous event listener to avoid duplicates
+        const newCheckbox = elements.allowDownloadCheck.cloneNode(true);
+        elements.allowDownloadCheck.parentNode.replaceChild(newCheckbox, elements.allowDownloadCheck);
+        elements.allowDownloadCheck = newCheckbox;
+
+        // Add event listener for checkbox changes
+        elements.allowDownloadCheck.addEventListener('change', function() {
+            const newUrl = generateShareUrl(this.checked);
+            elements.shareUrlInput.value = newUrl;
+
+            // Show "Link updated" feedback
+            elements.copySuccess.classList.add('d-none');
+            elements.linkUpdated.classList.remove('d-none');
+
+            // Hide feedback after 2 seconds
+            setTimeout(() => {
+                elements.linkUpdated.classList.add('d-none');
+            }, 2000);
+        });
 
         const modal = new bootstrap.Modal(elements.shareModal);
         modal.show();

@@ -238,6 +238,7 @@ body {
 .loading-indicator .spinner-border {
     width: 1.5rem;
     height: 1.5rem;
+    color: var(--primary-color) !important;
 }
 
 /* Supported Formats */
@@ -336,6 +337,36 @@ body {
     .supported-formats a:focus {
         color: #fff;
     }
+
+    /* Modal dark mode */
+    .modal-content {
+        background-color: #2d3238;
+        border-color: #495057;
+        color: #e9ecef;
+    }
+
+    .modal-header {
+        border-bottom-color: #495057;
+        color: #f8f9fa;
+    }
+
+    .modal-header .btn-close {
+        filter: invert(1) grayscale(100%) brightness(200%);
+    }
+
+    .modal-body .form-control {
+        background-color: #1a1d21;
+        border-color: #495057;
+        color: #e9ecef;
+    }
+
+    .modal-body .form-check-label {
+        color: #e9ecef;
+    }
+
+    .modal-body .text-muted {
+        color: #adb5bd !important;
+    }
 }
 
 /* Accessibility */
@@ -379,17 +410,24 @@ body {
 .btn-outline-primary:focus,
 .btn-outline-primary:active,
 .btn-outline-primary.active {
-    background-color: var(--primary-dark);
-    border-color: var(--primary-dark);
+    background-color: var(--primary-dark) !important;
+    border-color: var(--primary-dark) !important;
     color: #fff;
 }
 
-.modal-body {
-    min-height: 160px;
+/* Checkbox with primary color */
+.form-check-input:checked {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
 }
 
-.modal-header {
-    color: #1a1d21;
+.form-check-input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.25rem rgba(11, 161, 161, 0.25);
+}
+
+.modal-body {
+    min-height: 250px;
 }
 
 /* Override Bootstrap tooltip colors */

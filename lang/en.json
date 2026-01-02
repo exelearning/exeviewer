@@ -28,7 +28,7 @@
         "loadingContent": "Loading content...",
         "processingFile": "Processing file...",
         "downloadingFile": "Downloading file...",
-        "downloading": "Downloading...",
+        "downloading": "Downloading..."
     },
     "errors": {
         "invalidFile": "Please select a valid .zip or .elpx file",
@@ -70,7 +70,10 @@
         "modalTitle": "Share link",
         "description": "The link will work as long as the .zip or .elpx file remains at the specified address.",
         "copy": "Copy",
-        "copied": "Link copied to clipboard!"
+        "copied": "Link copied to clipboard!",
+        "linkUpdated": "Link updated!",
+        "allowDownload": "Download button",
+        "allowDownloadDesc": "Users accessing the link will see a button to download the original file."
     },
     "download": {
         "tooltip": "Download original file"
