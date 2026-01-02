@@ -14,7 +14,7 @@
         "supportedFormats": "eXeViewer %s, compatible con sitios web y .elpx de eXeLearning"
     },
     "navbar": {
-        "loadAnother": "Cargar otro archivo",
+        "loadAnother": "Otro archivo",
         "newFile": "Salir",
         "openNewWindow": "Abrir en ventana nueva",
         "restoredContent": "Contenido recuperado"
