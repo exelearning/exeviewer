@@ -836,7 +836,7 @@
         } catch (error) {
             console.error('[App] Error processing file:', error);
 
-            // Check for JSZip error (not a valid ZIP file)
+            // Check for fflate error (not a valid ZIP file)
             if (error.message && error.message.includes('central directory')) {
                 showError(i18n.t('errors.notAZipFile'));
             } else {
