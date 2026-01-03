@@ -169,7 +169,7 @@ Firefox doesn't support PWA installation natively. Use the [PWAs for Firefox](ht
    - Caches the application shell for offline use.
    - Intercepts requests to `/viewer/*` and serves extracted ZIP content from memory.
 
-2. **ZIP processing** (`js/app.js` + `js/zip.worker.js`): Uses JSZip in a Web Worker to extract content in a background thread without blocking the UI. Files are sent to the Service Worker as ArrayBuffers using Transferable objects (zero-copy transfer).
+2. **ZIP processing** (`js/app.js` + `js/zip.worker.js`): Uses fflate in a Web Worker to extract content in a background thread without blocking the UI. Files are sent to the Service Worker as ArrayBuffers using Transferable objects (zero-copy transfer).
 
 3. **Content display**: An iframe loads `/viewer/index.html`. The Service Worker intercepts this request and serves the corresponding file from the extracted content.
 
@@ -244,7 +244,7 @@ exeviewer/
 ├── vendor/             # Third-party libraries
 │   ├── bootstrap/      # Bootstrap 5.3.2
 │   ├── bootstrap-icons/# Bootstrap Icons 1.11.1
-│   └── jszip/          # JSZip 3.10.1
+│   └── fflate/         # fflate 0.8.2
 └── scripts/
     └── generate-icons.js   # Icon generation script (requires Node.js + sharp)
 ```
@@ -265,7 +265,7 @@ You should have received a copy of the GNU Affero General Public License along w
 
 - [Bootstrap](https://getbootstrap.com/) v5.3.2 - Copyright 2011-2023 The Bootstrap Authors - MIT License
 - [Bootstrap Icons](https://icons.getbootstrap.com/) v1.11.1 - Copyright 2019-2023 The Bootstrap Authors - MIT License
-- [JSZip](https://stuk.github.io/jszip/) v3.10.1 - Copyright 2009-2016 Stuart Knightley - MIT License or GPLv3
+- [fflate](https://github.com/101arrowz/fflate) v0.8.2 - Copyright 2020 Arjun Barrett - MIT License
 
 ### Related projects
 

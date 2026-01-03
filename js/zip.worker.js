@@ -1,10 +1,29 @@
 /**
  * eXeViewer - ZIP Extraction Web Worker
- * Handles ZIP file extraction in a background thread to avoid blocking the UI
+ * Handles ZIP file extraction in a background thread using fflate
  */
 
-// Import JSZip library
-importScripts('../vendor/jszip/jszip.min.js');
+// Import fflate library
+importScripts('../vendor/fflate/fflate.min.js');
+
+/**
+ * Find common prefix in file paths (for ZIPs with a root folder)
+ * @param {string[]} fileList - List of file paths
+ * @returns {string} Common prefix or empty string
+ */
+function findCommonPrefix(fileList) {
+    const htmlFiles = fileList.filter(f => f.endsWith('.html') || f.endsWith('.htm'));
+    if (htmlFiles.length === 0) return '';
+
+    const indexFile = htmlFiles.find(f => f === 'index.html' || f.endsWith('/index.html'));
+    if (indexFile && indexFile.includes('/')) {
+        const parts = indexFile.split('/');
+        if (parts.length === 2) {
+            return parts[0] + '/';
+        }
+    }
+    return '';
+}
 
 /**
  * Handle messages from the main thread
@@ -16,87 +35,65 @@ self.onmessage = async function(e) {
         // Notify start of reading
         self.postMessage({ type: 'progress', message: 'reading' });
 
-        const zip = await JSZip.loadAsync(file);
-        const files = {};
-        const fileList = Object.keys(zip.files);
+        // Read file as ArrayBuffer
+        const arrayBuffer = await file.arrayBuffer();
+        const uint8Array = new Uint8Array(arrayBuffer);
 
-        console.log(`[Worker] ZIP contains ${fileList.length} entries`);
+        // Use fflate to unzip
+        fflate.unzip(uint8Array, (err, unzipped) => {
+            if (err) {
+                console.error('[Worker] fflate error:', err);
+                self.postMessage({ type: 'error', message: err.message });
+                return;
+            }
 
-        // Find common prefix (if files are in a subdirectory)
-        let commonPrefix = '';
-        const htmlFiles = fileList.filter(f => f.endsWith('.html') || f.endsWith('.htm'));
+            const fileList = Object.keys(unzipped);
+            console.log(`[Worker] ZIP contains ${fileList.length} entries`);
 
-        if (htmlFiles.length > 0) {
-            // Check if there's an index.html at root or in a subfolder
-            const indexFile = htmlFiles.find(f =>
-                f === 'index.html' ||
-                f.endsWith('/index.html')
-            );
+            // Find common prefix (if files are in a subdirectory)
+            const commonPrefix = findCommonPrefix(fileList);
+            console.log(`[Worker] Common prefix: "${commonPrefix}"`);
 
-            if (indexFile && indexFile.includes('/')) {
-                // Get the prefix (folder containing index.html)
-                const parts = indexFile.split('/');
-                if (parts.length === 2) {
-                    commonPrefix = parts[0] + '/';
+            const files = {};
+            const transferables = [];
+
+            for (const path of fileList) {
+                const content = unzipped[path];
+
+                // Skip empty entries (directories in fflate have zero-length arrays)
+                if (content.length === 0) {
+                    continue;
                 }
-            }
-        }
 
-        console.log(`[Worker] Common prefix: "${commonPrefix}"`);
+                // Get the normalized path (remove common prefix if exists)
+                let normalizedPath = path;
+                if (commonPrefix && path.startsWith(commonPrefix)) {
+                    normalizedPath = path.substring(commonPrefix.length);
+                }
 
-        let processed = 0;
-        const total = fileList.length;
-        const transferables = [];
+                // Skip empty paths
+                if (!normalizedPath) {
+                    continue;
+                }
 
-        for (const relativePath of fileList) {
-            const zipEntry = zip.files[relativePath];
-
-            // Skip directories
-            if (zipEntry.dir) {
-                processed++;
-                continue;
-            }
-
-            // Get the normalized path (remove common prefix if exists)
-            let normalizedPath = relativePath;
-            if (commonPrefix && relativePath.startsWith(commonPrefix)) {
-                normalizedPath = relativePath.substring(commonPrefix.length);
+                // Convert Uint8Array to ArrayBuffer for transfer
+                const buffer = content.buffer.slice(
+                    content.byteOffset,
+                    content.byteOffset + content.byteLength
+                );
+                files[normalizedPath] = buffer;
+                transferables.push(buffer);
             }
 
-            // Skip empty paths
-            if (!normalizedPath) {
-                processed++;
-                continue;
-            }
+            const fileCount = Object.keys(files).length;
+            console.log(`[Worker] Extracted ${fileCount} files`);
 
-            // Read file as ArrayBuffer (more efficient than base64)
-            try {
-                const content = await zipEntry.async('arraybuffer');
-                files[normalizedPath] = content;
-                transferables.push(content);
-            } catch (error) {
-                console.warn(`[Worker] Error reading ${relativePath}:`, error);
-            }
-
-            processed++;
-            if (processed % 50 === 0) {
-                self.postMessage({
-                    type: 'progress',
-                    message: 'extracting',
-                    processed,
-                    total
-                });
-            }
-        }
-
-        const fileCount = Object.keys(files).length;
-        console.log(`[Worker] Extracted ${fileCount} files`);
-
-        // Transfer ArrayBuffers to main thread (zero-copy transfer)
-        self.postMessage(
-            { type: 'complete', files, fileCount },
-            transferables
-        );
+            // Transfer ArrayBuffers to main thread (zero-copy transfer)
+            self.postMessage(
+                { type: 'complete', files, fileCount },
+                transferables
+            );
+        });
 
     } catch (error) {
         console.error('[Worker] Error:', error);

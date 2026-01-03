@@ -169,7 +169,7 @@ Firefox no soporta la instalación de PWA de forma nativa. Usa la extensión [PW
    - Almacena en caché la estructura de la aplicación para uso sin conexión.
    - Intercepta las peticiones a `/viewer/*` y sirve el contenido ZIP extraído desde memoria.
 
-2. **Procesamiento ZIP** (`js/app.js` + `js/zip.worker.js`): Usa JSZip en un Web Worker para extraer el contenido en un hilo secundario sin bloquear la interfaz. Los ficheros se envían al Service Worker como ArrayBuffers usando objetos Transferable (transferencia sin copia).
+2. **Procesamiento ZIP** (`js/app.js` + `js/zip.worker.js`): Usa fflate en un Web Worker para extraer el contenido en un hilo secundario sin bloquear la interfaz. Los ficheros se envían al Service Worker como ArrayBuffers usando objetos Transferable (transferencia sin copia).
 
 3. **Visualización del contenido**: Un iframe carga `/viewer/index.html`. El Service Worker intercepta esta petición y sirve el fichero correspondiente del contenido extraído.
 
@@ -244,7 +244,7 @@ exeviewer/
 ├── vendor/             # Bibliotecas de terceros
 │   ├── bootstrap/      # Bootstrap 5.3.2
 │   ├── bootstrap-icons/# Bootstrap Icons 1.11.1
-│   └── jszip/          # JSZip 3.10.1
+│   └── fflate/         # fflate 0.8.2
 └── scripts/
     └── generate-icons.js   # Script de generación de iconos (requiere Node.js + sharp)
 ```
@@ -265,7 +265,7 @@ Deberías haber recibido una copia de la Licencia Pública General Affero de GNU
 
 - [Bootstrap](https://getbootstrap.com/) v5.3.2 - Copyright 2011-2023 The Bootstrap Authors - Licencia MIT
 - [Bootstrap Icons](https://icons.getbootstrap.com/) v1.11.1 - Copyright 2019-2023 The Bootstrap Authors - Licencia MIT
-- [JSZip](https://stuk.github.io/jszip/) v3.10.1 - Copyright 2009-2016 Stuart Knightley - Licencia MIT o GPLv3
+- [fflate](https://github.com/101arrowz/fflate) v0.8.2 - Copyright 2020 Arjun Barrett - Licencia MIT
 
 ### Proyectos relacionados
 

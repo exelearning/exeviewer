@@ -3,7 +3,7 @@
  * Handles PWA caching and serves extracted ZIP content from memory/IndexedDB
  */
 
-const SW_VERSION = '1.6.0';
+const SW_VERSION = '1.7.0';
 const CACHE_NAME = `exeviewer-v${SW_VERSION}`;
 
 // IndexedDB configuration
@@ -30,7 +30,7 @@ const APP_SHELL_FILES = [
     './vendor/bootstrap-icons/bootstrap-icons.min.css',
     './vendor/bootstrap-icons/fonts/bootstrap-icons.woff2',
     './vendor/bootstrap-icons/fonts/bootstrap-icons.woff',
-    './vendor/jszip/jszip.min.js'
+    './vendor/fflate/fflate.min.js'
 ];
 
 // In-memory storage for the extracted ZIP contents
