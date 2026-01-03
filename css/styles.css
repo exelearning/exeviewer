@@ -4,23 +4,42 @@
 
 /* CSS Variables */
 :root {
-    --primary-color: #0d6efd;
-    --primary-dark: #0b5ed7;
-    --bg-light: #f8f9fa;
-    --bg-dark: #212529;
-    --text-muted: #6c757d;
-    --border-color: #dee2e6;
-    --shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-    --shadow-md: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    /* === Primary colors (eXeLearning branding) === */
+    --primary-color: #0ba1a1;       /* Primary: buttons, active icons, drop zone border */
+    --primary-dark: #088b8b;        /* Primary dark: hover and active states */
+    --primary-rgb: 11, 161, 161;    /* Primary RGB: for transparent backgrounds */
+    --success-text: #0a7a5a;        /* Success text: confirmation messages */
+    --navbar-bg: #1a1d21;           /* Top navbar background */
+    --tooltip-bg: #34373B;          /* Tooltip background */
+
+    /* === Interface colors === */
+    --bg-light: #f8f9fa;            /* Light background */
+    --bg-dark: #212529;             /* Dark background (headings, contrast) */
+    --surface-color: #ffffff;       /* Surface background: drop zone, viewer */
+    --text-muted: #6c757d;          /* Secondary text */
+    --border-color: #a3d3d3;        /* Borders with greenish tint */
+
+    /* === Shadows and effects === */
+    --shadow-sm: 0 0.125rem 0.25rem rgba(var(--primary-rgb), 0.075);  /* Subtle shadow */
+    --shadow-md: 0 0.5rem 1rem rgba(var(--primary-rgb), 0.15);        /* Medium shadow */
+    --focus-shadow: 0 0 0 0.25rem rgba(var(--primary-rgb), 0.25);     /* Accessible focus ring */
+
+    /* === Transitions === */
     --transition-fast: 0.15s ease-in-out;
     --transition-normal: 0.3s ease-in-out;
+
+    /* === Layout === */
     --navbar-height: 56px;
-    /* eXeLearning colors */
-    --primary-color: #0ba1a1;       /* Main green */
-    --primary-dark: #088b8b;        /* Darker green for hover/active */
-    --border-color: #a3d3d3;        /* Soft greenish border instead of bluish */
-    --shadow-sm: 0 0.125rem 0.25rem rgba(11, 161, 161, 0.075); /* subtle green shadow */
-    --shadow-md: 0 0.5rem 1rem rgba(11, 161, 161, 0.15);       /* medium green shadow */
+
+    /* === Dark mode colors (used in @media prefers-color-scheme: dark) === */
+    --dark-bg-light: #1a1d21;       /* Light background in dark mode */
+    --dark-bg-surface: #212529;     /* Surface background in dark mode */
+    --dark-bg-modal: #2d3238;       /* Modal background in dark mode */
+    --dark-text-color: #e9ecef;     /* Primary text in dark mode */
+    --dark-text-muted: #adb5bd;     /* Secondary text in dark mode */
+    --dark-text-bright: #f8f9fa;    /* Highlighted text in dark mode */
+    --dark-border-color: #495057;   /* Borders in dark mode */
+    --dark-success-text: #5dd39e;   /* Success text in dark mode (WCAG AA) */
 }
 
 
@@ -54,7 +73,7 @@ body {
 
 /* Top Navbar Styles */
 #topNavbar {
-    background: #1a1d21;
+    background: var(--navbar-bg);
     z-index: 1030;
     box-shadow: var(--shadow-sm);
 }
@@ -135,19 +154,19 @@ body {
     border: 3px dashed var(--border-color);
     border-radius: 1rem;
     padding: 3rem 2rem;
-    background-color: white;
+    background-color: var(--surface-color);
     transition: all var(--transition-normal);
     cursor: pointer;
 }
 
 .drop-zone:hover {
     border-color: var(--primary-color);
-    background-color: rgba(13, 110, 253, 0.02);
+    background-color: rgba(var(--primary-rgb), 0.02);
 }
 
 .drop-zone.drag-over {
     border-color: var(--primary-color);
-    background-color: rgba(13, 110, 253, 0.05);
+    background-color: rgba(var(--primary-rgb), 0.05);
     transform: scale(1.02);
     box-shadow: var(--shadow-md);
 }
@@ -267,7 +286,7 @@ body {
     height: calc(100vh - var(--navbar-height));
     margin-top: var(--navbar-height);
     overflow: hidden;
-    background-color: white;
+    background-color: var(--surface-color);
 }
 
 .content-frame {
@@ -303,34 +322,35 @@ body {
 /* Dark Mode Support (if user prefers) */
 @media (prefers-color-scheme: dark) {
     :root {
-        --bg-light: #1a1d21;
-        --bg-dark: #f8f9fa;
-        --text-muted: #adb5bd;
-        --border-color: #495057;
+        --bg-light: var(--dark-bg-light);
+        --bg-dark: var(--dark-text-bright);
+        --text-muted: var(--dark-text-muted);
+        --border-color: var(--dark-border-color);
+        --surface-color: var(--dark-bg-surface);
     }
 
     body {
-        color: #e9ecef;
+        color: var(--dark-text-color);
     }
 
     .drop-zone {
-        background-color: #212529;
+        background-color: var(--dark-bg-surface);
     }
 
     .drop-zone:hover {
-        background-color: rgba(13, 110, 253, 0.1);
+        background-color: rgba(var(--primary-rgb), 0.1);
     }
 
     .drop-zone.drag-over {
-        background-color: rgba(13, 110, 253, 0.15);
+        background-color: rgba(var(--primary-rgb), 0.15);
     }
 
     .welcome-content h1 {
-        color: #f8f9fa;
+        color: var(--dark-text-bright);
     }
 
     .supported-formats a {
-        color: #e9ecef;
+        color: var(--dark-text-color);
     }
 
     .supported-formats a:hover,
@@ -340,14 +360,14 @@ body {
 
     /* Modal dark mode */
     .modal-content {
-        background-color: #2d3238;
-        border-color: #495057;
-        color: #e9ecef;
+        background-color: var(--dark-bg-modal);
+        border-color: var(--dark-border-color);
+        color: var(--dark-text-color);
     }
 
     .modal-header {
-        border-bottom-color: #495057;
-        color: #f8f9fa;
+        border-bottom-color: var(--dark-border-color);
+        color: var(--dark-text-bright);
     }
 
     .modal-header .btn-close {
@@ -355,17 +375,17 @@ body {
     }
 
     .modal-body .form-control {
-        background-color: #1a1d21;
-        border-color: #495057;
-        color: #e9ecef;
+        background-color: var(--dark-bg-light);
+        border-color: var(--dark-border-color);
+        color: var(--dark-text-color);
     }
 
     .modal-body .form-check-label {
-        color: #e9ecef;
+        color: var(--dark-text-color);
     }
 
     .modal-body .text-muted {
-        color: #adb5bd !important;
+        color: var(--dark-text-muted) !important;
     }
 }
 
@@ -423,7 +443,7 @@ body {
 
 .form-check-input:focus {
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 0.25rem rgba(11, 161, 161, 0.25);
+    box-shadow: var(--focus-shadow);
 }
 
 .modal-body {
@@ -432,25 +452,25 @@ body {
 
 /* Success text with good contrast in both modes */
 .alert-success-text {
-    color: #0a7a5a;  /* Darker green for better contrast on light backgrounds */
+    color: var(--success-text);
 }
 
 @media (prefers-color-scheme: dark) {
     .alert-success-text {
-        color: #5dd39e;  /* Lighter green for dark backgrounds - WCAG AA compliant */
+        color: var(--dark-success-text);
     }
 }
 
 /* Override Bootstrap tooltip colors */
 .tooltip {
-  --bs-tooltip-bg: #34373B;
+  --bs-tooltip-bg: var(--tooltip-bg);
 }
 
 /* Fix arrow for bottom-placed tooltips */
 .bs-tooltip-bottom .tooltip-arrow::before {
   border-width: 0.4rem 0.4rem 0;
   border-bottom-color: transparent;
-  border-top-color: #34373B;
+  border-top-color: var(--tooltip-bg);
 }
 
 /* Focus Styles */
@@ -531,26 +551,26 @@ input:focus,
 /* Dark Mode - Language Selector */
 @media (prefers-color-scheme: dark) {
     .language-selector-welcome .btn-outline-secondary {
-        color: #adb5bd;
-        border-color: #495057;
+        color: var(--dark-text-muted);
+        border-color: var(--dark-border-color);
     }
 
     .language-selector-welcome .btn-outline-secondary:hover {
         color: #fff;
-        background-color: #495057;
-        border-color: #495057;
+        background-color: var(--dark-border-color);
+        border-color: var(--dark-border-color);
     }
 
     .language-selector-welcome .dropdown-menu {
-        background-color: #2d3238;
-        border-color: #495057;
+        background-color: var(--dark-bg-modal);
+        border-color: var(--dark-border-color);
     }
 
     .language-selector-welcome .dropdown-item {
-        color: #e9ecef;
+        color: var(--dark-text-color);
     }
 
     .language-selector-welcome .dropdown-item:hover {
-        background-color: #495057;
+        background-color: var(--dark-border-color);
     }
 }
