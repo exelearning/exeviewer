@@ -29,7 +29,8 @@
         currentPackageName: null,
         contentFromUrl: null,  // Stores the source URL when content is loaded from URL
         historyNavigationCount: 0,  // Counter to track pending history navigations
-        zipWorker: null  // Web Worker for ZIP extraction
+        zipWorker: null,  // Web Worker for ZIP extraction
+        isRestoredContent: false  // True if content was restored from IndexedDB
     };
 
     // DOM Elements
@@ -188,6 +189,17 @@
         const footerHtml = `<i class="bi bi-info-circle me-1"></i>${text}`;
 
         elements.footerInfo.innerHTML = footerHtml;
+    }
+
+    /**
+     * Update the package name when language changes (for restored content)
+     */
+    function updateRestoredContentName() {
+        if (state.isRestoredContent && elements.packageName) {
+            state.currentPackageName = i18n.t('navbar.restoredContent');
+            elements.packageName.textContent = state.currentPackageName;
+            elements.packageName.title = state.currentPackageName;
+        }
     }
 
     /**
@@ -902,6 +914,7 @@
         // Reset state
         state.currentPackageName = null;
         state.contentFromUrl = null;
+        state.isRestoredContent = false;
 
         // Clear iframe
         elements.contentFrame.src = 'about:blank';
@@ -1411,8 +1424,11 @@
         // Update footer with dynamic links (after i18n is ready)
         updateFooter();
 
-        // Listen for language changes to update footer
-        window.addEventListener('languagechange', updateFooter);
+        // Listen for language changes to update footer and restored content name
+        window.addEventListener('languagechange', () => {
+            updateFooter();
+            updateRestoredContentName();
+        });
 
         // Set up event listeners
         setupEventListeners();
@@ -1460,6 +1476,7 @@
                 if (type === 'STATUS' && ready && fileCount > 0) {
                     console.log(`[App] Restored content found: ${fileCount} files`);
                     state.currentPackageName = i18n.t('navbar.restoredContent');
+                    state.isRestoredContent = true;
                     showViewer();
                 }
                 resolve();
