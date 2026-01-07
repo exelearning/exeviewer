@@ -7,7 +7,7 @@
         "dragDrop": "Arrastra y suelta tu archivo <strong>.zip</strong> o <strong>.elpx</strong> aquí",
         "or": "o",
         "browseFiles": "Selecciona el fichero",
-        "loadFromUrl": "Cargar desde URL (admite enlaces de Nextcloud, ownCloud y Drive)",
+        "loadFromUrl": "Cargar desde URL (admite enlaces de Nextcloud y ownCloud)",
         "shareHint": "Podrás generar un enlace directo para compartir el contenido.",
         "urlPlaceholder": "https://ejemplo.com/contenido.zip",
         "loadUrl": "Cargar",
@@ -48,7 +48,8 @@
         "notAZipFile": "No se pudo procesar el archivo. Tal vez no sea un archivo .zip o .elpx válido.",
         "notExeContent": "No parece un contenido generado con eXeLearning. Selecciona un .zip o .elpx válido exportado desde eXeLearning.",
         "storageQuotaExceeded": "El archivo es demasiado grande para el límite de tu navegador. Intenta cerrar otras pestañas o borrar datos de navegación.",
-        "storageQuotaWarning": "El archivo ({fileSize}) podría exceder el almacenamiento disponible ({available}). El guardado podría fallar."
+        "storageQuotaWarning": "El archivo ({fileSize}) podría exceder el almacenamiento disponible ({available}). El guardado podría fallar.",
+        "googleDriveBlocked": "Google Drive bloquea las descargas directas desde aplicaciones web. Descarga el archivo desde Google Drive y arrástralo aquí."
     },
     "accessibility": {
         "loading": "Cargando...",

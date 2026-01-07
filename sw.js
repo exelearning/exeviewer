@@ -3,7 +3,7 @@
  * Handles PWA caching and serves extracted ZIP content from memory/IndexedDB
  */
 
-const SW_VERSION = '1.7.0';
+const SW_VERSION = '1.0.0';
 const CACHE_NAME = `exeviewer-v${SW_VERSION}`;
 
 // IndexedDB configuration

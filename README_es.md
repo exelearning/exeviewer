@@ -14,7 +14,7 @@ La aplicación se ejecuta completamente en tu navegador. Cuando cargas un ficher
 
 - Carga ficheros `.zip` o `.elpx` desde tu dispositivo (arrastrándolos o seleccionándolos)
 - Carga contenido desde una URL (enlaces directos a ficheros `.zip` o `.elpx`)
-- Admite enlaces compartidos de Nextcloud, ownCloud y Google Drive
+- Admite enlaces compartidos de Nextcloud y ownCloud
 - Genera enlaces para compartir cuando visualizas contenido cargado desde URL
 - Extracción en memoria (no se escribe nada en disco)
 - Navegación completa con soporte para HTML, CSS, JavaScript, imágenes y multimedia
@@ -42,7 +42,6 @@ El fichero nunca sale de tu dispositivo. Todo el procesamiento ocurre en tu nave
 Funciona con:
 - Enlaces directos a ficheros .zip o .elpx en cualquier servidor
 - Enlaces compartidos de Nextcloud y ownCloud
-- Enlaces compartidos de Google Drive
 
 ### Descargar y compartir contenido
 
@@ -52,7 +51,7 @@ Cuando cargas contenido desde una URL, aparecen dos botones en la barra superior
 
 **Esto resuelve un problema común**: muchos usuarios de eXeLearning crean contenido pero no tienen dónde publicarlo. Con eXeViewer:
 
-1. Sube tu fichero `.zip` o `.elpx` a un servicio en la nube (Nextcloud, ownCloud, Google Drive o cualquier alojamiento de ficheros)
+1. Sube tu fichero `.zip` o `.elpx` a un servicio en la nube (Nextcloud, ownCloud o cualquier servidor)
 2. Genera un enlace para compartir desde tu servicio en la nube
 3. Pega el enlace en eXeViewer
 4. Haz clic en el botón "Compartir" para obtener una URL del visor

@@ -14,7 +14,7 @@ The application runs entirely in your browser. When you load a file from your de
 
 - Load `.zip` or `.elpx` files from your device (drag and drop or file browser)
 - Load content from a URL (direct links to `.zip` or `.elpx` files)
-- Support for shared links from Nextcloud, ownCloud and Google Drive
+- Support for shared links from Nextcloud or ownCloud
 - Generate shareable links when viewing URL-loaded content
 - In-memory extraction (no files written to disk)
 - Full navigation support for HTML, CSS, JavaScript, images, and media
@@ -42,7 +42,6 @@ The file never leaves your device. All processing happens in your browser.
 This works with:
 - Direct links to files on any server
 - Shared links from Nextcloud and ownCloud
-- Shared links from Google Drive
 
 ### Downloading and sharing content
 
@@ -52,7 +51,7 @@ When you load content from a URL, two buttons appear in the top bar:
 
 **This solves a common problem**: many eXeLearning users create content but don’t have a place to publish it. With eXeViewer:
 
-1. Upload your `.zip` or `.elpx` file to a cloud service (Nextcloud, ownCloud, Google Drive, or any file hosting)
+1. Upload your `.zip` or `.elpx` file to a cloud service (Nextcloud, ownCloud, or any file server)
 2. Generate a share link from your cloud service
 3. Paste the link in eXeViewer
 4. Click the "Share" button to get a viewer URL

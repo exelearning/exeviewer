@@ -524,12 +524,14 @@
 
             // Google Drive: convert /view to direct download
             // Format: https://drive.google.com/file/d/FILE_ID/view?usp=sharing
-            // Convert to: https://drive.google.com/uc?export=download&id=FILE_ID
+            // Convert to: https://drive.usercontent.google.com/download?id=FILE_ID&export=download&confirm=t
+            // Note: drive.usercontent.google.com is Google's dedicated download domain
+            // The confirm=t parameter bypasses the virus scan warning for large files
             if (urlObj.hostname === 'drive.google.com') {
                 const match = url.match(/\/file\/d\/([^/]+)/);
                 if (match && match[1]) {
                     const fileId = match[1];
-                    return `https://drive.google.com/uc?export=download&id=${fileId}`;
+                    return `https://drive.usercontent.google.com/download?id=${fileId}&export=download&confirm=t`;
                 }
             }
 
@@ -662,16 +664,26 @@
             const downloadUrl = convertToDirectDownloadUrl(url.trim());
             console.log('[App] Downloading from:', downloadUrl);
 
+            // Check if this is a Google Drive URL
+            // Google Drive blocks CORS and public proxies, so we only try direct fetch
+            const isGoogleDrive = url.includes('drive.google.com') || url.includes('drive.usercontent.google.com');
+
             let response;
             let usedProxy = false;
 
-            // Try direct fetch first, then fallback to CORS proxy
+            // Try direct fetch first, then fallback to CORS proxy (except for Google Drive)
             try {
                 response = await fetchWithCorsProxy(downloadUrl, false);
                 if (!response.ok) {
                     throw new Error('Direct fetch failed');
                 }
             } catch (directError) {
+                // For Google Drive, don't try proxies - they are blocked
+                // Show specific error message immediately
+                if (isGoogleDrive) {
+                    throw new Error('GOOGLE_DRIVE_BLOCKED');
+                }
+
                 console.log('[App] Direct fetch failed, trying CORS proxy...');
                 usedProxy = true;
                 response = await fetchWithCorsProxy(downloadUrl, true);
@@ -758,8 +770,11 @@
         } catch (error) {
             console.error('[App] Error downloading from URL:', error);
 
-            // Handle network errors
-            if (error.name === 'TypeError' && error.message.includes('fetch')) {
+            if (error.message === 'GOOGLE_DRIVE_BLOCKED') {
+                // Google Drive blocks CORS and public proxies, suggest manual download
+                showError(i18n.t('errors.googleDriveBlocked'));
+            } else if (error.name === 'TypeError' && error.message.includes('fetch')) {
+                // Handle network errors
                 showError(i18n.t('errors.networkError'));
             } else {
                 showError(error.message || i18n.t('errors.downloadFailed'));
