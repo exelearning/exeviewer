@@ -30,7 +30,8 @@
         contentFromUrl: null,  // Stores the source URL when content is loaded from URL
         historyNavigationCount: 0,  // Counter to track pending history navigations
         zipWorker: null,  // Web Worker for ZIP extraction
-        isRestoredContent: false  // True if content was restored from IndexedDB
+        isRestoredContent: false,  // True if content was restored from IndexedDB
+        currentErrorKey: null  // Current error translation key (for language updates)
     };
 
     // DOM Elements
@@ -645,14 +646,14 @@
     async function downloadFromUrl(url) {
         // Validate URL
         if (!url || !url.trim()) {
-            showError(i18n.t('errors.invalidUrl'));
+            showError('errors.invalidUrl');
             return;
         }
 
         try {
             new URL(url);
         } catch (e) {
-            showError(i18n.t('errors.invalidUrl'));
+            showError('errors.invalidUrl');
             return;
         }
 
@@ -772,12 +773,12 @@
 
             if (error.message === 'GOOGLE_DRIVE_BLOCKED') {
                 // Google Drive blocks CORS and public proxies, suggest manual download
-                showError(i18n.t('errors.googleDriveBlocked'));
+                showError('errors.googleDriveBlocked');
             } else if (error.name === 'TypeError' && error.message.includes('fetch')) {
                 // Handle network errors
-                showError(i18n.t('errors.networkError'));
+                showError('errors.networkError');
             } else {
-                showError(error.message || i18n.t('errors.downloadFailed'));
+                showError(error.message || 'errors.downloadFailed', !!error.message);
             }
             hideLoading();
         }
@@ -791,7 +792,7 @@
         // Validate file type
         const fileName = file.name.toLowerCase();
         if (!fileName.endsWith('.zip') && !fileName.endsWith('.elpx')) {
-            showError(i18n.t('errors.invalidFile'));
+            showError('errors.invalidFile');
             return;
         }
 
@@ -845,7 +846,7 @@
             if (result.storageError === 'QUOTA_EXCEEDED') {
                 console.error('[App] Storage quota exceeded');
                 // Show error but still display content (it's in memory)
-                showError(i18n.t('errors.storageQuotaExceeded'));
+                showError('errors.storageQuotaExceeded');
             } else if (result.storageWarning) {
                 // Log warning but continue
                 console.warn('[App] Storage warning:', result.storageWarning);
@@ -865,9 +866,9 @@
 
             // Check for fflate error (not a valid ZIP file)
             if (error.message && error.message.includes('central directory')) {
-                showError(i18n.t('errors.notAZipFile'));
+                showError('errors.notAZipFile');
             } else {
-                showError(error.message || i18n.t('errors.processingFailed'));
+                showError(error.message || 'errors.processingFailed', !!error.message);
             }
             hideLoading();
         }
@@ -984,10 +985,17 @@
 
     /**
      * Show error message
-     * @param {string} message - Error message to display
+     * @param {string} key - Error translation key (e.g., 'errors.invalidFile') or raw message
+     * @param {boolean} isRaw - If true, the key is treated as a raw message (not translated)
      */
-    function showError(message) {
-        elements.errorMessage.textContent = message;
+    function showError(key, isRaw = false) {
+        if (isRaw) {
+            elements.errorMessage.textContent = key;
+            state.currentErrorKey = null;  // Don't update raw messages on language change
+        } else {
+            elements.errorMessage.textContent = i18n.t(key);
+            state.currentErrorKey = key;  // Save for language updates
+        }
         elements.errorAlert.classList.remove('d-none');
     }
 
@@ -996,6 +1004,16 @@
      */
     function hideError() {
         elements.errorAlert.classList.add('d-none');
+        state.currentErrorKey = null;
+    }
+
+    /**
+     * Update error message when language changes
+     */
+    function updateErrorMessage() {
+        if (state.currentErrorKey && !elements.errorAlert.classList.contains('d-none')) {
+            elements.errorMessage.textContent = i18n.t(state.currentErrorKey);
+        }
     }
 
     /**
@@ -1439,10 +1457,11 @@
         // Update footer with dynamic links (after i18n is ready)
         updateFooter();
 
-        // Listen for language changes to update footer and restored content name
+        // Listen for language changes to update footer, restored content name, and error message
         window.addEventListener('languagechange', () => {
             updateFooter();
             updateRestoredContentName();
+            updateErrorMessage();
         });
 
         // Set up event listeners
@@ -1451,7 +1470,7 @@
         // Check for secure context
         if (!isSecureContext()) {
             console.warn('[App] Not in a secure context. Service Workers may not work.');
-            showError(i18n.t('errors.secureContextRequired'));
+            showError('errors.secureContextRequired');
             return;
         }
 
