@@ -1,6 +1,6 @@
 # eXeViewer
 
-[Versión en español](README_es.md)
+[Versión en español](README_es.md) · [Try eXeViewer online](https://exelearning.github.io/exeviewer/)
 
 View eXeLearning content packages directly in your browser.
 

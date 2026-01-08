@@ -1,6 +1,6 @@
 # eXeViewer
 
-[English version](README.md)
+[English version](README.md) · [Prueba eXeViewer online](https://exelearning.github.io/exeviewer/)
 
 Visualiza contenidos generados con eXeLearning directamente en tu navegador.
 
