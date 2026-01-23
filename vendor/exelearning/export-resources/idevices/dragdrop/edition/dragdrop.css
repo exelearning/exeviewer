@@ -1,0 +1,632 @@
+#dragdropQIdeviceForm {
+    width: 100%;
+}
+
+#dragdropQIdeviceForm input[type="button"] {
+	margin-right: 0 !important;
+}
+
+#dragdropQIdeviceForm input[type="radio"],
+#dragdropQIdeviceForm input[type="checkbox"],
+#dragdropQIdeviceForm input[type=button] {
+    cursor: pointer;
+}
+
+
+#dragdropQIdeviceForm #dadEPercentajeCards {
+    width: 9.5ch !important;
+    max-width: 9.5ch !important;
+}
+
+.DAD-DEOptionsMedia {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1em;
+    width: 100%;
+}
+
+/* Medias */
+.DAD-DEMultiMediaOption {
+    height: 100%;
+    min-height: 300px;
+    min-width: 400px;
+    position: relative;
+    width: 50%;
+}
+
+/* Drag */
+.DAD-DEMultimedia {
+    background-color: #fff;
+    border-radius: .5em;
+    height: 227px;
+    margin: 40px auto auto auto;
+    position: relative;
+    width: 400px;
+}
+
+.DAD-DEMedia {
+    border: 1px solid #cccccc;
+    border-radius: .5em;
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+}
+
+
+.DAD-DEOptionsGame {
+    min-height: 300px;
+    width: 50%;
+}
+
+
+
+.DAD-DEInputImage {
+    align-items: center;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    min-width: 100px;
+    width: 100%;
+}
+
+#ccgmQEIdeviceForm .DAD-DEInputImage input[type=text] {
+    flex-flow: 1;
+    margin-right: 0.2em;
+    min-width: 100px;
+    width: 100%;
+}
+
+.DAD-DEInputImage input[type=button] {
+    flex-shrink: 0;
+}
+
+.DAD-DEAuthorAlt {
+    align-items: center;
+    display: none;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+
+}
+
+.DAD-DEAuthorAlt div {
+    width: 49%;
+}
+
+.DAD-DEAuthorAlt label {
+    display: block;
+}
+
+.DAD-DEAuthorAlt input[type=text] {
+    width: 97%;
+}
+
+.DAD-DEAuthorAlt div {
+    width: 49%;
+}
+
+.DAD-DEAuthorAlt label {
+    display: block;
+}
+
+.DAD-DEAuthorAlt input[type=text] {
+    width: 97%;
+}
+
+.DAD-DEInputAudio,
+.DAD-DEInputImage {
+    align-items: center;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.DAD-DEInputAudio,
+.DAD-DEInputImage {
+    align-items: center;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.DAD-DEInputAudio input[type=text],
+.DAD-DEInputImage input[type=text] {
+    flex-flow: 1;
+    margin-right: 0.2em;
+    min-width: 100px;
+    width: 100%;
+}
+
+.DAD-DEInputAudio input[type=button],
+.DAD-DEInputImage input[type=button] {
+    flex-shrink: 0;
+}
+
+.DAD-EButtonImage {
+    height: 100%;
+    transition: all .3s ease-in-out;
+    width: 100%;
+}
+
+.DAD-DButtonImage:hover {
+    -webkit-transform: scale(1.05);
+    transform: scale(1.05);
+}
+
+#dragdropQIdeviceForm .DAD-EReport {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+/*Panel parejas */
+.DAD-EPanel {
+    padding: 0;
+    width: 100%;
+    max-width: 1200px;
+    position: relative;
+    padding-top: 1em;
+}
+
+.DAD-EPhrase {
+    align-items: flex-start;
+    display: flex;
+    justify-content: center;
+    flex-wrap: nowrap;
+    width: 100%;
+
+}
+
+.DAD-EBack {
+    background-color: rgb(220, 242, 255);
+    border-radius: 0.3em;
+
+}
+
+.DAD-EFront {
+    background-color: #eeeeee;
+    border-radius: 0.3em;
+}
+
+.DAD-EMultimedia {
+    margin: 0 auto 0.6em auto;
+    position: relative;
+    width: 240px;
+    min-height: 240px;
+    height: 240px;
+    min-width: 240px;
+    overflow: hidden;
+    border: 1px solid rgb(3, 112, 116);
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.20), 0 3px 6px 0 rgba(0, 0, 0, 0.19);
+    border-radius: 0.3em;
+}
+
+.DAD-ECard {
+    top: 4px;
+    left: 4px;
+    width: 232px;
+    height: 232px;
+    min-width: 232px;
+    background-color: white;
+    position: absolute;
+
+}
+
+.DAD-EMultimedia textarea {
+    left: 0;
+    top: 0;
+    position: absolute;
+
+}
+
+.DAD-EDatosCarta {
+    width: 50%;
+    max-width: 450px;
+    min-width: 400px;
+    border-radius: 0.3em;
+    padding: 0.7em;
+    padding-bottom: 1.3em;
+    height: auto;
+    margin-right: 0.6em;
+    margin-top: 1em;
+    cursor: pointer;
+}
+
+.DAD-EDatosCarta input[type=text] {
+    margin-right: .2em;
+    width: 100%;
+}
+
+/* Medias */
+
+.DAD-EImageFit {
+    width: 240px;
+    min-height: 240px;
+    height: 240px;
+    min-width: 240px;
+    object-fit: contain;
+    object-position: center;
+    margin: auto;
+    background-color: white;
+    position: absolute;
+}
+
+.DAD-EImage,
+.DAD-NoImage {
+    position: absolute;
+}
+
+.DAD-ECursor {
+    left: 0;
+    top: 0;
+    position: absolute;
+    display: none;
+}
+
+/* Opciones imagen */
+
+.DAD-EAuthorAlt {
+    align-items: center;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+}
+
+.DAD-EAuthorAlt div {
+    width: 49%;
+}
+
+.DAD-EAuthorAlt label {
+    display: block;
+}
+
+.DAD-EAuthorAlt input[type=text] {
+    width: 97%;
+}
+
+.DAD-EInputAudio,
+.DAD-EInputImage,
+.DAD-EInputText {
+    align-items: center;
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    min-width: 100px;
+    width: 100%;
+}
+
+.DAD-EInputAudio input[type=text],
+.DAD-EInputImage input[type=text] {
+    flex-flow: 1;
+    margin-right: 0.2em;
+    min-width: 100px;
+    width: 100%;
+
+}
+
+.DAD-EInputAudio input[type=button],
+.DAD-EInputImage input[type=button] {
+    flex-shrink: 0;
+}
+
+.DAD-ETextDiv {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.7);
+    color: black;
+    position: absolute;
+    color: '#000000';
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    border: 1px solid #ccc;
+    border-radius: 0.6em;
+    font-size: 1.3em;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    -webkit-hyphens: auto;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    hyphens: auto;
+}
+
+.DAD-ETextDiv * {
+    box-sizing: border-box;
+    margin-left: auto;
+    margin-right: auto;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    -webkit-hyphens: auto;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    hyphens: auto;
+
+}
+
+/* Itinerario */
+
+.DAD-EHit {
+    background-image: url(quextIEHit.png);
+    background-size: 100% 100%;
+    display: inline-block;
+    height: 1.5em;
+    width: 1.5em;
+}
+
+.DAD-Hide {
+    display: none;
+}
+
+.DAD-ECustomMessageDiv,
+.DAD-ECustomMessageDef {
+    margin-top: 0.6em;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+}
+
+.DAD-ECustomMessageDiv label,
+.DAD-ECustomMessageDef label {
+    white-space: nowrap;
+    margin-right: 0.1em;
+}
+
+.DAD-ECustomMessageDiv input[type=text],
+.DAD-ECustomMessageDef input[type=text] {
+    width: 100%;
+    max-width: 1000px;
+    margin-right: 0.2em;
+}
+
+/*Numero Preguntas */
+.DAD-ENumCardDiv {
+    align-items: center;
+    display: flex;
+    height: 1.5em;
+    justify-content: center;
+    position: absolute;
+    right: 0;
+    top: -1em;
+    width: 3em;
+    height: 3em;
+    z-index: 100;
+
+}
+
+.DAD-ENumCardsIcon {
+    background-image: url(quextIENumber.png);
+    background-size: 100% 100%;
+    display: inline-block;
+    height: 1.5em;
+    margin-right: 0px;
+    width: 1.5em;
+}
+
+.DAD-ENumCards {
+    font-weight: bold;
+    height: 1.5em;
+    text-align: center;
+    width: 2em;
+}
+
+.DAD-ECustomMessage {
+    align-items: center;
+    display: flex;
+    justify-content: flex-start;
+    margin-top: 1em;
+    width: 100%;
+}
+
+.DAD-ECustomMessage input[type=text] {
+    width: 100%;
+    margin-right: 0.1em;
+}
+
+.DAD-ECustomMessage label {
+    margin: 0 0.1em;
+}
+
+/* barra edición */
+.DAD-ENavigationButtons {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    margin-top: 1em;
+    width: 100%;
+}
+
+.DAD-ENavigationButton {
+    height: 1.7em;
+    margin: 0 .3em;
+    min-width: 1.7em;
+    width: 1.7em;
+}
+
+.DAD-EButtonImage {
+    height: 100%;
+    transition: all .3s ease-in-out;
+    width: 100%;
+}
+
+.DAD-EButtonImage:hover {
+    -webkit-transform: scale(1.05);
+    transform: scale(1.05);
+}
+
+.DAD-NumberCard {
+    text-align: center;
+    vertical-align: middle;
+    width: 3em;
+}
+
+.DAD-EReverseFacces {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.DAD-EReverseFacces a {
+    text-align: center;
+    display: inline-block;
+    margin-right: 1em;
+}
+
+.DAD-ECoord {
+    display: none;
+}
+
+#dragdropQIdeviceFormTab3 p:first-child {
+    margin-top: 0;
+}
+
+#dragdropQIdeviceFormTab3 {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2%;
+}
+
+#dragdropQIdeviceFormTab3>* {
+    flex: 0 0 48%;
+}
+
+#dragdropQIdeviceFormTab3> :first-child {
+    flex: 0 0 100%;
+}
+
+
+@media screen and (max-width:720px) {
+    #dragdropQIdeviceFormTab3>* {
+        flex: 0 0 100%;
+    }
+}
+
+#dragdropQIdeviceForm #dragdropQIdeviceFormTab3 label {
+    display: block;
+    margin-bottom: .2em;
+    color:  #0BA1A1;
+    font-weight: 500;
+}
+
+#dragdropQIdeviceForm #dragdropQIdeviceFormTab3 input {
+    width: 100%;
+}
+
+
+#dragdropQIdeviceForm .exe-block-info img {
+    margin-left: .2em;
+    vertical-align: middle;
+}
+
+
+
+/* Tabs (this should be common) */
+.exe-form-tabs {
+    list-style: none;
+    margin: 0 0 1.5em 0;
+    padding: 0;
+}
+
+#main .exe-form-tabs li {
+    display: inline;
+    list-style: none;
+    list-style-image: none;
+    margin: 0;
+    padding: 0;
+}
+
+.exe-form-tabs li:first-child a {
+    border-bottom-left-radius: 4px;
+    border-top-left-radius: 4px;
+}
+
+.exe-form-tabs li:last-child a {
+    border-bottom-right-radius: 4px;
+    border-top-right-radius: 4px;
+}
+
+.exe-form-tabs a {
+    background: #F9F9F9;
+    border: 1px solid #CCC;
+    color: #666;
+    display: inline-block;
+    padding: .5em 1em;
+}
+
+.exe-form-tabs li:not(:last-child) a {
+    border-right: none;
+}
+
+.exe-form-tabs .exe-form-active-tab {
+    background: #FFF;
+    color: #000;
+    font-weight: 500;
+}
+
+#gameQESCORMoptions {
+    margin-left: 1.5em;
+    visibility: hidden;
+}
+
+label[for=gameQEActivitySCORM] {
+    font-weight: bold;
+}
+
+#gameQESCORMinstructionsButton {
+    color: #777;
+    display: none;
+    margin: 10px 0 0 25px;
+}
+
+#gameQESCORMinstructionsButton ul {
+    list-style: none;
+    margin: 1.5em 0 .7em 0;
+    padding: 0;
+}
+
+#gameQESCORMinstructionsButton ul li {
+    list-style-image: none;
+    margin: 0 0 .5em 0;
+    padding: 0;
+}
+
+#gameQESCORMinstructionsAuto {
+    color: #777;
+    display: none;
+    margin: 10px 0 0 25px;
+}
+
+#gameQESCORMinstructionsAuto ul {
+    list-style: none;
+    margin: 1.5em 0 .7em 0;
+    padding: 0;
+}
+
+.GameModeHelpLink {
+    margin: 0 2px;
+    vertical-align: middle;
+}
+
+.GameModeLabel {
+    font-weight: normal
+}
+
+.DAD-TypeGameHelp {
+    display: none;
+    font-size: .95em
+}
+
+.Games-Reportdiv {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 2px;
+}

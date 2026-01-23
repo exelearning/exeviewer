@@ -1,0 +1,1492 @@
+.SLCNP-MainContainer a,
+.SLCNP-MainContainer a:visited,
+.SLCNP-MainContainer a:focus {
+    border: 0;
+    border-bottom: none;
+    border-width: 0;
+    text-decoration: none !important;
+}
+
+/* Contenedor */
+.SLCNP-MainContainer {
+    font-size: 1rem;
+    margin: 0 auto;
+    padding: 0;
+    width: 100%;
+    max-width: 750px;
+    position: relative;
+}
+
+.SLCNP-MainContainer * {
+    box-sizing: border-box;
+}
+
+.SLCNP-MainContainer p {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* Modo Pizarra digital */
+.SLCNP-DivModeBoard {
+    margin-top: .8em;
+    display: flex;
+    justify-content: center;
+    display: none;
+    position: relative;
+}
+
+a.SLCNP-ModeBoard,
+a.SLCNP-ModeBoardShow {
+    color: #6e6e6e;
+    font: normal 12px Helvetica, Arial, sans-serif;
+    text-decoration: none !important;
+    position: relative;
+    display: inline-block;
+    text-shadow: 0 1px 0 #fff;
+    -webkit-transition: border-color .218s;
+    -moz-transition: border .218s;
+    -o-transition: border-color .218s;
+    transition: border-color .218s;
+    background: #f3f3f3;
+    background: -moz-linear-gradient(linear, 0% 40%, 0% 70%, from(#F5F5F5), to(#F1F1F1));
+    border: solid 1px #dcdcdc;
+    border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    margin-right: 1em;
+    font-size: 1em;
+    padding: 0.6em 1em;
+    position: relative;
+    z-index: 10;
+    cursor: pointer;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-user-select: none;
+    text-align: center;
+    user-select: none;
+    white-space: nowrap;
+}
+
+a.SLCNP-ModeBoard:hover,
+a.SLCNP-ModeBoardShow:hover {
+    color: #333;
+    border-color: #999;
+    -moz-box-shadow: 0 2px 0 rgba(0, 0, 0, 0.2);
+    -webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+}
+
+a.SLCNP-ModeBoard:active,
+a.SLCNP-ModeBoardShow:active {
+    color: #000;
+    border-color: #444;
+}
+
+a.SLCNP-ModeBoardShow {
+    position: absolute;
+    bottom: 0;
+    right: 0
+}
+
+/* Instrucciones */
+.SLCNP-instructions {
+    margin: 0.3em auto;
+    width: 100%;
+    overflow: auto;
+}
+
+/* Minimizado */
+.SLCNP-GameMinimize {
+    display: none;
+    margin: 1em auto;
+    width: 100%;
+}
+
+.SLCNP-LinkMaximize {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+}
+
+.SLCNP-IconMinimize {
+    height: 2em;
+    margin-right: 0.5em;
+    width: 2em;
+}
+
+/* Juego */
+.SLCNP-GameContainer {
+    margin: 0 auto;
+    max-width: 750px;
+    padding: 1em 0.3em 0 0.3em;
+    position: relative;
+    width: 100%;
+}
+
+/* barra de puntuaciones */
+.SLCNP-GameScoreBoard {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.3em;
+    width: 100%;
+}
+
+.SLCNP-GameScoreBoard p {
+    font-size: 1.4em !important;
+    margin-right: 0.3em !important;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.SLCNP-GameScores {
+    align-items: center;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.SLCNP-GameScores>p:last-child {
+    text-align: left;
+}
+
+.SLCNP-LifesGame {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+}
+
+.SLCNP-NumberLifesGame {
+    display: none;
+}
+
+.SLCNP-TimeNumber {
+    align-items: center;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.SLCNP-PTime {
+    margin-left: 0.3em;
+    min-width: 3.5em;
+    text-align: center;
+    width: auto;
+}
+
+/* Pista */
+.SLCNP-ShowClue {
+    margin: 0.3em auto;
+    min-height: 0.4em;
+    padding: 0;
+    width: 100%;
+}
+
+.SLCNP-PShowClue {
+    color: #5877c6;
+    text-align: center;
+    width: 100%;
+}
+
+/* Multimedia */
+.SLCNP-Multimedia {
+    background-color: transparent;
+    border-radius: 0.6em;
+    margin: 0.3em auto;
+    max-width: 1024px;
+    overflow: hidden;
+    position: relative;
+    width: 65%;
+}
+
+.SLCNP-Multimedia:before {
+    content: '';
+    display: block;
+    padding-top: 56%;
+}
+
+.SLCNP-Protector,
+.SLCNP-NoImage,
+.SLCNP-Video,
+.SLCNP-Cover {
+    bottom: 0;
+    left: 0;
+    margin: auto;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 100%;
+    height: 100%
+}
+
+.SLCNP-Images,
+.SLCNP-GameOver,
+.SLCNP-EText {
+    border: 0;
+    border-radius: 0.6em;
+    height: 100%;
+    left: 0;
+    position: absolute;
+    text-decoration: none !important;
+    top: 0;
+    width: 100%;
+}
+
+.SLCNP-Video {
+    bottom: 0;
+    left: 0;
+    margin: auto;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 100%;
+    height: 100%
+}
+
+.SLCNP-EText {
+    border: none;
+    border-radius: 0.6em;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    position: absolute;
+    text-decoration: none !important;
+    overflow-y: auto;
+    padding-right: 0.7em;
+    z-index: 101;
+}
+
+.SLCNP-Protector {
+    background-color: white;
+    opacity: 0.00001;
+    z-index: 10;
+}
+
+.SLCNP-Cursor {
+    width: 2em;
+    left: 0;
+    top: 0;
+    position: absolute;
+    z-index: 3;
+    display: none;
+}
+
+.SLCNP-LinkAudio {
+    bottom: 3px;
+    display: none;
+    position: absolute;
+    right: 3px;
+    width: 2em;
+    z-index: 15;
+}
+
+/* Game Over */
+.SLCNP-GameOver {
+    position: absolute;
+    width: 100%;
+    top: 0;
+    z-index: 6;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.SLCNP-DataImage {
+    height: 100%;
+    padding: 0;
+    position: relative;
+    width: 50%;
+}
+
+.SLCNP-DataScore {
+    padding: 0;
+    width: 50%;
+}
+
+.SLCNP-DataScore p {
+    margin: 0.7em;
+}
+
+.SLCNP-HistGGame,
+.SLCNP-LostGGame {
+    bottom: 0;
+    display: none;
+    left: 0;
+    margin: auto;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 80%;
+}
+
+.SLCNP-HistGGame:before,
+.SLCNP-LostGGame:before {
+    content: '';
+    display: block;
+    padding-top: 100%;
+}
+
+/*Barra de progreso*/
+.SLCNP-ProgressBar {
+    background-color: black;
+    display: none;
+    height: 0.3em;
+    margin: 0.3em auto;
+    padding: 0;
+    position: relative;
+    width: 65%;
+}
+
+.SLCNP-InterBar {
+    background-color: #b3092f;
+    height: 0.3em;
+    left: 0;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    top: 0;
+    width: 0px;
+}
+
+.SLCNP-PointBar {
+    background-color: #8697cb;
+    height: 0.6em;
+    left: 0;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    top: -0.15em;
+    width: 0.6em;
+    z-index: 9;
+}
+
+.SLCNP-Tooltip {
+    display: none;
+    position: absolute;
+    width: 250px;
+    padding: 10px;
+    margin: 0 0 12px 0;
+    z-index: 4;
+    bottom: 170%;
+    background: #f3d55a;
+    color: #1c1b1b;
+    text-align: center;
+    font-weight: bold;
+    font-size: 0.7em;
+}
+
+.SLCNP-Tooltip:before {
+    content: "";
+    position: absolute;
+    border: 0 solid #f3d55a;
+    bottom: -14px;
+    z-index: 4;
+    border-right-width: 10px;
+    border-bottom: 14px solid transparent;
+    width: 50%;
+    right: 50%;
+}
+
+.SLCNP-Tooltip:after {
+    content: "";
+    position: absolute;
+    bottom: -14px;
+    z-index: 4;
+    border: 0 solid #f3d55a;
+    border-bottom: 14px solid transparent;
+    border-left-width: 10px;
+    width: 50%;
+    left: 50%;
+}
+
+/* Barra de navegación */
+.SLCNP-NavigationButtons {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    margin-top: 1em;
+    width: 100%;
+    display: none;
+}
+
+.SLCNP-NavigationButton {
+    height: 1.5em;
+    margin: 0 .3em;
+    min-width: 1.5em;
+    width: 1.5em;
+}
+
+.SLCNP-NumberQuestion {
+    font-weight: bold;
+    height: 1.5em;
+    line-height: 1.5em;
+    text-align: center;
+    vertical-align: middle;
+    width: 2em;
+}
+
+/* Author */
+.SLCNP-AuthorLicence {
+    margin: 0.3em auto 0 auto;
+    min-height: 0.4em;
+    width: 100%;
+}
+
+.SLCNP-AuthorLicence p {
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    width: 100%;
+}
+
+/* Código acceso */
+.SLCNP-Cubierta {
+    width: 100%;
+    height: 95%;
+    position: absolute;
+    top: 1%;
+    left: 0;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+    z-index: 1001;
+    background-color: rgb(255, 255, 255, 0.1)
+}
+
+.SLCNP-Cubierta .exeQuextIcons-Submit {
+    background: url(exequextreply.png) no-repeat;
+    background-size: 100% 100%;
+    height: 1.7em;
+    width: 1.7em;
+}
+
+.SLCNP-CodeAccessDiv {
+    padding: 1.5em 0.5em 1.5em 0.5em;
+    margin: 0 auto;
+    width: 95%;
+    max-width: 450px;
+    background-color: white;
+    border-radius: 0.5em;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.20), 0 3px 6px 0 rgba(0, 0, 0, 0.19);
+}
+
+.SLCNP-MessageCodeAccessE {
+    text-align: center;
+    vertical-align: middle;
+    width: 100%;
+}
+
+.SLCNP-DataCodeAccessE {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    margin: 0.7em auto 0 auto;
+    width: 100%;
+}
+
+.SLCNP-CodeAccessE {
+    margin: 0 .3em;
+    max-width: 350px;
+    width: 60%;
+    text-align: center;
+}
+
+/* Inicio juego */
+.SLCNP-StartGame {
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-user-select: none;
+    margin: 1em auto 0 auto;
+    text-align: center;
+    user-select: none;
+    width: 100%;
+}
+
+.SLCNP-StartGame a:hover {
+    text-decoration: underline;
+}
+
+/* Pegunta tipo test */
+.SLCNP-QuestionDiv {
+    display: none;
+    margin: 0.3em auto;
+    width: 100%;
+}
+
+.SLCNP-Question {
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-user-select: none;
+    border-radius: 0.3em;
+    margin: 0 auto;
+    margin-bottom: 0.4em;
+    min-height: 3.2em;
+    padding: 0.3em;
+    text-align: center;
+    user-select: none;
+    vertical-align: middle;
+    background-color: transparent;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Respuesta  tipo test */
+.SLCNP-OptionsDiv {
+    background-color: transparent;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.SLCNP-MainContainer a.SLCNP-Options {
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-user-select: none;
+    align-items: center;
+    background-color: #FFF;
+    border: 1px solid #777777;
+    border-radius: 0.4em;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0.1em;
+    min-height: 3em;
+    padding: 0.3em;
+    user-select: none;
+    width: 48%;
+    text-align: center;
+}
+
+.SLCNP-OptionsDiv a {
+    border: 1px solid #777777;
+    color: #1c1b1b;
+}
+
+.SLCNP-AnswersDiv {
+    align-items: center;
+    display: flex;
+    justify-content: flex-end;
+    padding: 0;
+}
+
+.SLCNP-Answers {
+    align-items: center;
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 0.3em;
+    padding: 0;
+    width: 8em;
+}
+
+.SLCNP-AnswersOptions {
+    border-radius: 2px;
+    height: 1.4em;
+    width: 1.4em;
+}
+
+.SLCNP-Answer1 {
+    background-color: #b3092f;
+    border: 1px solid #1c1b1b;
+    border-radius: 3px;
+    margin-left: 0.1em;
+}
+
+.SLCNP-Answer2 {
+    background-color: #5877c6;
+    border: 1px solid #1c1b1b;
+    border-radius: 3px;
+    margin-left: 0.1em;
+}
+
+.SLCNP-Answer3 {
+    background-color: #00a300;
+    border: 1px solid #1c1b1b;
+    border-radius: 3px;
+    margin-left: 0.1em;
+}
+
+.SLCNP-Answer4 {
+    background-color: #f3d55a;
+    border: 1px solid #1c1b1b;
+    border-radius: 2px;
+    margin-left: 0.1em;
+}
+
+/* Pregunta tipo ahorcado */
+.SLCNP-Definition {
+    align-items: center;
+    display: flex;
+    font-weight: 600;
+    justify-content: center;
+    margin: 0.5em auto;
+    min-height: 2em;
+    text-align: center;
+    width: 90%;
+}
+
+.SLCNP-Definition a {
+    cursor: pointer;
+    margin: 0;
+    text-align: center;
+    text-decoration: none !important;
+    width: 100%;
+    z-index: 8;
+}
+
+.SLCNP-Prhase {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 0.5em auto;
+    min-height: 3em;
+    width: 97%;
+}
+
+.SLCNP-Word {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    padding: 6px;
+    padding-bottom: 2px;
+    padding-top: 3px;
+}
+
+.SLCNP-Letter {
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    align-items: center;
+    border: 1px solid #555555;
+    border-radius: 3px;
+    display: flex;
+    font-size: 1.3em;
+    font-weight: 600;
+    height: 1.8em;
+    justify-content: center;
+    margin: 1px;
+    padding: 0;
+    text-align: center;
+    user-select: none;
+    width: 1.3em;
+}
+
+.SLCNP-Letter.blue {
+    color: #5877c6;
+}
+
+.SLCNP-Letter.green {
+    color: #00a300;
+}
+
+.SLCNP-Letter.red {
+    color: #b3092f;
+}
+
+.SLCNP-Letter.black {
+    color: #1c1b1b;
+}
+
+/* Respuesta ahorcado */
+.SLCNP-DivReply {
+    align-items: center;
+    background-color: transparent;
+    display: flex;
+    justify-content: center;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.SLCNP-EdReply {
+    margin: auto 0.2em;
+    max-width: 400px;
+    width: 60%;
+    text-align: center;
+}
+
+.SLCNP-GameContainer .exeQuextIcons-MoveOne,
+.SLCNP-GameContainer .exeQuextIcons-Submit {
+    height: 1.7em;
+    width: 1.7em;
+}
+
+/*  Video Introducción */
+.SLCNP-VideoIntroContainer {
+    align-items: center;
+    display: none;
+    justify-content: flex-end;
+    margin: 0.3em;
+    padding: 0;
+    width: 98%;
+}
+
+.SLCNP-VideoIntroDiv {
+    background-color: white;
+    border-radius: 0.6em;
+    display: none;
+    height: 100%;
+    left: 0;
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: 200;
+}
+
+input.SLCNP-VideoIntroClose {
+    cursor: pointer;
+    margin: 0;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    background: #fff;
+    border: none;
+    font-size: 0.9em;
+    padding: 5px 20px;
+    border-radius: 4px;
+}
+
+input.SLCNP-VideoIntroClose:hover {
+    background: #858585;
+    color: #fff;
+}
+
+.SLCNP-LinkVideoIntroShow {
+    display: none;
+}
+
+.SLCNP-BottonContainerDiv,
+.Games-BottonContainer {
+    align-items: center;
+    display: flex;
+    justify-content: flex-end;
+    margin: 0.1em auto;
+    padding: 0;
+    width: 100%;
+}
+
+.SLCNP-BottonContainerDivEnd {
+    justify-content: flex-end;
+}
+
+/* Modo Pizarra digital */
+.SLCNP-DivModeBoard {
+    margin-top: .8em;
+    display: flex;
+    justify-content: center;
+    display: none;
+    position: relative;
+}
+
+a.SLCNP-ModeBoard,
+a.SLCNP-ModeBoardShow {
+    color: #6e6e6e;
+    font: normal 12px Helvetica, Arial, sans-serif;
+    text-decoration: none !important;
+    position: relative;
+    display: inline-block;
+    text-shadow: 0 1px 0 #fff;
+    -webkit-transition: border-color .218s;
+    -moz-transition: border .218s;
+    -o-transition: border-color .218s;
+    transition: border-color .218s;
+    background: #f3f3f3;
+    background: -webkit-gradient(linear, 0% 40%, 0% 70%, from(#F5F5F5), to(#F1F1F1));
+    background: -moz-linear-gradient(linear, 0% 40%, 0% 70%, from(#F5F5F5), to(#F1F1F1));
+    border: solid 1px #dcdcdc;
+    border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    margin-right: 1em;
+    font-size: 1em;
+    padding: 0.6em 1em;
+    position: relative;
+    z-index: 4;
+    cursor: pointer;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-user-select: none;
+    text-align: center;
+    user-select: none;
+    white-space: nowrap;
+}
+
+a.SLCNP-ModeBoard:hover,
+a.SLCNP-ModeBoardShow:hover {
+    color: #333;
+    border-color: #999;
+    -moz-box-shadow: 0 2px 0 rgba(0, 0, 0, 0.2);
+    -webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+}
+
+a.SLCNP-ModeBoard:active,
+a.SLCNP-ModeBoardShow:active {
+    color: #000;
+    border-color: #444;
+}
+
+a.SLCNP-ModeBoardShow {
+    position: absolute;
+    bottom: 0;
+    right: 0
+}
+
+/*Intrucciones */
+.SLCNP-DivInstructions {
+    margin: 1em 0 0 0;
+    text-align: center;
+    width: 95%;
+}
+
+.SLCNP-parpadea {
+    -webkit-animation-duration: 1s;
+    -webkit-animation-iteration-count: 5;
+    -webkit-animation-name: SLCNP-parpadeo;
+    -webkit-animation-timing-function: linear;
+    animation-duration: 1s;
+    animation-iteration-count: 5;
+    animation-name: SLCNP-parpadeo;
+    animation-timing-function: linear;
+}
+
+/* FeedBack*/
+.SLCNP-DivFeedBack {
+    align-items: center;
+    background-color: rgba(232, 232, 232, 0.8);
+    border-radius: .6em;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: center;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: 11;
+}
+
+.SLCNP-DivFeedBack button {
+    cursor: pointer;
+}
+
+.selecciona-feedback-game {
+    -moz-box-shadow: 0 10px 6px -6px #999;
+    -webkit-box-shadow: 0 10px 6px -6px #999999;
+    background-color: #fff;
+    border: 1px solid #999;
+    border-radius: .6em;
+    box-shadow: 0 10px 6px -6px #999;
+    display: none;
+    margin-bottom: 1em;
+    max-height: 80%;
+    min-height: 10em;
+    overflow-y: auto;
+    padding: 1em;
+    width: 95%;
+}
+
+.selecciona-extra-content {
+    margin-top: 1.7em;
+}
+
+/*  Preview QuExtion */
+.SLCNP-ReloadContainer {
+    align-items: center;
+    display: flex;
+    justify-content: flex-end;
+    margin: 5px;
+    padding: 0;
+    width: 98%;
+}
+
+.SLCNP-previewQuestions {
+    background-color: transparent;
+    display: none;
+    margin: 5px auto;
+    max-width: 750px;
+    position: relative;
+    width: 100%;
+}
+
+.SLCNP-previewQuestionsDiv {
+    background-color: #071717;
+    border-radius: 0.6em;
+    color: #ffffff;
+    display: none;
+    height: 100%;
+    left: 0;
+    overflow-y: auto;
+    padding: 0.5em;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: 200;
+}
+
+.SLCNP-PreviewQuestionsTitle {
+    font-weight: bold;
+    margin: 0 auto 0.5em auto;
+    text-align: center;
+    width: 95%;
+}
+
+.SLCNP-prevQuestP {
+    font-size: 0.9em;
+    margin: 3px auto;
+    margin-left: 5px;
+    width: 90%;
+}
+
+.SLCNP-previewQuestionsClose {
+    bottom: 0.4em;
+    position: absolute;
+    right: 0.5em;
+}
+
+.exeQuextIcons-Preview {
+    background-image: url(exequextsq.png);
+    background-size: 100% 100%;
+}
+
+.exeQuextIcons-PauseVideo {
+    background-image: url(exequextpause.png);
+    background-size: 100% 100%;
+}
+
+.exeQuextIcons-PlayVideo {
+    background-image: url(exequextplayvideo.png);
+    background-size: 100% 100%;
+}
+
+.exeQuextIcons-Reload {
+    background-image: url(exequextreload.png);
+    background-size: 100% 100%;
+}
+
+.exeQuextIcons-First {
+    background-image: url(exequextfirstr.png);
+    background-size: 100% 100%;
+}
+
+.exeQuextIcons-Next {
+    background-image: url(exequextnextr.png);
+    background-size: 100% 100%;
+}
+
+.exeQuextIcons-Previous {
+    background-image: url(exequextpreviousr.png);
+    background-size: 100% 100%;
+}
+
+.exeQuextIcons-Last {
+    background-image: url(exequextlastr.png);
+    background-size: 100% 100%;
+}
+
+/* Enlace activo */
+.SLCNP-Activo {
+    -moz-transition: transform 0.3s;
+    -ms-transition: transform 0.3s;
+    -o-transition: transform 0.3s;
+    -webkit-filter: drop-shadow(.12em .12em .12em rgba(0, 0, 0, 0.5));
+    -webkit-transition: transform 0.3s;
+    cursor: pointer;
+    filter: drop-shadow(.12em .12em .12em rgba(0, 0, 0, 0.5));
+    transition: transform 0.3s;
+}
+
+.SLCNP-LinkMaximize:hover .SLCNP-Activo,
+.SLCNP-Activo:hover {
+    -moz-transform: scale(1.1);
+    -ms-transform: scale(1.1);
+    -o-transform: scale(1.1);
+    -webkit-transform: scale(1.1);
+    transform: scale(1.1);
+}
+
+/* Puntuacion */
+.Games-BottonContainer {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+
+.Games-BottonContainer * {
+    margin: 0;
+    padding: 0;
+}
+
+.Games-GetScore input[type=button] {
+    padding: 0.3em 0.5em;
+    margin: 0 .5em 0 0.5em;
+    width: auto;
+}
+
+.Games-GetScore span {
+    display: block;
+}
+
+.Games-GetScore form {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+}
+
+.Games-GetScore {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 1em
+}
+
+.Games-OverlayImage {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+}
+
+.Games-FullScreenImage {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+/* Iconos */
+.SLCNP-GameContainer .exeQuextIcons {
+    background-size: 100% 100%;
+    height: 1.4em;
+    margin-right: 0.3em;
+    width: 1.4em;
+}
+
+.SLCNP-GameContainer .exeQuextIcons-Video,
+.SLCNP-GameContainer .exeQuextIcons-Submit {
+    height: 1.7em;
+    width: 1.7em;
+}
+
+.SLCNP-MainContainer .exeQuextIcons-Submit {
+    background: url(exequextreply.png) no-repeat;
+    background-size: 100% 100%;
+}
+
+.SLCNP-MainContainer .exeQuextIcons-MoveOne {
+    background: url(exequextmoveon.png) no-repeat;
+    background-size: 100% 100%;
+}
+
+.SLCNP-GameContainer .exeQuextIcons-Minimize {
+    background-image: url(exequextmin.svg);
+    background-size: 100% 100%;
+}
+
+.SLCNP-GameContainer .exeQuextIcons-Hit {
+    background-image: url(exequexthits.svg);
+    background-size: 100% 100%;
+}
+
+.SLCNP-GameContainer .exeQuextIcons-FullScreen {
+    background-image: url(exequextfull.svg);
+    background-size: 100% 100%;
+}
+
+.SLCNP-GameContainer .exeQuextIcons-Error {
+    background-image: url(exequextrerrors.svg);
+    background-size: 100% 100%;
+}
+
+.SLCNP-GameContainer .exeQuextIcons-Score {
+    background-image: url(exequextscore.svg);
+    background-size: 100% 100%;
+}
+
+.SLCNP-GameContainer .exeQuextIcons-Time {
+    background-image: url(exequexttime.svg);
+    background-size: 100% 100%;
+}
+
+.SLCNP-GameContainer .exeQuextIcons-Number {
+    background-image: url(exequextnumber.svg);
+    background-size: 100% 100%;
+}
+
+.SLCNP-GameContainer .exeQuextIcons-Life {
+    background-image: url(exequextlive.png);
+    background-size: 100% 100%;
+}
+
+.SLCNP-GameContainer .exeQuextIcons-Video {
+    background-image: url(exequextvideo.png);
+    background-size: 100% 100%;
+}
+
+/* Full Screen */
+div:fullscreen .exeQuextIcons-FullScreen {
+    background-image: url(exequextfull.svg);
+    background-size: 100% 100%;
+}
+
+div:-webkit-full-screen .exeQuextIcons-FullScreen {
+    background: url(exequextfull.svg);
+    background-size: 100% 100%;
+}
+
+div:-moz-full-screen .exeQuextIcons-FullScreen {
+    background: url(exequextfull.svg);
+    background-size: 100% 100%;
+}
+
+div:-webkit-full-screen .SLCNP-Options {
+    min-height: 3.2em;
+}
+
+div:-moz-full-screen .SLCNP-Options {
+    min-height: 3.2em;
+    ;
+}
+
+div:fullscreen .SLCNP-Options {
+    min-height: 3.2em;
+}
+
+div:fullscreen .SLCNP-Question {
+    min-height: 3.2em;
+}
+
+div:-webkit-full-screen .SLCNP-Question {
+    min-height: 3.2em;
+}
+
+div:-moz-full-screen .SLCNP-Question {
+    min-height: 3.2em;
+}
+
+div:fullscreen .SLCNP-Multimedia,
+div:-webkit-full-screen .SLCNP-Multimedia,
+div:-moz-full-screen .SLCNP-Multimedia {
+    background-color: #fff;
+    margin: 3em;
+    margin-left: auto;
+    margin-right: auto;
+    top: 3em;
+}
+
+div:fullscreen .SLCNP-LinkMinimize {
+    display: none;
+}
+
+.SLCNP-GameContainer:-webkit-full-screen {
+    background-color: white;
+    height: 100vh;
+    width: 100%;
+    padding-top: 3px;
+    overflow-y: auto;
+}
+
+.SLCNP-GameContainer:-moz-full-screen {
+    background-color: white;
+    height: 100vh;
+    width: 100%;
+    padding-top: 3px;
+    overflow-y: auto;
+}
+
+.SLCNP-GameContainer:-ms-full-screen {
+    background-color: white;
+    height: 100vh;
+    width: 100%;
+    padding-top: 3px;
+    overflow-y: auto;
+}
+
+.SLCNP-GameContainer:fullscreen {
+    background-color: white;
+    height: 100vh;
+    width: 100%;
+    padding-top: 3px;
+    overflow-y: auto;
+}
+
+.SLCNP-GameContainer:-o-full-screen {
+    background-color: white;
+    height: 100vh;
+    width: 100%;
+}
+
+.Games-ReportIconDiv {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 0.1em;
+    width: 100%;
+    margin-bottom: 6px;
+}
+
+.Games-ReportIconDiv img {
+    width: 16px;
+    height: 16px;
+    display: block;
+}
+
+.Games-ReportIconDiv span {
+    font-size: 0.9em;
+}
+
+@-moz-keyframes SLCNP-parpadeo {
+    0% {
+        opacity: 1.0;
+    }
+
+    50% {
+        opacity: 0.0;
+    }
+
+    100% {
+        opacity: 1.0;
+    }
+}
+
+@-webkit-keyframes SLCNP-parpadeo {
+    0% {
+        opacity: 1.0;
+    }
+
+    50% {
+        opacity: 0.0;
+    }
+
+    100% {
+        opacity: 1.0;
+    }
+}
+
+@keyframes SLCNP-parpadeo {
+    0% {
+        opacity: 1.0;
+    }
+
+    50% {
+        opacity: 0.0;
+    }
+
+    100% {
+        opacity: 1.0;
+    }
+}
+
+@media screen and (max-width:550px) {
+    .SLCNP-MainContainer {
+        font-size: 0.9rem;
+    }
+
+    .SLCNP-Question {
+        margin-bottom: 0.5em;
+    }
+
+    .SLCNP-LinkFullScreen {
+        display: none;
+    }
+
+    .SLCNP-instructions {
+        margin: 0.1em auto;
+    }
+
+    .SLCNP-DivInstructions {
+        display: none;
+    }
+
+    .SLCNP-PShowClue {
+        font-size: 0.9em;
+    }
+
+    .SLCNP-StartGame a {
+        font-size: 0.9em;
+    }
+
+    .SLCNP-AuthorLicence p {
+        font-size: 0.9em;
+    }
+}
+
+@media screen and (max-width:470px) {
+    .SLCNP-MainContainer {
+        font-size: 0.9rem;
+    }
+
+    .SLCNP-PShowClue {
+        font-size: 0.8em;
+    }
+
+    .SLCNP-AuthorLicence p {
+        font-size: 0.8em;
+    }
+
+    .SLCNP-Question {
+        margin-bottom: 0.3em;
+    }
+
+    .SLCNP-Multimedia {
+        width: 95%;
+    }
+
+    .SLCNP-LifesGame {
+        display: none;
+    }
+
+    .SLCNP-NumberLifesGame {
+        align-items: center;
+        display: flex;
+        justify-content: center;
+    }
+
+    .SLCNP-LinkMinimize {
+        display: none;
+    }
+
+    .SLCNP-DataCodeAccessE label {
+        display: none;
+    }
+
+    .SLCNP-GameContainer .exeQuextIcons-MoveOne,
+    .SLCNP-GameContainer .exeQuextIcons-Submit,
+    .SLCNP-GameContainer .exeQuextIcons-Video {
+        height: 2em;
+        width: 2em;
+    }
+
+
+}
+
+@media screen and (max-width:340px) {
+    .SLCNP-MainContainer {
+        font-size: 0.8rem;
+    }
+
+    .SLCNP-GameScoreBoard p {
+        font-weight: normal;
+        margin: 0.1em;
+        padding: 0;
+    }
+
+    .SLCNP-GameContainer .exeQuextIcons {
+        margin: 0;
+        padding: 0;
+    }
+
+    .SLCNP-GameContainer .SLCNP-GameScoreBoard p {
+        padding: 0;
+    }
+
+    .SLCNP-GameScores {
+        width: 50%;
+    }
+
+    .SLCNP-TimeNumber {
+        width: 45%;
+    }
+
+    .SLCNP-instructions p {
+        margin: 0 auto;
+    }
+}
+
+@media screen and (max-width:295px) {
+    .SLCNP-MainContainer {
+        font-size: 0.7rem;
+    }
+
+    .SLCNP-GameScoreBoard {
+        justify-content: flex-start;
+    }
+
+    .SLCNP-GameScores {
+        width: 50%;
+    }
+
+    .SLCNP-TimeNumber {
+        width: 42%;
+    }
+}
+
+@media screen and (max-width:265px) {
+    .SLCNP-MainContainer {
+        font-size: 0.6rem;
+    }
+
+    .SLCNP-GameScoreBoard p {
+        font-weight: normal;
+        margin: 2px;
+    }
+
+    .SLCNP-GameContainer .exeQuextIcons {
+        height: 1.1em;
+        width: 1.1em;
+    }
+
+    .SLCNP-GameContainer .exeQuextIcons-Submit,
+    .SLCNP-GameContainer .exeQuextIcons-Video {
+        height: 2em;
+        width: 2em;
+    }
+
+    .SLCNP-GameScores {
+        width: auto;
+    }
+
+    .SLCNP-TimeNumber {
+        justify-content: flex-start;
+        width: auto;
+    }
+
+    .SLCNP-Letter {
+        font-size: 1.2em;
+        height: 1.7em;
+        margin: 0;
+        width: 1.2em;
+    }
+}
+
+@media screen and (max-width:235px) {
+
+    .SLCNP-GameScoreBoard .exeQuextIcons-Life,
+    .SLCNP-GameScoreBoard .exeQuextIcons-Time {
+        display: none;
+    }
+}
+
+@media screen and (min-width: 1400px) {
+    div:fullscreen .SLCNP-Multimedia {
+        background-color: #fff;
+        margin: 2em auto;
+        top: 1.4em;
+    }
+}
+
+@media screen and (min-width: 700px) and (max-height: 800px) {
+    div:fullscreen .SLCNP-Multimedia {
+        background-color: #fff;
+        margin-bottom: 0.6em;
+    }
+}
+
+/* To review */
+.selecciona-instructions {
+    overflow: auto;
+}

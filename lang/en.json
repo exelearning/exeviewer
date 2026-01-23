@@ -4,7 +4,7 @@
         "description": "View eXeLearning content packages in your browser"
     },
     "welcome": {
-        "dragDrop": "Drag and drop your <strong>.zip</strong> or <strong>.elpx</strong> file here",
+        "dragDrop": "Drag and drop your <strong>.zip</strong>, <strong>.elpx</strong> or <strong>.elp</strong> file here",
         "or": "or",
         "browseFiles": "Browse Files",
         "loadFromUrl": "Load from URL (supports Nextcloud and ownCloud links)",
@@ -28,10 +28,12 @@
         "loadingContent": "Loading content...",
         "processingFile": "Processing file...",
         "downloadingFile": "Downloading file...",
-        "downloading": "Downloading..."
+        "downloading": "Downloading...",
+        "convertingLegacy": "Converting legacy .elp file...",
+        "generatingHtml": "Generating HTML5 content..."
     },
     "errors": {
-        "invalidFile": "Please select a valid .zip or .elpx file",
+        "invalidFile": "Please select a valid .zip, .elpx or .elp file",
         "emptyZip": "The file appears to be empty",
         "noHtmlFiles": "No HTML files found in the package",
         "processingFailed": "Failed to process the file",
@@ -43,13 +45,15 @@
         "downloadFailed": "Could not download the file. Please check the URL and try again.",
         "urlAccessDenied": "Access denied. The file may be private or password protected.",
         "urlNotFound": "File not found. Please check the URL.",
-        "invalidFileType": "The URL does not point to a valid .zip or .elpx file",
+        "invalidFileType": "The URL does not point to a valid .zip, .elpx or .elp file",
         "networkError": "Please check your connection and try again.",
         "notAZipFile": "Could not process the file. It may not be a valid .zip or .elpx file.",
         "notExeContent": "The file does not appear to be an eXeLearning package. Please select a valid .zip or .elpx file exported from eXeLearning.",
         "storageQuotaExceeded": "The file is too large for your browser's storage limit. Try closing other tabs or clearing browser data.",
         "storageQuotaWarning": "The file ({fileSize}) may exceed available storage ({available}). Saving might fail.",
-        "googleDriveBlocked": "Google Drive blocks direct downloads from web applications. Please download the file from Google Drive, then drag and drop it here."
+        "googleDriveBlocked": "Google Drive blocks direct downloads from web applications. Please download the file from Google Drive, then drag and drop it here.",
+        "legacyConversionFailed": "Failed to convert .elp file",
+        "legacyNotSupported": "Legacy .elp support not available"
     },
     "accessibility": {
         "loading": "Loading...",

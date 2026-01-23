@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<idevice>
+    <title>TriviExt</title>
+    <css-class>trivial</css-class>
+    <category>Games</category>
+    <icon>
+        <name>trivial-icon</name>
+        <url>trivial-icon.svg</url>
+        <type>img</type>
+    </icon>
+    <downloadable>0</downloadable>
+</idevice>

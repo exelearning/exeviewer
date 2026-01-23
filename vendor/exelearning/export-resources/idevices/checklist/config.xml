@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<idevice>
+    <title>Checklist</title>
+    <css-class>checklist</css-class>
+    <category>Assessment and tracking</category>
+    <icon>
+        <name>checklist-icon</name>
+        <url>checklist-icon.svg</url>
+        <type>img</type>
+    </icon>
+    <downloadable>0</downloadable>
+</idevice>

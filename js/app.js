@@ -574,7 +574,7 @@
             const urlObj = new URL(url);
             const pathname = urlObj.pathname;
             const filename = pathname.split('/').pop();
-            if (filename && (filename.endsWith('.zip') || filename.endsWith('.elpx'))) {
+            if (filename && (filename.endsWith('.zip') || filename.endsWith('.elpx') || filename.endsWith('.elp'))) {
                 return decodeURIComponent(filename);
             }
         } catch (e) {
@@ -712,7 +712,7 @@
 
             // Validate file extension or content type
             const lowerFilename = filename.toLowerCase();
-            if (!lowerFilename.endsWith('.zip') && !lowerFilename.endsWith('.elpx') && !isValidType) {
+            if (!lowerFilename.endsWith('.zip') && !lowerFilename.endsWith('.elpx') && !lowerFilename.endsWith('.elp') && !isValidType) {
                 throw new Error(i18n.t('errors.invalidFileType'));
             }
 
@@ -785,12 +785,74 @@
     }
 
     /**
+     * Process legacy .elp file using ElpConverter
+     * @param {File} file - The .elp file to process
+     */
+    async function processLegacyElp(file) {
+        if (!window.ElpConverter || !window.ElpConverter.isSupported()) {
+            showError('errors.legacyNotSupported');
+            return;
+        }
+
+        try {
+            hideError();
+            showLoading(i18n.t('loading.convertingLegacy'));
+
+            // Ensure Service Worker is ready
+            if (!state.serviceWorkerReady) {
+                updateLoadingText(i18n.t('loading.registeringSW'));
+                await registerServiceWorker();
+            }
+
+            // Clear any previous content
+            await clearServiceWorkerContent();
+
+            const result = await window.ElpConverter.convert(file, (phase, percent) => {
+                if (phase === 'generating') {
+                    updateLoadingText(i18n.t('loading.generatingHtml'));
+                }
+            });
+
+            if (!result.success) {
+                console.error('[App] ELP conversion failed:', result.error);
+                showError('errors.legacyConversionFailed');
+                hideLoading();
+                return;
+            }
+
+            updateLoadingText(i18n.t('loading.loadingContent'));
+
+            // Send to Service Worker (existing flow)
+            await sendContentToServiceWorker(result.files);
+
+            state.currentPackageName = file.name;
+
+            // Small delay to ensure SW is ready to serve
+            await new Promise(resolve => setTimeout(resolve, 200));
+
+            showViewer();
+
+        } catch (error) {
+            console.error('[App] Error processing legacy ELP:', error);
+            showError('errors.legacyConversionFailed');
+            hideLoading();
+        }
+    }
+
+    /**
      * Process the selected file
      * @param {File} file - The file to process
      */
     async function processFile(file) {
         // Validate file type
         const fileName = file.name.toLowerCase();
+
+        // Check for legacy .elp files
+        if (fileName.endsWith('.elp')) {
+            await processLegacyElp(file);
+            return;
+        }
+
         if (!fileName.endsWith('.zip') && !fileName.endsWith('.elpx')) {
             showError('errors.invalidFile');
             return;

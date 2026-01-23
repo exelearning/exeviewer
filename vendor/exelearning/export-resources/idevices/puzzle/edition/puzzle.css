@@ -1,0 +1,357 @@
+#puzzleIdeviceForm {
+    width: 100%;
+}
+
+#node-content #puzzleIdeviceForm label,
+#node-content #puzzleIdeviceForm input:not(:only-of-type),
+#node-content #puzzleIdeviceForm input:is([type="checkbox"], [type="radio"]),
+#node-content #puzzleIdeviceForm input[type="button"] {
+    cursor: pointer;
+}
+
+#puzzleIdeviceForm input[type="button"] {
+    margin-right: 0 !important;
+}
+
+#puzzleIdeviceForm #puzzleEPercentajeQuestions,
+#puzzleIdeviceForm #puzzleEPercentajeFB{
+    width: 9.5ch !important;
+    max-width: 9.5ch !important;
+}
+
+#puzzleIdeviceForm .exe-form-tab {
+    margin-right: 3px !important;
+}
+
+#puzzleIdeviceForm .PZLE-EPanel {
+    padding: 0;
+    position: relative;
+    width: 100%;
+    max-width: 1000px;
+}
+
+#puzzleIdeviceForm .PZLE-EImageDefinition {
+    background-color: transparent;
+    height: 315px;
+    margin: 10px auto auto auto;
+    width: 560px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 0.3em;
+}
+
+#puzzleIdeviceForm .PZLE-EImageEnu {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    display: block;
+}
+
+#puzzleIdeviceForm .PZLE-ECustomMessageAudio,
+#puzzleIdeviceForm .PZLE-EDefinitioMedia {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    width: 100%;
+}
+
+#puzzleIdeviceForm .PZLE-EDefinitionAltAuthor {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+    flex-wrap: nowrap;
+}
+
+#puzzleIdeviceForm .PZLE-EDefinitionAltAuthor input:first-of-type {
+    margin-right: 6px;
+}
+
+#puzzleIdeviceForm .PZLE-EDefinitionAltAuthor input[type="text"] {
+    width: 100%;
+}
+
+#puzzleIdeviceForm .PZLE-EDefinitionAltAuthor label {
+    white-space: nowrap;
+}
+
+#puzzleEURLImageDefinition,
+#puzzleIdeviceForm #puzzleEAuthorDefinition,
+#puzzleIdeviceForm #puzzleEAltDefinition,
+#puzzleIdeviceForm #puzzleEURLAudioDefinition,
+#puzzleIdeviceForm #puzzleEURLAudioClue {
+    width: 100%;
+}
+
+#puzzleIdeviceForm .PZLE-FlexLeft {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+#puzzleIdeviceForm .PZLE-FlexLeft span {
+    display: block;
+}
+
+#puzzleIdeviceForm .PZLE-Gap10 {
+    gap: 10px;
+}
+
+#puzzleIdeviceForm .PZLE-ENumPuzzlesDiv {
+    position: relative;
+}
+
+#puzzleIdeviceForm .PZLE-ENumPuzzlesA {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    right: 0;
+    top: -2em;
+    width: 3em;
+    height: 3em;
+    z-index: 100;
+    gap: 5px;
+}
+
+#puzzleIdeviceForm .PZLE-ENumPuzzlesIcon {
+    background-image: url(quextIENumber.png);
+    background-size: 100% 100%;
+    margin-right: 0px;
+    width: 1.5em;
+    height: 1.5em;
+}
+
+#puzzleIdeviceForm #puzzleENumPuzzles {
+    font-size: 1.5em;
+}
+
+#puzzleIdeviceForm .PZLE-ENumPuzzles {
+    height: 1.5em;
+    text-align: right;
+    width: 2em;
+    display: block;
+}
+
+#puzzleIdeviceForm .PZLE-EImage {
+    position: absolute;
+}
+
+#puzzleIdeviceForm .PZLE-ECustomMessageDef,
+#puzzleIdeviceForm .PZLE-EClueDiv {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+}
+
+#puzzleIdeviceForm .PZLE-ECustomMessageDef label,
+#puzzleIdeviceForm .PZLE-EClueDiv label {
+    white-space: nowrap;
+}
+
+#puzzleIdeviceForm .PZLE-ECustomMessageDiv input[type="text"],
+#puzzleIdeviceForm .PZLE-ECustomMessageDef input[type="text"],
+#puzzleIdeviceForm .PZLE-EClueDiv input[type="text"] {
+    width: 100%;
+    max-width: 1200px;
+}
+
+#puzzleIdeviceForm .PZLE-ENavigationButtons {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    margin-top: 0.6em;
+    width: 100%;
+}
+
+#puzzleIdeviceForm .PZLE-ENavigationButton {
+	width: 1.7em;
+	height: 1.7em;
+	min-width: 1.7em;
+}
+
+#puzzleIdeviceForm .PZLE-EButtonImage {
+    height: 100%;
+    transition: all 0.3s ease-in-out;
+    width: 100%;
+}
+
+#puzzleIdeviceForm .PZLE-EButtonImage:hover {
+    -webkit-transform: scale(1.05);
+    transform: scale(1.05);
+}
+
+#puzzleIdeviceForm .PZLE-ENumberPuzzle {
+    height: 1.5em;
+    line-height: 1.5em;
+    text-align: center;
+    vertical-align: middle;
+    width: 2em;
+    font-size: 1.5em;
+}
+
+#puzzleIdeviceForm .PZLE-Hide,
+#puzzleIdeviceForm .PZLE-EFeedbackP {
+    display: none;
+}
+
+#puzzleIdeviceForm .GameModeHelpLink {
+    margin: 0 2px;
+    vertical-align: middle;
+}
+
+#puzzleIdeviceForm .GameModeLabel {
+    font-weight: normal;
+}
+
+#puzzleIdeviceForm .PZLE-TypeGameHelp {
+    display: none;
+    font-size: 0.95em;
+}
+
+.Games-Reportdiv {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 2px;
+}
+
+#puzzleIdeviceFormTab3 p:first-child {
+    margin-top: 0;
+}
+
+#puzzleIdeviceFormTab3 {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2%;
+}
+
+#puzzleIdeviceFormTab3>* {
+    flex: 0 0 48%;
+}
+
+#puzzleIdeviceFormTab3> :first-child {
+    flex: 0 0 100%;
+}
+
+
+@media screen and (max-width:720px) {
+    #puzzleIdeviceFormTab3>* {
+        flex: 0 0 100%;
+    }
+}
+
+#puzzleIdeviceForm #puzzleIdeviceFormTab3 label {
+    display: block;
+    margin-bottom: .2em;
+    color:  #0BA1A1;
+    font-weight: 500;
+}
+
+#puzzleIdeviceForm #puzzleIdeviceFormTab3 input {
+    width: 100%;
+}
+
+/* To review */
+#puzzleIdeviceForm .exe-block-info img {
+    vertical-align: middle;
+    margin-left: 0.2em;
+}
+
+.exe-block-close {
+    position: absolute;
+    top: 6px;
+    right: 5px;
+}
+
+
+#puzzleIdeviceForm .exe-form-tabs {
+    margin: 0 0 1.5em 0;
+    padding: 0;
+    list-style: none;
+}
+
+#main #puzzleIdeviceForm .exe-form-tabs li {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    list-style-image: none;
+    display: inline;
+}
+
+#puzzleIdeviceForm .exe-form-tabs li:first-child a {
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+
+#puzzleIdeviceForm .exe-form-tabs li:last-child a {
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
+#puzzleIdeviceForm .exe-form-tabs a {
+    display: inline-block;
+    padding: 0.5em 1em;
+    border: 1px solid #ccc;
+    background: #f9f9f9;
+    color: #666;
+}
+
+#puzzleIdeviceForm .exe-form-tabs li:not(:last-child) a {
+    border-right: none;
+}
+
+#puzzleIdeviceForm .exe-form-tabs .exe-form-active-tab {
+    color: #000;
+    background: #fff;
+    font-weight: 500;
+}
+
+#puzzleSCORMoptions {
+    visibility: hidden;
+    margin-left: 1.5em;
+}
+
+#puzzleIdeviceForm label[for="puzzleActivitySCORM"] {
+    font-weight: bold;
+}
+
+#puzzleSCORMinstructionsButton {
+    display: none;
+    color: #777;
+    margin: 10px 0 0 25px;
+}
+
+#puzzleSCORMinstructionsButton ul {
+    margin: 1.5em 0 0.7em 0;
+    padding: 0;
+    list-style: none;
+}
+
+#puzzleSCORMinstructionsButton ul li {
+    margin: 0 0 0.5em 0;
+    padding: 0;
+    list-style-image: none;
+}
+
+#puzzleSCORMinstructionsAuto {
+    display: none;
+    color: #777;
+    margin: 10px 0 0 25px;
+}
+
+#puzzleSCORMinstructionsAuto ul {
+    margin: 1.5em 0 0.7em 0;
+    padding: 0;
+    list-style: none;
+}
+
+#puzzleSCORMinstructionsAuto ul li {
+    margin: 0 0 0.5em 0;
+    padding: 0;
+    list-style-image: none;
+}

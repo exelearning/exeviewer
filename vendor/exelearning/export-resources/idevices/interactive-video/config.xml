@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<idevice>
+    <title>Interactive video</title>
+    <css-class>interactive-video</css-class>
+    <category>Assessment and tracking</category>
+    <icon>
+        <name>interactive-video-icon</name>
+        <url>interactive-video-icon.svg</url>
+        <type>img</type>
+    </icon>
+    <edition-js>
+        <filename>interactive-video.js</filename>
+    </edition-js>
+    <edition-css>
+        <filename>interactive-video.css</filename>
+    </edition-css>
+    <export-js>
+        <filename>interactive-video.js</filename>
+    </export-js>
+    <export-css>
+        <filename>interactive-video.css</filename>
+    </export-css>
+    <downloadable>0</downloadable>
+</idevice>

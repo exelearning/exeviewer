@@ -1,0 +1,36 @@
+#websiteIdeviceForm {
+  padding: 20px;
+  border: 0px solid #000;
+}
+
+#websiteIdeviceForm input {
+  font-size: 1em;
+  display: block;
+  width: 26em;
+}
+
+#websiteIdeviceForm .text1 {
+  font-weight: bold;
+  padding-top: 0%;
+  margin-bottom: 5px;
+}
+
+#websiteIdeviceForm .text2 {
+  display: block;
+  font-size: 0.9em;
+  margin-top: 0.4em;
+}
+
+#websiteUrl {
+  margin-top: 8px;
+}
+
+#websiteIdeviceForm #sizeSelector {
+  margin-top: 8px;
+}
+
+#websiteIdeviceForm #sizeSelector {
+  display: block;
+  font-family: "Encode Sans", ​Arial, Helvetica, sans-serif;
+  font-size: 1em;
+}

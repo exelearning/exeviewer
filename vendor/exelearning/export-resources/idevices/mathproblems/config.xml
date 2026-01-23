@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<idevice>
+	<title>Math problems</title>
+	<css-class>mathproblems</css-class>
+	<category>Science</category>
+	<icon>
+	    <name>mathproblems-icon</name>
+            <url>mathproblems-icon.svg</url>
+            <type>img</type>
+        </icon>
+	<downloadable>0</downloadable>
+</idevice>

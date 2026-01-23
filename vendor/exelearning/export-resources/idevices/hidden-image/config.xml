@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<idevice>
+    <title>Hidden image</title>
+    <css-class>hidden-image</css-class>
+    <category>Games</category>
+    <icon>
+        <name>hidden-image-icon</name>
+        <url>hidden-image-icon.svg</url>
+        <type>img</type>
+    </icon>
+    <downloadable>0</downloadable>
+</idevice>
+

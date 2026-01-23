@@ -1,0 +1,127 @@
+/* Text iDevice (edition CSS) */
+#textForm .idevice-description {
+    border-bottom: 1px solid #a7a7a7;
+    margin-bottom: 15px;
+}
+
+#textForm .exe-field {
+    font-weight: bold;
+    padding: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+#textForm .exe-field label.form-label {
+    color: rgb(0, 0, 0);
+}
+
+#textForm .exe-field label.form-label {
+    color: rgb(0, 0, 0);
+}
+
+#textForm .exe-field.form-check {
+    margin-top: 10px;
+    margin-left: 40px;
+}
+
+#textForm .exe-range-field label {
+    width: 100%;
+}
+
+#textForm .exe-range-field input {
+    max-width: 450px;
+}
+
+#textForm .exe-range-field span.value-number {
+    position: relative;
+    top: -8px;
+    margin-left: 5px;
+}
+
+#textForm .exe-datalist-field input {
+    max-width: 450px;
+}
+
+#textForm .exe-datalist-field input {
+    max-width: 450px;
+}
+
+#textForm .form-floating input {
+    max-width: 450px;
+    height: 30px;
+}
+
+#textForm .idevice-element-in-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: auto;
+}
+
+#textForm fieldset .exe-text-legend {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: auto;
+}
+
+#textForm legend a {
+    text-decoration: none !important;
+    color: var(--dark-exe-color);
+    font-weight: bold;
+    transition: var(--tr-02);
+    width: 100%;
+}
+
+#textForm .exe-button {
+    height: 16px;
+    font-size: 14px;
+    color: var(--dark-exe-color);
+    margin-left: var(--margin-m);
+    border: 2px solid var(--verde-cl);
+    border-radius: 5px;
+    padding: 2px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+    margin-inline: 5px;
+    cursor: pointer;
+}
+
+#textForm .exe-button:hover {
+    color: var(--light-exe-color);
+    background-color: var(--dark-exe-color);
+    border-color: var(--dark-exe-color);
+}
+
+#textForm .exe-button.exe-button-remove {
+    position: absolute;
+    top: 0px;
+    right: -26px;
+    height: 40px;
+}
+
+#textForm .exe-button.exe-button-remove.exe-button-remove-fs-open {
+    right: -22px;
+}
+
+#textForm .exe-button.exe-button-remove:hover {
+    color: var(--light-exe-color);
+    background-color: var(--remove);
+    border-color: var(--remove);
+}
+
+#textForm .exe-parent {
+    position: relative;
+}
+
+#textForm .grid-container {
+    display: grid;
+    column-gap: 20px;
+    grid-template-columns: repeat(2, minmax(200px, 1fr));
+}
+
+#textForm .grid-container input {
+    width: calc(100% - var(--margin-l));
+}

@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<idevice>
+    <title>A-Z quiz</title>
+    <css-class>az-quiz-game</css-class>
+    <category>Games</category>
+    <icon>
+        <name>az-quiz-game-icon</name>
+        <url>az-quiz-game-icon.svg</url>
+        <type>img</type>
+    </icon>
+    <downloadable>0</downloadable>
+</idevice>

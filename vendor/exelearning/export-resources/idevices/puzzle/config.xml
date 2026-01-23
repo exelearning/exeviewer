@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<idevice>
+    <title>Puzzle</title>
+    <css-class>puzzle</css-class>
+    <category>Games</category>
+    <icon>
+        <name>puzzle-icon</name>
+        <url>puzzle-icon.svg</url>
+        <type>img</type>
+    </icon>
+    <downloadable>0</downloadable>
+</idevice>
+
+

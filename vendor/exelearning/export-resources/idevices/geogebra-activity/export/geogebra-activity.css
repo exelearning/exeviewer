@@ -1,0 +1,87 @@
+/* GeoGebra activity iDevice */
+.auto-geogebra-instructions {
+    margin-bottom: .5em
+}
+
+.auto-geogebra-wrapper {
+    padding: 1em 0
+}
+
+.auto-geogebra-loading {
+    background: #FFF url(geogegra-activity-loading.gif) no-repeat 50% 50%;
+    position: relative;
+    overflow: hidden;
+    width: 565px;
+    height: 363px
+}
+
+.auto-geogebra-get-score {
+    text-align: center;
+    padding-top: .5em
+}
+
+.auto-geogebra .scorm-button-text {
+    display: none
+}
+
+.auto-geogebra-extra-content {
+    margin-top: 1.7em
+}
+
+.auto-geogebra-author {
+    margin-top: 0.3em;
+    width: 100%;
+    text-align: center;
+}
+
+.Games-ReportIconDiv {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 0.1em;
+    width: 100%;
+    margin-bottom: 6px;
+}
+
+.Games-ReportIconDiv img {
+    width: 16px;
+    height: 16px;
+    display: block;
+}
+
+.Games-ReportIconDiv span {
+    font-size: 0.9em;
+}
+
+
+.Games-GetScore {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1em;
+    padding: 0;
+    margin: 0;
+}
+
+.Games-GetScore input[type=button] {
+    font-size: 1em;
+    padding: 0.3em;
+    width: auto;
+}
+
+.Games-GetScore span {
+    display: block;
+}
+
+.Games-GetScore form {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+}
+
+.Games-RepeatActivity {
+    padding: 0;
+    margin: 0;
+    font-size: 1em;
+}

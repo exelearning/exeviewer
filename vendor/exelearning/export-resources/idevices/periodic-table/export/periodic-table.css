@@ -1,0 +1,1463 @@
+.PTP-MainContainer * {
+	box-sizing: border-box;
+}
+
+table.PTP-table-container .PTP-table-container th,
+.PTP-table-container td {
+	user-select: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+}
+
+.PTP-table-container {
+	width: 100%;
+	max-width: 1400px;
+	margin: 0 auto;
+	background: #fff;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+	padding: 10px;
+	position: relative;
+
+}
+
+.PTP-MainContainer table.PTP-periodic-table {
+	display: table !important;
+	width: 100% !important;
+	border-collapse: collapse !important;
+	table-layout: fixed !important;
+	user-select: none !important;
+}
+
+.PTP-MainContainer table.PTP-periodic-table td {
+	border: 1px solid #ccc !important;
+	position: relative !important;
+	aspect-ratio: 1 / 1 !important;
+	overflow: hidden !important;
+	vertical-align: middle !important;
+	text-align: center !important;
+	user-select: none !important;
+}
+
+
+.PTP-MainContainer table.PTP-periodic-table,
+.PTP-MainContainer table.PTP-periodic-table td,
+.PTP-MainContainer table.PTP-periodic-table th {
+	 user-select: none !important;
+	-webkit-user-select: none !important;
+	-moz-user-select: none !important;
+	-ms-user-select: none !important;
+}
+
+
+.PTP-QuestionData {
+	color: #00008B;
+}
+
+.PTP-complete-mode,
+.PTP-game-mode {
+	border: 2px solid #00008B;
+	cursor: pointer;
+}
+
+.PTP-complete-mode:hover,
+.PTP-game-mode:hover {
+	border: 2px solid #ffffff;
+}
+
+.PTP-complete-mode:active,
+.PTP-game-mode:active {
+	transform: scale(0.95);
+}
+
+.PTP-atomic-mass {
+	position: absolute;
+	top: 3px;
+	left: 5px;
+	font-size: 0.7em;
+	font-weight: normal;
+	color: #333;
+	display: none;
+}
+
+.PTP-GroupBigDiv {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 4px;
+
+}
+
+.PTP-GroupBigDiv span {
+	display: block;
+}
+
+
+.PTP-element {
+	width: 100%;
+	aspect-ratio: 1/1;
+	position: relative;
+	font-size: 0.8em;
+	padding: 2px;
+}
+
+
+.PTP-element-number {
+	position: absolute;
+	display: block;
+	top: 0;
+	right: 2px;
+	font-size: 1em;
+	color: #333;
+}
+
+.PTP-element-symbol {
+	display: block;
+	position: absolute;
+	font-size: 1.5em;
+	font-weight: bold;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.PTP-element-name {
+	display: block;
+	position: absolute;
+	font-size: 0.8em;
+	color: #333;
+	left: 50%;
+	bottom: 0;
+	transform: translateX(-50%);
+}
+
+.PTP-MainContainer table.PTP-separate-row {
+	display: table !important;
+	width: 83.33% !important;
+	max-width: 1200px !important;
+	margin: 0.6em auto 0 auto !important;
+	border-collapse: collapse !important;
+	background: #fff !important;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.2) !important;
+	table-layout: fixed !important;
+	user-select: none !important;
+}
+
+.PTP-MainContainer table.PTP-separate-row td {
+	border: 1px solid #ccc !important;
+	position: relative !important;
+	aspect-ratio: 1 / 1 !important;
+	overflow: hidden !important;
+	vertical-align: middle !important;
+	text-align: center !important;
+	user-select: none !important;
+}
+
+.PTP-MainContainer table.PTP-separate-row,
+.PTP-MainContainer table.PTP-separate-row td {
+	user-select:  none !important;
+	-webkit-user-select: none !important;
+	-moz-user-select: none !important;
+	-ms-user-select: none !important;
+}
+
+.PTP-lightbox {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: rgba(255, 255, 255, 0.03);
+	display: none;
+	justify-content: center;
+	align-items: center;
+}
+
+.PTP-lightboxMobile {
+
+	display: none;
+	justify-content: center;
+	align-items: center;
+}
+
+.PTP-lightbox-content {
+	background-color: white;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	padding: 12px;
+	border-radius: 5px;
+	min-width: 200px;
+	text-align: center;
+	width: 100%;
+	max-width: 300px;
+}
+
+.PTP-lightbox input,
+.PTP-lightboxMobile input {
+	padding: 5px;
+	margin: 10px 0;
+	width: 100%;
+}
+
+
+.PTP-element-box-big {
+	width: 180px;
+	height: 180px;
+	border: 1px solid black;
+	padding: 8px;
+	background-color: #f9f9a0;
+	position: relative;
+	margin: 6px auto;
+
+}
+
+
+.PTP-element-number-big {
+	position: absolute;
+	right: 5px;
+	top: 0px;
+	font-size: 1.8em;
+}
+
+.PTP-mass-big {
+	position: absolute;
+	left: 5px;
+	top: 3px;
+	font-size: 1em;
+	font-weight: normal;
+
+}
+
+.PTP-element-symbol-big {
+	position: absolute;
+	top: 45%;
+	transform: translateY(-50%);
+	font-size: 4.5em;
+}
+
+.PTP-name-big {
+	position: absolute;
+	left: 5px;
+	top: 125px;
+	font-size: 1.2em;
+	font-weight: normal;
+}
+
+.PTP-configuration-big {
+	position: absolute;
+	left: 5px;
+	bottom: 4px;
+	font-size: 0.8em;
+}
+
+.PTP-ionization-energy-big {
+	font-size: 1em;
+	font-weight: normal;
+}
+
+.PTP-electronegativity-big {
+	font-size: 1em;
+	font-weight: normal;
+	grid-row: 6;
+}
+
+.PTP-oxidation-states-big span {
+	display: inline-block;
+}
+
+
+.PTP-oxidation-states-big {
+	font-size: 0.8em;
+	font-weight: normal;
+	position: absolute;
+	display: flex;
+	flex-direction: column;
+	right: 5px;
+	top: 50%;
+	transform: translateY(-50%);
+}
+
+.PTP-oxidation-states-big span {
+	display: block;
+}
+
+.PTP-ionic-big {
+	position: absolute;
+	display: flex;
+	width: 180px;
+	justify-content: space-between;
+	align-items: center;
+	left: 5px;
+	top: 50px;
+	display: none;
+}
+
+.PTP-inputdata {
+	display: flex;
+	width: 100%;
+	justify-content: space-between;
+	align-items: center;
+	gap: 5px;
+	margin-bottom: 0.5em;
+}
+.PTP-inputdata input{
+	text-align: center;
+}
+
+.PTP-inputdataMobile {
+	display: flex;
+	width: 100%;
+	max-width: 180px;
+	justify-content: space-between;
+	align-items: center;
+	gap: 5px;
+	margin: auto;
+	margin-bottom: 0.5em;
+	
+}
+.PTP-inputdataMobile input{
+	text-align: center;
+}
+
+.PTP-alkali-metal {
+	background-color: #dfa5d2;
+}
+
+.PTP-alkaline-earth {
+	background-color: #f7bd9c;
+}
+
+.PTP-transition-metal {
+	background-color: #fff7a2;
+}
+
+.PTP-lanthanoid {
+	background-color: #b4ffa7;
+}
+
+.PTP-actinoid {
+	background-color: #affffb;
+}
+
+.PTP-post-transition-metal {
+	background-color: #ffd5c2;
+}
+
+.PTP-lightbox-content select {
+	margin-bottom: 6px;
+}
+
+.PTP-metalloid {
+	background-color: #c2ffd8;
+}
+
+.PTP-non-metal {
+	background-color: #c2eeff;
+}
+
+.PTP-halogen {
+	background-color: #ffc2d6;
+}
+
+.PTP-noble-gas {
+	background-color: #c2c6ff;
+}
+
+
+@media (max-width: 1300) {
+	.element-name {
+		font-size: 0.8em;
+	}
+}
+
+@media (max-width: 1150px) {
+	.element-name {
+		font-size: 0.8em;
+	}
+
+	.atomic-mass {
+		display: none;
+	}
+}
+
+@media (max-width: 1000px) {
+	.element-name {
+		font-size: 0.7em;
+	}
+
+	.atomic-mass {
+		display: none;
+	}
+}
+
+@media (max-width: 900px) {
+	.element-name {
+		display: none;
+	}
+
+	.atomic-mass {
+		display: none;
+	}
+}
+
+@media (max-width: 600px) {
+
+	.atomic-mass,
+	.atomic-number {
+		font-size: 0.6em;
+	}
+
+	.symbol {
+		font-size: 0.9em;
+	}
+
+	.atomic-mass {
+		display: none;
+	}
+}
+
+.PTP-MainContainer a,
+.PTP-MainContainer a:visited,
+.PTP-MainContainer a:focus {
+	border: 0;
+	border-bottom: none;
+	border-width: 0;
+	text-decoration: none !important;
+}
+
+.PTP-InputWordDef,
+.PTP-InputWord {
+	max-width: 10em;
+}
+
+/* Contenedor */
+.PTP-MainContainer {
+	font-size: 1rem;
+	margin: 1em auto;
+	padding: 0;
+	width: 100%;
+	max-width: 1200px;
+}
+
+
+
+.PTP-MainContainer p {
+	margin: 0 !important;
+	padding: 0 !important;
+}
+
+
+.PTP-ToggleBackground {
+	position: absolute;
+	top: 5px;
+	right: 5px;
+	width: 24px;
+	height: 24px;
+	z-index: 3;
+	display: block;
+}
+
+.PTP-Solutions .PTP-SolutionsList {
+	padding: .3em;
+}
+
+.PTP-AuthorBackImage {
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	color: #ccc;
+	display: none;
+	font-style: italic;
+}
+
+ul.PTP-SolutionsList li {
+	list-style-type: none;
+	margin-bottom: 0.7em;
+	;
+}
+
+ul.PTP-SolutionsList input[type=text] {
+	max-width: 12em;
+}
+
+.PTP-NoBackground {
+	background-image: none !important;
+}
+
+.PTP-Solutions {
+	width: auto;
+	display: none;
+	max-width: 1024px;
+}
+
+.PTP-Cell {
+	position: relative;
+	width: 100%;
+	height: 100%;
+	text-align: center;
+	margin: 0;
+	padding: 0;
+	aspect-ratio: 1 / 1;
+}
+
+.PTP-Cell input {
+	width: 100%;
+	height: 100%;
+	border: none;
+	text-align: center;
+	font-size: 1.2em;
+	box-sizing: border-box;
+	border: 1px solid #999;
+	background-color: #fff;
+	color: #0e1625
+}
+
+.PTP-Cell input:focus {
+	outline: none;
+}
+
+.PTP-Cell input:disabled {
+	background-color: #eee;
+	border: 1px solid #ddd;
+}
+
+.PTP-Number {
+	position: absolute;
+	top: 2px;
+	left: 2px;
+	font-size: 0.8em;
+	color: #555;
+}
+
+.PTP-ActiveDefinition {
+	padding: 5px;
+	margin-bottom: 10px;
+	min-height: 40px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-wrap: nowrap;
+	gap: 3px;
+}
+
+.PTP-ActiveDefinition div {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+}
+
+.PTP-Solutions ol {
+	padding-left: 10px;
+}
+
+.PTP-WordDef {
+	color: #388E3C;
+	font-weight: bolder;
+	display: none;
+}
+
+.PTP-Boton {
+	display: inline-block;
+	padding: 10px 20px;
+	font-size: 16px;
+	background-color: #007bff !important;
+	color: white !important;
+	text-align: center;
+	text-decoration: none !important;
+	border-radius: 5px;
+	border: none;
+	cursor: pointer;
+	margin: 10px 0;
+}
+
+.PTP-Boton:hover {
+	background-color: #0056b3 !important;
+	color: white !important;
+}
+
+.PTP-Buttons {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 3px;
+}
+
+.PTP-Detail {
+	background-color: #ffffff;
+	box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.20), 0 3px 6px 0 rgba(0, 0, 0, 0.19);
+	min-width: 300px;
+	max-width: 400px;
+	width: 100%;
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	border-radius: 0.5em;
+	z-index: 99;
+	overflow: auto;
+	max-height: 90vh;
+}
+
+.PTP-FlexDetail {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 10px;
+	width: 100%;
+}
+
+.PTP-FlexDetail a {
+	width: 1.6em;
+	height: 1.6em;
+	display: block;
+}
+
+.PTP-IconsToolBar {
+	width: 100%;
+	height: 100%;
+	background-size: 100% 100%;
+}
+
+.PTP-Footer {
+	width: 100%;
+	padding: 10px;
+	box-sizing: border-box;
+}
+
+.PTP-Footer {
+	font-size: 1.1em;
+	width: 100%;
+	-webkit-hyphens: auto;
+	-moz-hyphens: auto;
+	-ms-hyphens: auto;
+	hyphens: auto;
+	max-height: 7em;
+	overflow-y: auto;
+}
+
+
+.PTP-MultimediaPoint {
+	position: relative;
+	margin: 0.5em auto;
+	width: 90%;
+	background-color: #ffffff;
+}
+
+.PTP-Images {
+	width: 100%;
+	height: 100%;
+	object-fit: contain;
+	transition: all 0.5s ease-in-out;
+}
+
+.PTP-AuthorPoint {
+	width: 100%;
+	text-align: center;
+	font-size: 0.9em;
+	margin-top: 0.3em;
+	background-color: #ffffff;
+	color: #333333;
+	font-style: italic;
+}
+
+.PTP-Icons {
+	background-size: 100% 100%;
+	height: 1.4em;
+	margin-right: 0.3em;
+	width: 1.4em;
+	background-color: red;
+}
+
+.PTP-IconImage {
+	background: url(ccmgimage.svg) no-repeat;
+	background-size: 100% 100%;
+}
+
+.PTP-IconAudio {
+	background: url(cmmgaudio.svg) no-repeat;
+	background-size: 100% 100%;
+}
+
+
+
+
+/* Instrucciones */
+.PTP-instructions {
+	margin: 0.3em auto;
+	width: 100%;
+	overflow: auto;
+}
+
+/* Minimizado */
+.PTP-GameMinimize {
+	display: none;
+	margin: 1em auto;
+	width: 100%;
+}
+
+.PTP-LinkMaximize {
+	align-items: center;
+	display: flex;
+	justify-content: center;
+}
+
+.PTP-IconMinimize {
+	height: 2em;
+	margin-right: 0.5em;
+	width: 2em;
+}
+
+/* Juego */
+.PTP-GameContainer {
+	margin: 0 auto;
+	max-width: 1200px;
+	padding: 1em 0.3em 0 0.3em;
+	position: relative;
+	width: 100%;
+}
+
+/* barra de puntuaciones */
+.PTP-GameScoreBoard {
+	align-items: center;
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 0.3em;
+	width: 100%;
+}
+
+
+.PTP-GameScoreBoard p {
+	font-size: 1.4em !important;
+	margin-right: 0.3em !important;
+	text-align: center;
+	vertical-align: middle;
+}
+
+.PTP-GameScores {
+	align-items: center;
+	display: flex;
+	justify-content: flex-start;
+}
+
+.PTP-GameScores>p:last-child {
+	text-align: left;
+}
+
+.PTP-TimeNumber {
+	align-items: center;
+	display: flex;
+	justify-content: flex-end;
+}
+
+.PTP-PTime {
+	margin-left: 0.3em;
+	min-width: 3.5em;
+	text-align: center;
+	width: auto;
+}
+
+/* Pista */
+.PTP-QuestionP,
+.PTP-ShowClue {
+	width: 100%;
+	text-align: center;
+	display: none;
+	font-size: 1.2em;
+
+}
+
+.PTP-Message {
+	width: 100%;
+	text-align: center;
+	font-size: 1.1em;
+	min-height: 1.5em;
+
+}
+
+.PTP-MainContainer .PTP-Message p {
+	text-align: center;
+}
+
+.PTP-PShowClue {
+	color: #5877c6;
+	text-align: center;
+	width: 100%;
+	display: none;
+	font-size: 1.1em;
+}
+
+/* Multimedia */
+.PTP-MultimediaDiv {
+	background-color: transparent;
+	margin: 0.3em auto;
+	overflow: hidden;
+	position: relative;
+	display: flex;
+	justify-content: center;
+}
+
+.PTP-Multimedia {
+	background-color: transparent;
+	overflow: hidden;
+	position: relative;
+	overflow: hidden;
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	height: 100%;
+	max-width: none;
+}
+
+.PTP-Multimedia ul {
+	margin-top: 0.2em;
+	margin-bottom: 0.2em;
+}
+
+
+
+.PTP-Cursor {
+	width: 2em;
+	left: 0;
+	top: 0;
+	position: absolute;
+	z-index: 10;
+	display: none;
+}
+
+.PTP-FullLinkImage {
+	right: 5px;
+	top: 5px;
+	position: absolute;
+	z-index: 10;
+	display: block;
+}
+
+.rosco-FullLinkImage {
+	cursor: pointer;
+	right: 0;
+	top: 0;
+	position: absolute;
+	z-index: 20;
+	display: none;
+}
+
+
+.Games-OverlayImage {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: rgba(0, 0, 0, 0.8);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 2000;
+}
+
+.Games-FullScreenImage {
+	max-width: 100%;
+	max-height: 100%;
+	object-fit: contain;
+}
+
+.PTP-FullScreenExit {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+}
+
+.PTP-Images:fullscreen {
+	width: 100%;
+	height: 100%;
+	object-fit: contain;
+	background-color: black;
+}
+
+.PTP-Images:-webkit-full-screen {
+	width: 100%;
+	height: 100%;
+	object-fit: contain;
+	background-color: black;
+}
+
+.PTP-Images:-moz-full-screen {
+	width: 100%;
+	height: 100%;
+	object-fit: contain;
+	background-color: black;
+}
+
+.PTP-Images:-ms-fullscreen {
+	width: 100%;
+	height: 100%;
+	object-fit: contain;
+	background-color: black;
+}
+
+.PTP-Images:-o-full-screen {
+	width: 100%;
+	height: 100%;
+	object-fit: contain;
+	background-color: black;
+}
+
+/* Game Over */
+
+
+.PTP-NumberQuestion {
+	font-weight: bold;
+	height: 1.5em;
+	line-height: 1.5em;
+	text-align: center;
+	vertical-align: middle;
+	width: 2em;
+}
+
+/* Author */
+.PTP-AuthorLicence {
+	margin: 0.3em auto 0 auto;
+	min-height: 0.4em;
+	width: 100%;
+}
+
+.PTP-AuthorLicence p {
+	margin: 0;
+	padding: 0;
+	text-align: center;
+	width: 100%;
+}
+
+/* Código acceso */
+.PTP-Cubierta {
+	width: 100%;
+	height: 95%;
+	position: absolute;
+	top: 4%;
+	left: 0;
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	flex-direction: column;
+	z-index: 80;
+	background-color: rgb(255, 255, 255, 0.1)
+}
+
+.PTP-Cubierta .exeQuextIcons-Submit {
+	background: url(exequextreply.png) no-repeat;
+	background-size: 100% 100%;
+	height: 1.7em;
+	width: 1.7em;
+}
+
+.PTP-CodeAccessDiv {
+	padding: 1.5em 0.5em 1.5em 0.5em;
+	margin: 5em auto;
+	width: 95%;
+	max-width: 450px;
+	background-color: white;
+	border-radius: 0.5em;
+	box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.20), 0 3px 6px 0 rgba(0, 0, 0, 0.19);
+}
+
+.PTP-MessageCodeAccessE {
+	text-align: center;
+	vertical-align: middle;
+	width: 100%;
+}
+
+.PTP-DataCodeAccessE {
+	align-items: center;
+	display: flex;
+	justify-content: center;
+	margin: 0.7em auto 0 auto;
+	width: 100%;
+}
+
+.PTP-CodeAccessE {
+	margin: 0 .3em;
+	max-width: 350px;
+	width: 60%;
+	text-align: center;
+}
+
+/* Inicio juego */
+.PTP-StartGame {
+	-moz-user-select: none;
+	-ms-user-select: none;
+	-webkit-user-select: none;
+	user-select: none;
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	font-size: 1.1em;
+}
+
+.PTP-StartGame a:hover {
+	text-decoration: underline;
+}
+
+.PTP-GameContainer .exeQuextIcons-Submit {
+	height: 1.7em;
+	width: 1.7em;
+}
+
+.Games-BottonContainer {
+	align-items: center;
+	display: flex;
+	justify-content: flex-end;
+	margin: 0.1em auto;
+	padding: 0;
+	width: 100%;
+}
+
+/*Intrucciones */
+.PTP-parpadea {
+	-webkit-animation-duration: 1s;
+	-webkit-animation-iteration-count: 5;
+	-webkit-animation-name: PTP-parpadeo;
+	-webkit-animation-timing-function: linear;
+	animation-duration: 1s;
+	animation-iteration-count: 5;
+	animation-name: PTP-parpadeo;
+	animation-timing-function: linear;
+}
+
+/* FeedBack*/
+.PTP-DivFeedBack {
+	align-items: center;
+	background-color: rgba(232, 232, 232, 0.8);
+	border-radius: .6em;
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	justify-content: center;
+	left: 0;
+	position: absolute;
+	top: 0;
+	width: 100%;
+	z-index: 60;
+}
+
+.PTP-DivFeedBack button {
+	cursor: pointer;
+}
+
+.periodic-table-feedback-game {
+	-moz-box-shadow: 0 10px 6px -6px #999;
+	-webkit-box-shadow: 0 10px 6px -6px #999999;
+	background-color: #fff;
+	border: 1px solid #999;
+	border-radius: .6em;
+	box-shadow: 0 10px 6px -6px #999;
+	display: none;
+	margin-bottom: 1em;
+	max-height: 80%;
+	min-height: 10em;
+	overflow-y: auto;
+	padding: 1em;
+	width: 95%;
+}
+
+.periodic-table-extra-content {
+	margin-top: 1.7em;
+}
+
+/* Enlace activo */
+.PTP-Activo {
+	-moz-transition: transform 0.3s;
+	-ms-transition: transform 0.3s;
+	-o-transition: transform 0.3s;
+	-webkit-filter: drop-shadow(.12em .12em .12em rgba(0, 0, 0, 0.5));
+	-webkit-transition: transform 0.3s;
+	cursor: pointer;
+	filter: drop-shadow(.12em .12em .12em rgba(0, 0, 0, 0.5));
+	transition: transform 0.3s;
+}
+
+.PTP-LinkMaximize:hover .PTP-Activo,
+.PTP-Activo:hover {
+	-moz-transform: scale(1.1);
+	-ms-transform: scale(1.1);
+	-o-transform: scale(1.1);
+	-webkit-transform: scale(1.1);
+	transform: scale(1.1);
+}
+
+/* Puntuacion */
+.Games-BottonContainer * {
+	margin: 0;
+	padding: 0;
+}
+
+.Games-GetScore input[type=button] {
+	padding: 0.3em 0.5em;
+	margin: 0 .5em 1em 0.5em;
+	width: auto;
+}
+
+.Games-GetScore {
+	align-items: center;
+	display: flex;
+	justify-content: center;
+	width: 100%;
+	margin-top: 1em
+}
+
+/* Iconos */
+.PTP-GameContainer .exeQuextIcons {
+	background-size: 100% 100%;
+	height: 1.4em;
+	margin-right: 0.3em;
+	width: 1.4em;
+}
+
+.PTP-GameContainer .exeQuextIcons-Life {
+	background-image: url(exequextlive.png);
+	background-size: 100% 100%;
+}
+
+
+.PTP-GameContainer .exeQuextIcons-Submit {
+	height: 1.7em;
+	width: 1.7em;
+}
+
+.PTP-GameContainer .exeQuextIcons-Minimize {
+	background-image: url(exequextmin.svg);
+	background-size: 100% 100%;
+}
+
+.PTP-GameContainer .exeQuextIcons-Hit {
+	background-image: url(exequexthits.svg);
+	background-size: 100% 100%;
+}
+
+.PTP-GameContainer .exeQuextIcons-FullScreen {
+	background-image: url(exequextfull.svg);
+	background-size: 100% 100%;
+}
+
+.PTP-GameContainer .exeQuextIcons-Error {
+	background-image: url(exequextrerrors.svg);
+	background-size: 100% 100%;
+}
+
+.PTP-GameContainer .exeQuextIcons-Score {
+	background-image: url(exequextscore.svg);
+	background-size: 100% 100%;
+}
+
+.PTP-GameContainer .exeQuextIcons-Time {
+	background-image: url(exequexttime.svg);
+	background-size: 100% 100%;
+}
+
+.PTP-GameContainer .exeQuextIcons-Number {
+	background-image: url(exequextnumber.svg);
+	background-size: 100% 100%;
+}
+
+/* Full Screen */
+
+
+
+
+div:fullscreen .exeQuextIcons-FullScreen {
+	background-image: url(exequextfull.svg);
+	background-size: 100% 100%;
+}
+
+div:-webkit-full-screen .exeQuextIcons-FullScreen {
+	background: url(exequextfull.svg);
+	background-size: 100% 100%;
+}
+
+div:-moz-full-screen .exeQuextIcons-FullScreen {
+	background: url(exequextfull.svg);
+	background-size: 100% 100%;
+}
+
+
+
+
+div:fullscreen .PTP-MultimediaDiv,
+div:-webkit-full-screen .PTP-MultimediaDiv,
+div:-moz-full-screen .PTP-MultimediaDiv {
+	background-color: #fff;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+div:fullscreen .PTP-MultimediaDiv,
+div:-webkit-full-screen .PTP-MultimediaDiv,
+div:-moz-full-screen .PTP-MultimediaDiv {
+	background-color: #fff;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+
+
+div:fullscreen .PTP-LinkMinimize {
+	display: none;
+}
+
+.PTP-GameContainer:-webkit-full-screen {
+	background-color: white;
+	height: 100vh;
+	width: 100%;
+	padding-top: 3px;
+	overflow-y: auto;
+}
+
+.PTP-GameContainer:-moz-full-screen {
+	background-color: white;
+	height: 100vh;
+	width: 100%;
+	padding-top: 3px;
+	overflow-y: auto;
+}
+
+.PTP-GameContainer:-ms-full-screen {
+	background-color: white;
+	height: 100vh;
+	width: 100%;
+	padding-top: 3px;
+	overflow-y: auto;
+}
+
+.PTP-GameContainer:-o-full-screen {
+	background-color: white;
+	height: 100vh;
+	width: 100%;
+	padding-top: 3px;
+	overflow-y: auto;
+}
+
+.PTP-GameContainer:fullscreen {
+	background-color: white;
+	height: 100vh;
+	width: 100%;
+	top: 3px;
+	overflow-y: auto;
+}
+
+.Games-ReportIconDiv {
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	gap: 0.1em;
+	width: 100%;
+	margin-bottom: 6px;
+}
+
+.Games-ReportIconDiv img {
+	width: 16px;
+	height: 16px;
+	display: block;
+}
+
+.Games-ReportIconDiv span {
+	font-size: 0.9em;
+}
+
+.periodic-table-instructions {
+	overflow: auto;
+}
+
+
+.PTP-borde-parpadeante {
+	border: 1px solid #000;
+	animation: parpadeoBorde 10s infinite;
+}
+
+@keyframes parpadeoBorde {
+	0% {
+		border-color: #000;
+	}
+
+	50% {
+		border-color: transparent;
+	}
+
+	100% {
+		border-color: #000;
+	}
+}
+
+
+
+
+@-moz-keyframes PTP-parpadeo {
+	0% {
+		opacity: 1.0;
+	}
+
+	50% {
+		opacity: 0.0;
+	}
+
+	100% {
+		opacity: 1.0;
+	}
+}
+
+@-webkit-keyframes PTP-parpadeo {
+	0% {
+		opacity: 1.0;
+	}
+
+	50% {
+		opacity: 0.0;
+	}
+
+	100% {
+		opacity: 1.0;
+	}
+}
+
+@keyframes PTP-parpadeo {
+	0% {
+		opacity: 1.0;
+	}
+
+	50% {
+		opacity: 0.0;
+	}
+
+	100% {
+		opacity: 1.0;
+	}
+}
+
+@media screen and (min-width: 1400px) {
+	div:fullscreen .PTP-MultimediaDiv {
+		background-color: #fff;
+	}
+
+}
+
+@media screen and (min-width: 700px) and (max-height: 800px) {
+	div:fullscreen .PTP-MultimediaDiv {
+		background-color: #fff;
+		margin-bottom: 0.9em;
+	}
+}
+
+@media (max-width: 768px) {
+	.PTP-element-number {
+		font-size: 0.8em;
+		top: 0;
+		right: 0;
+	}
+
+	.PTP-element-symbol {
+		font-size: 0.8em;
+		font-weight: normal;
+	}
+
+	.PTP-element-name {
+		display: none;
+	}
+}
+
+@media screen and (max-width: 550px) {
+
+	.PTP-element-number {
+		top: 0;
+		right: 0;
+		font-size: 0.6em;
+	}
+
+	.PTP-element-symbol {
+		font-size: 0.6em;
+		font-weight: normal;
+	}
+
+	.PTP-LinkFullScreen {
+		display: none;
+	}
+
+	.PTP-instructions {
+		margin: 0.1em auto;
+	}
+
+
+
+	.PTP-MultimediaDiv {
+		width: 100%;
+	}
+
+	.PTP-Crucigrama {
+		max-width: 100%;
+		height: auto;
+		font-size: 0.8rem;
+		padding: 0px;
+	}
+
+	.PTP-Crucigrama input {
+		max-width: 100%;
+		font-size: 0.7rem;
+	}
+}
+
+@media screen and (max-width: 480px) {
+	.PTP-Crucigrama input {
+		max-width: 100%;
+		font-size: 0.65rem;
+	}
+
+	.PTP-LinkMinimize,
+	.PTP-DataCodeAccessE label {
+		display: none;
+	}
+
+	.PTP-GameContainer .exeQuextIcons-Submit {
+		height: 2em;
+		width: 2em;
+	}
+
+	
+}
+
+@media screen and (max-width: 340px) {
+	.PTP-MainContainer {
+		font-size: 0.8rem;
+	}
+
+	.PTP-GameScoreBoard p {
+		font-weight: normal;
+		margin: 0.1em;
+		padding: 0;
+	}
+
+	.PTP-GameContainer .exeQuextIcons {
+		margin: 0;
+		padding: 0;
+	}
+
+	.PTP-GameContainer .PTP-GameScoreBoard p {
+		padding: 0;
+	}
+
+	.PTP-GameScores {
+		width: 50%;
+	}
+
+	.PTP-TimeNumber {
+		width: 45%;
+	}
+
+	.PTP-instructions p {
+		margin: 0 auto;
+	}
+}

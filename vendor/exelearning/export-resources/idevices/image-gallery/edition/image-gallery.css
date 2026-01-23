@@ -1,0 +1,146 @@
+/* Image Gallery iDevice (edition CSS) */
+
+.imageGalleryIdeviceForm {
+  padding: 10px;
+  border: 2px dashed var(--medium-exe-color);
+  border-radius: var(--radius);
+  margin-top: 0.4em;
+}
+
+.imageGalleryIdeviceForm #textMsxHide {
+  margin-top: 10px;
+}
+
+.imageGalleryIdeviceForm #imagesContainer {
+  width: 100%;
+  /* margin-top: 20px; */
+  display: flex;
+  flex-flow: row wrap;
+  overflow: auto;
+}
+
+.imageGalleryIdeviceForm .imgSelectContainer {
+  height: 200px;
+  width: 160px;
+  padding: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+  text-align: center;
+  cursor: move;
+}
+
+.imageGalleryIdeviceForm .imgSelectContainer .imgSelect {
+  height: 130px;
+  width: 160px;
+  justify-content: center;
+  text-align: center;
+  margin-bottom: 5px;
+  margin-top: 15px;
+}
+
+.imageGalleryIdeviceForm .imgSelectContainer .imgSelect .imageElement {
+  width: 128px;
+  height: 128px;
+  margin: 0 auto;
+  margin-bottom: 5px;
+  text-align: center;
+  box-shadow: rgba(255, 255, 255, 0.2) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0.4) 0px 0px 0px 1px;
+  border-radius: var(--radius);
+  background-color: white;
+}
+
+.imageGalleryIdeviceForm .imgSelectContainer .imgSelect img.image {
+  max-height: 128px;
+  max-width: 128px;
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.imageGalleryIdeviceForm .imgSelectContainer .imgSelect input.textInput {
+  margin: 0 auto;
+  width: 90%;
+}
+
+.imageGalleryIdeviceForm .imgSelectContainer .imgButtons {
+  height: 20px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: var(--margin-m);
+  padding: var(--margin-s);
+  border: 1px solid var(--elements-hover);
+  border-radius: var(--radius);
+}
+
+
+.imageGalleryIdeviceForm .imgSelectContainer .imgButtons button {
+  color: var(--icon-gray);
+  cursor: pointer;
+  border: none;
+  background: none !important;
+  padding: 0;
+  border-radius: 50%;
+  height: 24px;
+  width: 24px;
+  opacity: 0.8;
+}
+
+.imageGalleryIdeviceForm .imgSelectContainer .imgButtons button i{
+  font-family: var(--icons-ff);
+  font-style: normal;
+}
+
+.imageGalleryIdeviceForm .imgSelectContainer .imgButtons button.disabled {
+  color: var(--bs-gray-500);
+  pointer-events: none;
+  cursor: default;
+}
+
+.imageGalleryIdeviceForm .imgSelectContainer .imgButtons button:not(.disabled):hover {
+  color: var(--dark-exe-color);
+  opacity: 1;
+}
+
+.imageGalleryIdeviceForm .imgSelectContainer .imgButtons button:not(.disabled).remove:hover {
+  color: var(--remove);
+}
+
+.imageGalleryIdeviceForm .imgSelectContainer .imgButtons button.remove:hover {
+  background-color: rgba(197, 103, 103, 0.651);
+}
+
+.imageGalleryIdeviceForm .imgSelectContainer .imgButtons button.modify {
+  background-image: url("icons/edit.svg");
+}
+
+.imageGalleryIdeviceForm .imgSelectContainer .imgButtons button.up {
+  background-image: url("icons/left.svg");
+}
+
+.imageGalleryIdeviceForm .imgSelectContainer .imgButtons button.down {
+  background-image: url("icons/right.svg");
+}
+
+.imageGalleryIdeviceForm .imgSelectContainer .imgButtons button.remove {
+  background-image: url("icons/remove.svg");
+}
+
+.imageGalleryIdeviceForm.highlight {
+  background-color: var(--light-exe-color);
+  border-color: var(--dragging-exe-color);
+}
+
+.imageGalleryIdeviceForm .imgSelectContainer.highlight {
+  background-color: var(--light-exe-color);
+}
+
+#addImageButton{
+  float:left;
+}
+
+#addImageInstructions{
+  position:relative;
+  top:.5em;
+}

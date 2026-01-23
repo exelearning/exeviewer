@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<idevice>
+    <title>Word search</title>
+    <css-class>word-search</css-class>
+    <category>Games</category>
+    <icon>
+        <name>word-search-icon</name>
+        <url>word-search-icon.svg</url>
+        <type>img</type>
+    </icon>
+    <downloadable>0</downloadable>
+</idevice>

@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<idevice>
+    <title>Math operations</title>
+    <css-class>mathematicaloperations</css-class>
+    <category>Science</category>
+    <icon>
+        <name>mathematicaloperations-icon</name>
+        <url>mathematicaloperations-icon.svg</url>
+        <type>img</type>
+    </icon>
+    <downloadable>0</downloadable>
+</idevice>

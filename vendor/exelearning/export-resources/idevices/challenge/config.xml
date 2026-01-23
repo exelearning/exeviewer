@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<idevice>
+    <title>Challenge</title>
+    <css-class>challenge</css-class>
+    <category>Games</category>
+    <icon>
+        <name>challenge-icon</name>
+        <url>challenge-icon.svg</url>
+        <type>img</type>
+    </icon>
+    <downloadable>0</downloadable>
+</idevice>

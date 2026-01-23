@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<idevice>
+    <title>Discover</title>
+    <css-class>discover</css-class>
+    <category>Games</category>
+    <icon>
+        <name>discover-icon</name>
+        <url>discover-icon.svg</url>
+        <type>img</type>
+    </icon>
+    <downloadable>0</downloadable>
+</idevice>
+

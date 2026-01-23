@@ -4,7 +4,7 @@
         "description": "Visualiza contenidos de eXeLearning en tu navegador"
     },
     "welcome": {
-        "dragDrop": "Arrastra y suelta tu archivo <strong>.zip</strong> o <strong>.elpx</strong> aquí",
+        "dragDrop": "Arrastra y suelta tu archivo <strong>.zip</strong>, <strong>.elpx</strong> o <strong>.elp</strong> aquí",
         "or": "o",
         "browseFiles": "Selecciona el fichero",
         "loadFromUrl": "Cargar desde URL (admite enlaces de Nextcloud y ownCloud)",
@@ -28,10 +28,12 @@
         "loadingContent": "Cargando el contenido...",
         "processingFile": "Procesando el archivo...",
         "downloadingFile": "Descargando archivo...",
-        "downloading": "Descargando..."
+        "downloading": "Descargando...",
+        "convertingLegacy": "Convirtiendo archivo .elp antiguo...",
+        "generatingHtml": "Generando contenido HTML5..."
     },
     "errors": {
-        "invalidFile": "Selecciona un archivo .zip o .elpx válido",
+        "invalidFile": "Selecciona un archivo .zip, .elpx o .elp válido",
         "emptyZip": "El fichero parece estar vacío",
         "noHtmlFiles": "No se encontraron archivos HTML en el archivo",
         "processingFailed": "Error al procesar el archivo",
@@ -43,13 +45,15 @@
         "downloadFailed": "No se pudo descargar el archivo. Comprueba la URL e inténtalo de nuevo.",
         "urlAccessDenied": "Acceso denegado. El archivo puede ser privado o estar protegido con contraseña.",
         "urlNotFound": "Archivo no encontrado. Comprueba la URL.",
-        "invalidFileType": "La URL no apunta a un archivo .zip o .elpx válido",
+        "invalidFileType": "La URL no apunta a un archivo .zip, .elpx o .elp válido",
         "networkError": "Comprueba tu conexión e inténtalo de nuevo.",
         "notAZipFile": "No se pudo procesar el archivo. Tal vez no sea un archivo .zip o .elpx válido.",
         "notExeContent": "No parece un contenido generado con eXeLearning. Selecciona un .zip o .elpx válido exportado desde eXeLearning.",
         "storageQuotaExceeded": "El archivo es demasiado grande para el límite de tu navegador. Intenta cerrar otras pestañas o borrar datos de navegación.",
         "storageQuotaWarning": "El archivo ({fileSize}) podría exceder el almacenamiento disponible ({available}). El guardado podría fallar.",
-        "googleDriveBlocked": "Google Drive bloquea las descargas directas desde aplicaciones web. Descarga el archivo desde Google Drive y arrástralo aquí."
+        "googleDriveBlocked": "Google Drive bloquea las descargas directas desde aplicaciones web. Descarga el archivo desde Google Drive y arrástralo aquí.",
+        "legacyConversionFailed": "Error al convertir el archivo .elp",
+        "legacyNotSupported": "Soporte para .elp no disponible"
     },
     "accessibility": {
         "loading": "Cargando...",

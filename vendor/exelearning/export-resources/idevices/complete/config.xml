@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<idevice>
+	<title>Complete</title>
+	<css-class>complete</css-class>
+	<category>Interactive activities</category>
+	<icon>
+		<name>commplete-icon</name>
+		<url>complete-icon.svg</url>
+		<type>img</type>
+	</icon>
+	<downloadable>0</downloadable>
+</idevice>

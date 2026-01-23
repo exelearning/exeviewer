@@ -1,0 +1,525 @@
+#roscoIdeviceForm label {
+    display: inline;
+}
+
+#roscoIdeviceForm label[for='roscoShowSolution'] {
+    margin-right: .5em;
+}
+
+#roscoIdeviceForm .roscoSeparation {
+    margin: 15px auto;
+    color: #c0c0c0;
+}
+
+#roscoIdeviceForm .roscoLetterEdition {
+    width: 36px;
+    height: 36px;
+    min-width: 20px;
+    border: none;
+    color: white;
+    background-color: #818181;
+    text-align: center;
+    text-decoration: none;
+    line-height: 36px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 4px;
+    margin: 0;
+}
+
+#roscoIdeviceForm #roscoClue {
+    width: 35%;
+    min-width: 100px;
+    margin-right: 5px;
+}
+
+#roscoIdeviceForm #roscoDuration {
+    width: 9.5ch !important;
+    max-width: 9.5ch !important;
+}
+
+#roscoIdeviceForm #roscoCodeAccess {
+    width: 20%;
+    min-width: 100px;
+    margin-right: 5px;
+}
+
+#roscoIdeviceForm .roscoFileWordEdition {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 5px;
+    width: 100%;
+}
+
+#roscoIdeviceForm .roscoWordMutimediaEdition {
+    width: 100%;
+    margin: 10px auto;
+}
+
+#roscoIdeviceForm .roscoWordMutimedia {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+#roscoIdeviceForm .roscoReport {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+#roscoIdeviceForm .roscoReport label[for=roscoEEvaluationID] {
+    margin-left: 0.2em
+}
+
+#roscoIdeviceForm .roscoLinkStart,
+#roscoIdeviceForm .roscoLinkClose,
+#roscoIdeviceForm .roscoPlayAudio,
+#roscoIdeviceForm .roscoLinkSelectImage,
+#roscoIdeviceForm .roscoStartEdition,
+#roscoIdeviceForm .roscoSelectImageEdition,
+#roscoIdeviceForm .roscoCloseImage,
+#roscoIdeviceForm .roscoPlayAudio {
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    margin: 0 3px;
+}
+
+#roscoIdeviceForm .roscoLinkClose,
+#roscoIdeviceForm .roscoLinkSelectImage,
+#roscoIdeviceForm .roscoSelectImageEdition,
+#roscoIdeviceForm .roscoCloseImage {
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    margin: 0 3px;
+}
+
+#roscoIdeviceForm img {
+    border-style: none;
+}
+
+#roscoIdeviceForm .roscoWordMutimediaEdition a:focus,
+#roscoIdeviceForm .roscoWordMutimediaEdition a:link,
+#roscoIdeviceForm .roscoWordMutimediaEdition a:visited,
+#roscoIdeviceForm .roscoWordMutimediaEdition a:active {
+    outline: 0;
+    border: none;
+}
+
+#roscoIdeviceForm .roscoStartEdition,
+#roscoIdeviceForm .roscoSelectImageEdition,
+#roscoIdeviceForm .roscoCloseImage {
+    margin: 0;
+    padding: 0;
+}
+
+#roscoIdeviceForm .roscoHomeImagenEdition {
+    width: 100%;
+    position: absolute;
+    left: 0;
+    top: 0
+}
+
+#roscoIdeviceForm .roscoWordEdition {
+    width: 100% !important;
+    margin: 0 3px;
+}
+
+#roscoIdeviceForm .roscoDefinitionEdition {
+    width: 100% !important;
+    margin: 0 3px;
+}
+
+#roscoIdeviceForm #roscoMessageCodeAccess {
+    width: 30%;
+}
+
+#roscoIdeviceForm .roscoImageEdition {
+    width: 560px;
+    height: 315px;
+    display: block;
+    position: relative;
+    margin: 10px auto;
+    border: 1px solid white;
+}
+
+#roscoIdeviceForm .roscoNoImageEdition {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 560px;
+    height: 315px;
+    background: url(roscoHomeImage.png);
+    background-repeat: no-repeat;
+    background-size: 560px 315px;
+}
+
+#roscoIdeviceForm .roscoHomeImageEdition {
+    position: absolute;
+    cursor: crosshair;
+}
+
+#roscoIdeviceForm .roscoCursorEdition {
+    position: absolute;
+    pointer-events: none;
+    z-index: 3000;
+}
+
+#roscoIdeviceForm .roscoAuthorEdition {
+    width: 100%;
+    margin: 0 3px;
+}
+
+#roscoIdeviceForm .roscoAlt {
+    width: 100%;
+    margin: 0 3px;
+}
+
+#roscoIdeviceForm .roscoBarEdition,
+#roscoIdeviceForm .roscoMetaData,
+#roscoIdeviceForm .roscoAudioDiv {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 0 5px 0;
+    width: 100%;
+}
+
+#roscoIdeviceForm .roscoMetaData .roscoMetaItem {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    width: 50%;
+}
+
+#roscoIdeviceForm .roscoMetaData .roscoMetaItem>label.form-label {
+    flex: 0 0 auto;
+    margin: 0;
+    max-width: 50%;
+}
+
+#roscoIdeviceForm .roscoMetaData .roscoMetaItem>input.form-control {
+    flex: 1 1 auto;
+    width: auto;
+    min-width: 0;
+}
+
+#roscoIdeviceForm div>label {
+    display: inline-block;
+    margin: 0 !important;
+    vertical-align: middle;
+}
+
+#roscoIdeviceForm div>input.form-control {
+    display: inline-block;
+    width: auto;
+    vertical-align: middle;
+}
+
+#roscoIdeviceForm .roscoImageBarEdition {
+    display: none
+}
+
+#roscoIdeviceForm .roscoAuthorEdition {
+    margin: 0 3px;
+}
+
+#roscoIdeviceForm .roscoAlt {
+    margin: 0 3px;
+}
+
+#roscoIdeviceForm .roscoURLImageEdition,
+#roscoIdeviceForm .roscoURLAudioEdition {
+    width: 100%;
+    margin: 0 3px;
+}
+
+#roscoIdeviceForm .roscoImageInputWrapper {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    gap: .5rem;
+}
+
+#roscoIdeviceForm .roscoImageInputWrapper>label {
+    flex: 0 0 auto;
+    margin: 0;
+}
+
+#roscoIdeviceForm .roscoImageInputWrapper>input.roscoURLImageEdition {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+#roscoIdeviceForm .roscoImageInputWrapper>.exe-pick-any-file {
+    flex: 0 0 auto;
+    white-space: nowrap;
+}
+
+#roscoIdeviceForm .roscoAudioInputWrapper {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    gap: .5rem;
+}
+
+#roscoIdeviceForm .roscoAudioInputWrapper>label {
+    flex: 0 0 auto;
+    margin: 0;
+}
+
+#roscoIdeviceForm .roscoAudioInputWrapper>input.roscoURLAudioEdition {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+#roscoIdeviceForm .roscoAudioInputWrapper>.exe-pick-any-file {
+    flex: 0 0 auto;
+    white-space: nowrap;
+}
+
+#roscoIdeviceForm .roscoAudioInputWrapper>a.roscoPlayAudio,
+#roscoIdeviceForm .roscoAudioInputWrapper>a.roscoLinkClose {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 0 0 .35rem;
+}
+
+#roscoIdeviceForm fieldset.exe-fieldset-closed>div>div,
+#roscoIdeviceForm fieldset.exe-fieldset>div>div {
+    margin-bottom: .75rem;
+}
+
+#roscoIdeviceForm fieldset.exe-fieldset-closed>div>div:last-child,
+#roscoIdeviceForm fieldset.exe-fieldset>div>div:last-child {
+    margin-bottom: 0;
+}
+
+#roscoIdeviceForm .roscoYImageEdition,
+#roscoIdeviceForm .roscoXImageEdition {
+    display: none;
+}
+
+#roscoIdeviceForm .exe-block-info img {
+    vertical-align: middle;
+    margin-left: .2em
+}
+
+.exe-block-close {
+    position: absolute;
+    top: 6px;
+    right: 5px;
+}
+
+#roscoIdeviceFormTab3 p:first-child {
+    margin-top: 0;
+}
+
+#roscoIdeviceFormTab3 {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2%;
+}
+
+#roscoIdeviceFormTab3>* {
+    flex: 0 0 48%;
+}
+
+#roscoIdeviceFormTab3> :first-child {
+    flex: 0 0 100%;
+}
+
+@media screen and (max-width:720px) {
+    #roscoIdeviceFormTab3>* {
+        flex: 0 0 100%;
+    }
+}
+
+#roscoIdeviceForm #roscoIdeviceFormTab3 label {
+    display: block;
+    margin-bottom: .2em;
+    color: #0BA1A1;
+    font-weight: 500;
+}
+
+#roscoIdeviceForm #roscoIdeviceFormTab3 input {
+    width: 100%;
+}
+
+.exe-form-tabs {
+    margin: 0 0 1.5em 0;
+    padding: 0;
+    list-style: none
+}
+
+#main .exe-form-tabs li {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    list-style-image: none;
+    display: inline
+}
+
+.exe-form-tabs li:first-child a {
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px
+}
+
+.exe-form-tabs li:last-child a {
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px
+}
+
+.exe-form-tabs a {
+    display: inline-block;
+    padding: .5em 1em;
+    border: 1px solid #CCC;
+    background: #F9F9F9;
+    color: #666
+}
+
+.exe-form-tabs li:not(:last-child) a {
+    border-right: none;
+}
+
+.exe-form-tabs .exe-form-active-tab {
+    color: #000;
+    background: #FFF;
+    font-weight: 500
+}
+
+#roscoSCORMoptions {
+    visibility: hidden;
+    margin-left: 1.5em
+}
+
+label[for=roscoActivitySCORM] {
+    font-weight: bold
+}
+
+#roscoSCORMinstructionsButton {
+    display: none;
+    color: #777;
+    margin: 10px 0 0 25px
+}
+
+#roscoSCORMinstructionsButton ul {
+    margin: 1.5em 0 .7em 0;
+    padding: 0;
+    list-style: none
+}
+
+#roscoSCORMinstructionsButton ul li {
+    margin: 0 0 .5em 0;
+    padding: 0;
+    list-style-image: none
+}
+
+#roscoSCORMinstructionsAuto {
+    display: none;
+    color: #777;
+    margin: 10px 0 0 25px
+}
+
+#roscoSCORMinstructionsAuto ul {
+    margin: 1.5em 0 .7em 0;
+    padding: 0;
+    list-style: none
+}
+
+#roscoSCORMinstructionsAuto ul li {
+    margin: 0 0 .5em 0;
+    padding: 0;
+    list-style-image: none
+}
+
+.roscoTypeGameHelp {
+    display: none;
+    font-size: .95em
+}
+
+.Games-Reportdiv {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 2px;
+}
+
+.GameModeHelpLink {
+    margin: 0 2px;
+    vertical-align: middle;
+}
+
+.GameModeLabel {
+    font-weight: normal
+}
+
+/* Show solution row (extracted time input) */
+.roscoShowSolutionRow {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: .5rem;
+    margin-top: .25rem;
+    margin-bottom: .5rem
+}
+
+.roscoShowSolutionTime input {
+    width: 4rem;
+    min-width: 4rem;
+    text-align: center
+}
+
+.roscoShowSolutionRow .roscoShowSolutionTime {
+    display: flex;
+    align-items: center;
+    line-height: 1.15;
+    padding: 0
+}
+
+.roscoShowSolutionRow .roscoShowSolutionTime span {
+    display: inline-flex;
+    align-items: center
+}
+
+#roscoIdeviceForm input[type="radio"]:checked.form-check-input {
+    background-color: var(--brand-primary, #0BA1A1);
+    border-color: var(--brand-primary, #0BA1A1);
+}
+
+.roscoImageBarEdition .roscoMetaData {
+    margin: 0 0 .5rem 0;
+}
+
+.roscoMetaData .roscoMetaItem label {
+    min-width: auto;
+}
+
+.roscoMetaData .roscoMetaItem input {
+    min-width: 0;
+}
+
+.roscoMetaData .roscoMetaItem {
+    flex: 0 0 50%;
+    max-width: 50%;
+    display: flex;
+    align-items: center;
+}
+
+.roscoMetaData .roscoMetaItem label {
+    margin-bottom: 0;
+    margin-right: .5rem;
+    white-space: nowrap;
+    flex: 0 0 auto;
+}
+
+.roscoMetaData .roscoMetaItem input {
+    flex: 1 1 auto;
+    min-width: 0;
+}

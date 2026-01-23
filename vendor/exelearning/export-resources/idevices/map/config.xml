@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<idevice>
+    <title>Map</title>
+    <css-class>map</css-class>
+    <category>Information and presentation</category>
+    <icon>
+        <name>map-icon</name>
+        <url>map-icon.svg</url>
+        <type>img</type>
+    </icon>
+    <downloadable>0</downloadable>
+</idevice>

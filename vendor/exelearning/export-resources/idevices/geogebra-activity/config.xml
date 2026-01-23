@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<idevice>
+    <title>GeoGebra activity</title>
+    <css-class>geogebra-activity</css-class>
+    <category>Science</category>
+    <icon>
+        <name>geogebra-activity-icon</name>
+        <url>geogebra-activity-icon.svg</url>
+        <type>img</type>
+    </icon>
+    <downloadable>0</downloadable>
+</idevice>

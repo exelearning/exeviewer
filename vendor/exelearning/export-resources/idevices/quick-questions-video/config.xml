@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<idevice>
+    <title>Video test</title>
+    <css-class>quick-questions-video</css-class>
+    <category>Assessment and tracking</category>
+    <icon>
+        <name>quick-questions-video-icon</name>
+        <url>quick-questions-video-icon.svg</url>
+        <type>img</type>
+    </icon>
+    <downloadable>0</downloadable>
+</idevice>

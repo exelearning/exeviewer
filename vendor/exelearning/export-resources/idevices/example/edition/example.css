@@ -1,0 +1,54 @@
+/* Example iDevice (edition CSS) */
+
+#exampleForm .idevice-description {
+  border-bottom: 1px solid #a7a7a7;
+  margin-bottom: 15px;
+}
+
+#exampleForm .exe-field {
+  font-weight: bold;
+  padding: 5px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+#exampleForm .exe-field:nth-child(odd) {
+  background-color: rgb(229, 229, 229);
+}
+
+#exampleForm .exe-field label.form-label {
+  color: rgb(0, 0, 0);
+}
+
+#exampleForm .exe-field label.form-label {
+  color: rgb(0, 0, 0);
+}
+
+#exampleForm .exe-field.form-check {
+  margin-top: 10px;
+  margin-left: 40px;
+}
+
+#exampleForm .exe-range-field label {
+  width: 100%;
+}
+#exampleForm .exe-range-field input {
+  max-width: 450px;
+}
+#exampleForm .exe-range-field span.value-number {
+  position: relative;
+  top: -8px;
+  margin-left: 5px;
+}
+
+#exampleForm .exe-datalist-field input {
+  max-width: 450px;
+}
+#exampleForm .exe-datalist-field input {
+  max-width: 450px;
+}
+
+#exampleForm .form-floating input {
+  max-width: 450px;
+  height: 30px;
+}

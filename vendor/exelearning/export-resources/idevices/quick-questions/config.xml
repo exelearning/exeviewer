@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<idevice>
+    <title>Test</title>
+    <css-class>quick-questions</css-class>
+    <category>Assessment and tracking</category>
+    <icon>
+        <name>quick-questions.icon</name>
+        <url>quick-questions-icon.svg</url>
+        <type>img</type>
+    </icon>
+    <downloadable>0</downloadable>
+</idevice>
+

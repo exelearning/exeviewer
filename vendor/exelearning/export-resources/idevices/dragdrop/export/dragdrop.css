@@ -1,0 +1,1574 @@
+.DADP-ContainerDrags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    justify-content: space-around;
+    margin-bottom: 10px;
+}
+
+.DADP-ContainerDrags .hovering {
+    border-color: orange;
+}
+
+.DADP-DragTargetContainer,
+.DADP-DragSourceContainer {
+    width: 20%;
+    max-width: 180px;
+    display: flex;
+    flex-direction: column;
+    aspect-ratio: 1/1.3;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+
+.DADP-DragSourceContainer {
+    aspect-ratio: 1/1;
+    border: none;
+}
+
+.DADP-DragSourceContainer.DADP-Text1 {
+    aspect-ratio: auto;
+    min-height: 3em;
+}
+
+.DADP-DS {
+    position: absolute;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.DADP-TextTargetDiv,
+.DADP-TextSourceDiv {
+    box-sizing: border-box;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 32px;
+    border-bottom: 1px solid #ccc;
+    padding: 3px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+.DADP-Dragging{
+    opacity: 0.3;
+}
+.DADP-MediaTargetDiv {
+    position: relative;
+}
+.DADP-TextSource{
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 175px;
+    width: 100%;
+ 
+}
+
+.DADP-MediaTargetDiv img.DADP-ImageTarget {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border: none;
+    padding: 2px;
+    border-radius: none;
+    box-shadow: none;
+    cursor: grab;
+    background-color: white;
+}
+
+
+.sr-av {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+
+.DADP-MediaTargetDiv {
+    flex-grow: 1;
+}
+
+.DADP-MediaTargetDiv,
+.DADP-MediaSourceDiv {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 3px;
+}
+
+.DADP-MediaSourceDiv {
+    height: 100%;
+}
+
+.DADP-TextSourceDiv {
+    border: none;
+    padding: 0;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: transparent;
+
+}
+
+.DADP-MediaSource img.DADP-ImageSource {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border: none;
+    border-radius: none;
+    box-shadow: none;
+    cursor: grab;
+    background-color: white;
+    transition: box-shadow 0.3s ease;
+}
+
+.DADP-TextTargetDiv .DADP-DS {
+    width: 100%;
+    text-align: center;
+}
+
+.DADP-MediaSource {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.DADP-MediaSourceDiv .DADP-MediaSource img.DADP-ImageSource {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border: 2px solid #ccc;
+    padding: 5px;
+    border-radius: 4px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    cursor: grab;
+    transition: box-shadow 0.3s ease;
+}
+
+.DADP-MediaSourceDiv .DADP-MediaSource img.DADP-ImageSource:active,
+.DADP-Text1 .DADP-TextSourceDiv .DADP-DS:active {
+    cursor: grabbing;
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+}
+
+.DADP-Text1 .DADP-DS {
+    border: none;
+    width: 100%;
+}
+
+.DADP-Text1 .DADP-TextSourceDiv .DADP-DS {
+    width: 100%;
+    max-width: 160px;
+    text-align: center;
+    padding: 3px;
+    font: 1.1em;
+    cursor: grab;
+    transition: box-shadow 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border: 1px solid #ccc;
+    background-color: white;
+
+}
+
+
+.Games-ReportIconDiv {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 0.1em;
+    width: 100%;
+    margin-bottom: 6px;
+}
+
+.Games-ReportIconDiv img {
+    width: 16px;
+    height: 16px;
+    display: block;
+}
+
+.Games-ReportIconDiv span {
+    font-size: 0.9em;
+}
+
+.DADP-CardOK {
+    border: 2px solid #4be94b !important;
+}
+
+.DADP-CardKO {
+    border: 2px solid #e24646 !important;
+}
+
+.DADP-MainContainer {
+    margin: 1em auto;
+    padding: 0;
+    width: 100%;
+    height: auto;
+    position: relative;
+    min-height: 100px;
+}
+
+.DADP-MainContainer * {
+    box-sizing: border-box;
+}
+
+.DADP-MainContainer p {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* Instrucciones */
+
+.DADP-instructions {
+    margin: 0.3em auto;
+    width: 100%;
+    overflow: auto;
+}
+
+/* Minimizado */
+
+.DADP-GameMinimize {
+    margin: 1em auto;
+    width: 100%;
+}
+
+.DADP-LinkMaximize {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+}
+
+.DADP-IconMinimize {
+    height: 2em;
+    margin-right: 0.5em;
+    width: 2em;
+}
+
+/* Juego */
+
+.DADP-GameContainer {
+    margin: 0 auto;
+    padding: 2em 0.3em 2em 0.3em;
+    position: relative;
+    max-width: 1650px;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+}
+
+/* barra de puntuaciones */
+
+.DADP-GameScoreBoard {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.4em;
+    margin-bottom: 0.4em;
+    width: 100%;
+    height: 1.1em;
+}
+
+.DADP-GameScoreBoard p {
+    font-size: 1.4em !important;
+    margin-right: 0.3em !important;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.DADP-GameScores {
+    align-items: center;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.DADP-GameScores>p:last-child {
+    text-align: left;
+}
+
+.DADP-TimeNumber {
+    align-items: center;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.DADP-PTime {
+    margin-left: 0.3em;
+    min-width: 3.5em;
+    text-align: center;
+    width: auto;
+}
+
+/* Pista */
+.DADP-ShowClue {
+    display: none;
+}
+
+.DADP-PShowClue {
+    text-align: center;
+    width: 100%;
+}
+
+.DADP-ContainerData {
+    width: 100%;
+    height: 100%;
+    border-radius: 0.4em;
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+}
+
+.DADP-ContainerData * {
+    box-sizing: border-box;
+}
+
+.DADP-ImageContain {
+    width: 30%;
+    height: 100%;
+    position: relative;
+}
+
+.DADP-Image {
+    margin: 0;
+    max-width: 100%;
+    max-height: 100%;
+    height: 100%;
+    width: 100%;
+    margin: auto;
+    object-fit: contain;
+    display: block;
+}
+
+.DADP-EText {
+    border: none;
+    width: 70%;
+    height: 100%;
+    padding: 10px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+
+.DADP-StartNivelMemory {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-user-select: none;
+    margin: 0.5em auto 0 auto;
+    text-align: center;
+    user-select: none;
+    width: 100%;
+}
+
+.DADP-StartNivelMemory a {
+    display: block;
+    margin-left: 0.5em;
+    color: #a2241a;
+    font-size: 1em;
+    font-weight: 500;
+}
+
+.DADP-StartGameMemory a:hover {
+    text-decoration: underline;
+}
+
+.DADP-Multimedia {
+    background-color: transparent;
+    border-radius: 0.6em;
+    margin: 0 auto;
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    align-content: flex-start;
+    flex-wrap: wrap;
+    gap: 0.3em;
+    margin-top: 0.8em;
+    height: auto;
+}
+
+
+
+.DADP-AuthorWord {
+
+    left: 1px;
+
+
+}
+
+.DADP-AuthorDef {
+    right: 1px;
+
+}
+
+.DADP-Author img {
+    width: 100%;
+    height: 100%;
+}
+
+.DADP-LinkAudio img {
+    width: 100%;
+    height: 100%;
+}
+
+.DADP-LinkAudio {
+    top: -3px;
+    position: absolute;
+    left: -3px;
+    width: 32px;
+    height: 32px;
+    min-width: 20px;
+    min-height: 20px;
+    display: block;
+    z-index: 6;
+    cursor: pointer;
+    display: none;
+}
+
+
+.DADP-LinkAudioBig {
+    position: absolute;
+    width: 70px;
+    height: 70px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+
+}
+
+.DADP-LinkAudio-Back {
+    display: none;
+}
+
+.DADP-LinkAudio-Front {
+    display: none;
+}
+
+.DADP-Audio {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Game Over */
+
+.DADP-Cover {
+    width: 100%;
+    height: 95%;
+    position: absolute;
+    top: 1%;
+    left: 0;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+    z-index: 20;
+    background-color: rgb(255, 255, 255, 0.1)
+}
+
+.DADP-ClueBotton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0.6em auto;
+}
+
+
+/* Aciertos */
+
+.DADP-Information,
+.DADP-Buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.DADP-Buttons {
+    gap: 10px;
+    display: none;
+}
+
+.DADP-Information a,
+.DADP-Buttons a {
+    font-size: 1.1em;
+    display: inline-block;
+    text-align: center;
+    text-decoration: none !important;
+}
+
+.DADP-Message {
+    width: 100%;
+    text-align: center;
+    font-size: 1.1em;
+    min-height: 1.5em;
+    display: none;
+}
+
+
+
+.DADP-AuthorGame {
+    margin: 0.5em auto;
+    width: 100%;
+    text-align: center;
+    font-size: 0.9em;
+    display: none;
+}
+
+/* Código acceso */
+
+
+.DADP-CodeAccessDiv,
+.DADP-ShowClue {
+    background-color: white;
+    width: 50%;
+    border: 1px solid #ddd;
+    border-radius: 0.6em;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.20), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    padding: 1.5em;
+    margin-top: 0;
+    max-width: 450px;
+}
+
+
+.DADP-MessageCodeAccessE {
+    text-align: center;
+    vertical-align: middle;
+    width: 100%;
+    margin: 0.5em;
+}
+
+.DADP-DataCodeAccessE {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    margin: 0.7em auto 0 auto;
+    width: 100%;
+}
+
+.DADP-CodeAccessE {
+    margin: 0 .3em;
+    width: 100%;
+    max-width: 300px;
+    text-align: center;
+}
+
+.DADP-GameContainer .exeQuextIcons-Submit {
+    height: 1.7em;
+    width: 1.7em;
+}
+
+.DADP-BottonContainerDiv,
+.Games-BottonContainer{
+    align-items: center;
+    display: flex;
+    justify-content: flex-end;
+    margin: 0.1em auto;
+    padding: 0;
+    width: 100%;
+}
+
+.DADP-BottonContainerDivEnd {
+    justify-content: flex-end;
+}
+
+/*Intrucciones */
+
+.DADP-DivInstructions {
+    margin: 1em 0 0 0;
+    text-align: center;
+    width: 95%;
+}
+
+
+.DADP-Word .DADP-FullLinkImage {
+	top: 0;
+    right: -5px;
+	position: absolute;
+	z-index: 10;
+	display: block;
+}
+
+.DADP-Definition .DADP-FullLinkImage {
+	top: 0;
+    left: px;
+	position: absolute;
+	z-index: 10;
+	display: block;
+}
+
+.DADP-MediaTargetDiv .DADP-FullLinkImage {
+	top: 5px;
+    right: 0;
+	position: absolute;
+	z-index: 10;
+	display: block;
+}
+
+
+.DADP-DS .DADP-FullLinkImage {
+	top: 5px;
+    right: 0;
+
+	position: absolute;
+	z-index: 10;
+	display: block;
+}
+
+
+.DADP-DS .DADP-FullLinkImage {
+	bottom: 5px;
+    right: 0;
+
+	position: absolute;
+	z-index: 10;
+	display: block;
+}
+
+.Games-OverlayImage {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+}
+
+.Games-FullScreenImage {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.DADP-FullLinkImage .exeQuextIcons{
+    margin: 0;
+    width: 18px;
+    height: 18px;
+}
+.exeQuextIcons-FullImage {
+	background-image: url(exezoomf.png);
+	background-size: 100% 100%;
+}
+
+.DADP-Over{
+    border: 1px solid salmon;
+}
+
+.DADP-NoSelect {
+    -webkit-user-select: none; 
+    -moz-user-select: none;    
+    -ms-user-select: none;     
+    user-select: none;         
+}
+
+.DADP-NoSelect img{
+    -webkit-user-drag: none;      
+    pointer-events: none;   
+}
+
+
+.DADP-parpadea {
+    -webkit-animation-duration: 1s;
+    -webkit-animation-iteration-count: 5;
+    -webkit-animation-name: DADP-parpadeo;
+    -webkit-animation-timing-function: linear;
+    animation-duration: 1s;
+    animation-iteration-count: 5;
+    animation-name: DADP-parpadeo;
+    animation-timing-function: linear;
+}
+
+
+.dragdrop-extra-content {
+    margin-top: 1.7em;
+}
+
+/* Enlace activo */
+
+.DADP-Activo {
+    -moz-transition: transform 0.3s;
+    -ms-transition: transform 0.3s;
+    -o-transition: transform 0.3s;
+    -webkit-filter: drop-shadow(.12em .12em .12em rgba(0, 0, 0, 0.5));
+    -webkit-transition: transform 0.3s;
+    cursor: pointer;
+    filter: drop-shadow(.12em .12em .12em rgba(0, 0, 0, 0.5));
+    transition: transform 0.3s;
+}
+
+.DADP-LinkMaximize:hover .DADP-Activo,
+.DADP-Activo:hover {
+    -moz-transform: scale(1.1);
+    -ms-transform: scale(1.1);
+    -o-transform: scale(1.1);
+    -webkit-transform: scale(1.1);
+    transform: scale(1.1);
+}
+
+/* Puntuacion */
+
+.Games-BottonContainer{
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+
+.Games-BottonContainer * {
+    margin: 0;
+    padding: 0;
+}
+
+.Games-GetScore input[type=button] {
+    padding: 0.3em 0.5em;
+    margin: 0 .5em 0 0.5em;
+    width: auto;
+}
+
+.Games-GetScore span {
+    display: block;
+}
+
+.Games-GetScore form{
+    align-items: center;
+    display: flex;
+    justify-content: center;
+}
+
+.Games-GetScore {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 1em
+}
+
+.Games-OverlayImage {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+}
+
+.Games-FullScreenImage {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+.noselect {
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* Iconos */
+
+.DADP-GameContainer .exeQuextIcons {
+    background-size: 100% 100%;
+    height: 1.4em;
+    margin-right: 0.3em;
+    width: 1.4em;
+}
+
+.exeQuextButtonsF {
+    background-size: 100% 100%;
+    height: 4em;
+    width: 4em;
+    margin-left: 0.5em;
+    margin-bottom: 1.5em;
+    margin-top: 1.5em;
+    margin-right: 0.5em;
+
+}
+
+.DADP-GameOverExt {
+    background-color: white;
+    width: 50%;
+    max-width: 450px;
+    border: 1px solid #ddd;
+    border-radius: 0.6em;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.20), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    padding: 0.5em;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    margin-top: 10em;
+}
+
+.DADP-GameOver {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    background-color: white;
+    width: 100%;
+    margin: 0.3em auto;
+}
+
+.DADP-GameOver:before {
+    content: '';
+    display: block;
+    padding-top: 40%;
+}
+
+.DADP-DataImage {
+    height: 100%;
+    padding: 0;
+    position: relative;
+    width: 50%;
+}
+
+.DADP-DataScore {
+    padding: 0;
+    width: 50%;
+}
+
+.DADP-DataScore p {
+    margin: 0.7em;
+    font-size: 0.9em;
+}
+
+.DADP-HistGGame,
+.DADP-LostGGame {
+    bottom: 0;
+    left: 0;
+    display: none;
+    margin: auto;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 60%;
+}
+
+.DADP-HistGGame:before,
+.DADP-LostGGame:before {
+    content: '';
+    display: block;
+    padding-top: 100%;
+}
+
+
+.DADP-StartGame {
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-user-select: none;
+    margin: 0.5em auto 0 auto;
+    text-align: center;
+    user-select: none;
+    width: 100%;
+}
+
+.DADP-StartGame a:hover {
+    text-decoration: underline;
+}
+
+.DADP-StartGame a {
+    color: #a2241a;
+    font-size: 1em;
+    font-weight: 500;
+}
+
+
+
+.DADP-GameContainer:-webkit-full-screen {
+    background-color: white;
+    height: 100vh;
+    width: 100%;
+}
+
+.DADP-GameContainer:-moz-full-screen {
+    background-color: white;
+    height: 100vh;
+    width: 100%;
+    padding-top: 3px;
+    overflow-y: auto;
+}
+
+.DADP-GameContainer:-ms-full-screen {
+    background-color: white;
+    height: 100vh;
+    width: 100%;
+    padding-top: 3px;
+    overflow-y: auto;
+}
+
+.DADP-GameContainer:-o-full-screen {
+    background-color: white;
+    height: 100vh;
+    width: 100%;
+    padding-top: 3px;
+    overflow-y: auto;
+}
+
+.DADP-GameContainer:fullscreen {
+    background-color: white;
+    height: 100vh;
+    width: 100%;
+    padding-top: 3px;
+    overflow-y: auto;
+}
+
+
+.DADP-GameContainer .exeQuextIcons-Video,
+.DADP-GameContainer .exeQuextIcons-Submit,
+.DADP-Cover .exeQuextIcons-Submit {
+    height: 1.7em;
+    width: 1.7em;
+}
+
+.DADP-GameContainer .exeQuextIcons-Time {
+    background-image: url(exequexttime.svg);
+    background-size: 100% 100%;
+}
+
+
+.DADP-GameContainer .exeQuextIcons-Minimize {
+    background-image: url(exequextmin.svg);
+    background-size: 100% 100%;
+}
+
+.DADP-GameContainer .exeQuextIcons-Hit {
+    background-image: url(exequexthits.svg);
+    background-size: 100% 100%;
+}
+
+.DADP-GameContainer .exeQuextIcons-Error {
+    background-image: url(exequextrerrors.svg);
+    background-size: 100% 100%;
+}
+
+.DADP-GameContainer .exeQuextIcons-Score {
+    background-image: url(exequextscore.svg);
+    background-size: 100% 100%;
+}
+
+
+.DADP-GameContainer .exeQuextIcons-FullScreen {
+    background-image: url(exequextfull.svg);
+    background-size: 100% 100%;
+}
+
+
+.DADP-GameContainer .exeQuextIcons-Number {
+    background-image: url(exequextnumber.svg);
+    background-size: 100% 100%;
+}
+
+
+.DADP-MainContainer .exeQuextIcons-Submit,
+.DADP-Cover .exeQuextIcons-Submit {
+    background: url(exequextreply.png) no-repeat;
+    background-size: 100% 100%;
+}
+
+
+div:fullscreen .exeQuextIcons-FullScreen {
+    background-image: url(exequextfull.svg);
+    background-size: 100% 100%;
+}
+
+div:fullscreen .DADP-Message {
+    font-weight: 1.1em;
+}
+
+
+.DADP-GameContainer:-webkit-full-screen {
+    background-color: white;
+    height: 100vh;
+    width: 100%;
+    max-width: 100vw;
+    padding: 0.6em 0.6em 1em 0.6em;
+    overflow-y: auto;
+
+}
+
+.DADP-GameContainer:-moz-full-screen {
+    background-color: white;
+    height: 100vh;
+    width: 100%;
+    max-width: 100vw;
+    padding: 0.6em 0.6em 1em 0.6em;
+    overflow-y: auto;
+    padding-top: 0;
+
+}
+
+.DADP-GameContainer:-ms-full-screen {
+    background-color: white;
+    height: 100vh;
+    width: 100%;
+    max-width: 100vw;
+    padding: 0.6em 0.6em 1em 0.6em;
+    overflow-y: auto;
+    padding-top: 0;
+
+}
+
+
+.DADP-GameContainer:fullscreen {
+    background-color: white;
+    height: 100vh;
+    width: 100%;
+    max-width: 100vw;
+    padding: 0.6em 0.6em 1em 0.6em;
+    overflow-y: auto;
+    padding-top: 0;
+
+}
+
+div:fullscreen .DADP-Word,
+div:fullscreen .DADP-Definition {
+    height: 100px;
+    margin-bottom: 10px;
+}
+
+div:fullscreen .DADP-LinkMinimize {
+    display: none;
+}
+
+
+@-moz-keyframes DADP-parpadeo {
+    0% {
+        opacity: 1.0;
+    }
+
+    50% {
+        opacity: 0.0;
+    }
+
+    100% {
+        opacity: 1.0;
+    }
+}
+
+@-webkit-keyframes DADP-parpadeo {
+    0% {
+        opacity: 1.0;
+    }
+
+    50% {
+        opacity: 0.0;
+    }
+
+    100% {
+        opacity: 1.0;
+    }
+}
+
+
+
+@keyframes DADP-parpadeo {
+    0% {
+        opacity: 1.0;
+    }
+
+    50% {
+        opacity: 0.0;
+    }
+
+    100% {
+        opacity: 1.0;
+    }
+}
+
+.DADP-GameButtons-Movil {
+    margin-top: 0;
+    flex-direction: row;
+    justify-content: flex-start;
+    height: 70px;
+}
+
+.exeQuextButtonsF-movil {
+    margin-right: 1.5em;
+    margin-left: 1.5em;
+    width: 3em;
+    height: 3em;
+
+
+}
+
+.DADP-Container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 2em;
+    width: 100%;
+}
+
+.DADP-Card {
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 200px;
+    height: 200px;
+    position: relative;
+    border-radius: 0.3em;
+    overflow: hidden;
+    border: 2px solid #ccc;
+    padding: 1em;
+    box-sizing: border-box;
+    cursor: pointer;
+    margin-bottom: 1em;
+    -webkit-user-select: none;
+    /* Safari 3.1+ */
+    -moz-user-select: none;
+    /* Firefox 2+ */
+    -ms-user-select: none;
+    /* IE 10+ */
+    user-select: none;
+
+}
+
+.DADP-CardTarget {
+    width: 200px;
+    height: 200px;
+    border-radius: 0.3em;
+    overflow: hidden;
+    border: 1px solid #ccc;
+    margin-bottom: 1em;
+}
+
+.DADP-Text {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    box-sizing: border-box;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    padding: 5px;
+    text-align: center;
+    font-size: 1.4em;
+}
+
+.DADP-Audio {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+}
+
+.DADP-Canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 9;
+    pointer-events: none;
+}
+
+.DADP-CardTarget .DADP-Card {
+    margin-bottom: 0;
+}
+
+.DADP-Main {
+    width: 100%;
+    height: auto;
+    position: relative;
+    margin: 0;
+    padding: 0;
+    background-color: transparent;
+}
+
+.DADP-ContainerGame {
+    padding: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 20%;
+    height: auto;
+    ;
+    position: relative;
+    background-color: transparent;
+}
+
+.DADP-ContainerWords,
+.DADP-ContainerDefinitions {
+    margin: 0;
+    padding: 0;
+    width: 40%;
+    max-width: 400px;
+    min-width: 120px;
+    height: auto;
+    background-color: white;
+}
+
+.DADP-Word,
+.DADP-Definition {
+    position: relative;
+    width: 100%;
+    height: 90px;
+    border: 1px solid #ddd;
+    padding: 3px;
+    background-color: #f9f9f9;
+    cursor: pointer;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    font-size: 1.2em;
+}
+
+.DADP-Word {
+    left: 0;
+}
+
+.DADP-Definition {
+    right: 0;
+}
+
+.DADP-Word:before,
+.DADP-Definition:before {
+    content: '';
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #555;
+    z-index: 8
+}
+
+.DADP-Word.DADP-Selected,
+.DADP-Definition.DADP-Selected {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.20), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
+}
+
+.DADP-Word.DADP-Selected:before {
+    width: 12px;
+    height: 12px;
+    right: -6px
+}
+
+.DADP-Definition.DADP-Selected:before {
+    width: 12px;
+    height: 12px;
+    left: -6px
+}
+
+.DADP-Word:before {
+    right: -4px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.DADP-Definition:before {
+    left: -4px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.DADP-Word:hover,
+.DADP-Definition:hover {
+    background-color: #e9e9e9;
+}
+
+.DADP-Word.DADP-Connected,
+.DADP-Definition.DADP-Connected {
+    cursor: pointer;
+}
+
+.DADP-Word.DADP-Connected:hover,
+.DADP-Definition.DADP-Connected:hover {
+    background-color: #f9f9f9;
+}
+
+.DADP-ResetButton,
+.DADP-CheckButton {
+    display: none;
+}
+
+@media screen and (max-width:650px) {
+    .DADP-LinkFullScreen {
+        display: none;
+    }
+
+    .DADP-ContainerGame {
+        gap: 80px;
+        font-size: 0.9em;
+    }
+
+    .DADP-Column {
+        min-height: 0;
+    }
+
+    .DADP-Card {
+        width: 100px;
+        height: 100px;
+    }
+
+    .DADP-CardTarget {
+        width: 100px;
+        height: 100px;
+    }
+
+    .DADP-GameOverExt {
+        width: 80%;
+        margin-top: 5em;
+    }
+
+    .DADP-DataImage {
+        display: none;
+    }
+
+    .DADP-DataScore {
+        width: 90%;
+    }
+
+    .DADP-CardDraw {
+        margin: 0.4em;
+    }
+
+
+
+    .DADP-MainContainer {
+        font-size: 0.9rem;
+    }
+
+
+    .DADP-LinkMinimize {
+        display: none;
+    }
+
+    .DADP-DataCodeAccessE label {
+        display: none;
+    }
+
+
+    .DADP-GameContainer .exeQuextIcons-Submit,
+    .DADP-GameContainer .exeQuextIcons-Video {
+        height: 2em;
+        width: 2em;
+    }
+
+    .DADP-CodeAccessDiv,
+    .DADP-ShowClue {
+        width: 90%;
+    }
+
+    div:fullscreen .DADP-Message {
+        font-size: 1em;
+    }
+
+    .DADP-ContainerGame {
+        gap: 80px;
+        font-size: 0.9rem;
+    }
+
+    .DADP-Word,
+    .DADP-Definition {
+        height: 80px;
+    }
+
+    .DADP-LinkAudio {
+        width: 24px;
+        height: 24px;
+    }
+
+    .DADP-LinkAudioBig {
+        width: 50px;
+        height: 50px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .DADP-Information a,
+    .DADP-Information p,
+    .DADP-Buttons a {
+        font-size: 1em;
+    }
+
+    .DADP-Message {
+        min-height: 1.3em;
+    }
+}
+
+
+@media screen and (max-width:425px) {
+    .DADP-MainContainer {
+        font-size: 0.8rem;
+    }
+
+    .DADP-GameScoreBoard p {
+        font-weight: normal;
+        margin: 0.1em;
+        padding: 0;
+    }
+
+    .DADP-GameContainer .exeQuextIcons {
+        margin: 0;
+        padding: 0;
+    }
+
+    .DADP-GameContainer .DADP-GameScoreBoard p {
+        padding: 0;
+    }
+
+    .DADP-GameScores {
+        width: 50%;
+    }
+
+    .DADP-TimeNumber {
+        width: 45%;
+    }
+
+    .DADP-instructions p {
+        margin: 0 auto;
+    }
+
+    .DADP-Message {
+        min-height: 1em;
+    }
+
+
+    .DADP-ContainerGame {
+        gap: 70px;
+        font-size: 0.8rem;
+    }
+
+    .DADP-Definition,
+    .DADP-Word {
+        font-family: 1em;
+    }
+
+    .DADP-Word,
+    .DADP-Definition {
+        height: 60px;
+    }
+
+    .DADP-LinkAudio {
+        width: 20px;
+        height: 20px;
+    }
+
+    .DADP-LinkAudioBig {
+        width: 45px;
+        height: 45px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+
+    }
+
+    .DADP-Word:before,
+    .DADP-Definition:before {
+        width: 4px;
+        height: 4px;
+    }
+
+    .DADP-Word.DADP-Selected:before,
+    .DADP-Definition.DADP-Selected:before {
+        width: 8px;
+        height: 8px;
+        right: -4px
+    }
+
+    .DADP-Definition.DADP-Selected:before {
+        width: 8px;
+        height: 8px;
+        left: -4px
+    }
+
+    .DADP-Word:before {
+        right: -2px;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    .DADP-Definition:before {
+        left: -2px;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+}
+
+@media screen and (max-width:375px) {
+    .DADP-MainContainer {
+        font-size: 0.7rem;
+    }
+
+    .DADP-GameScoreBoard {
+        justify-content: flex-start;
+    }
+
+    .DADP-GameScores {
+        width: 50%;
+    }
+
+    .DADP-TimeNumber {
+        width: 42%;
+    }
+
+    .DADP-ContainerGame {
+        gap: 50px;
+        font-size: 0.7rem;
+    }
+
+    .DADP-Word,
+    .DADP-Definition {
+        height: 50px;
+    }
+
+    .DADP-LinkAudio {
+        width: 16px;
+        height: 16px;
+    }
+
+    .DADP-LinkAudioBig {
+        width: 40px;
+        height: 40px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+
+    }
+}

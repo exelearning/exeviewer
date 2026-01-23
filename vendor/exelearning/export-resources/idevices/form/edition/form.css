@@ -1,0 +1,645 @@
+/* Form iDevice (edition CSS) */
+
+
+/* #formIdeviceForm .formAddQuestionsContainer {
+  margin-top: 10px;
+} */
+
+.formAddQuestionsContainer .label-bold {
+    font-weight: bold;
+    margin-right: 20px;
+}
+
+.formAddQuestionsContainer .formSelector {
+    width: 200px;
+}
+
+#formIdeviceForm .questionTextarea {
+    margin-bottom: 10px;
+}
+
+#formIdeviceForm #frmEPercentageQuestions {
+    width: 9.5ch !important;
+    max-width: 9.5ch !important;
+}
+
+
+#addQuestionsContainerForm #addQuestionsSelectorContainer {
+    background-color: rgba(220, 220, 220, 0.8);
+    padding: 8px;
+}
+
+#addQuestionsContainerForm #addQuestionsButtonsContainer {
+    background-color: rgba(220, 220, 220, 0.8);
+    padding: 8px;
+}
+
+#addQuestionsContainerForm #addQuestionsOptionsContainer {
+    padding: 5px;
+}
+
+ul#formPreview {
+    min-height: 80px;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+ul#formPreview .FormView_question {
+    padding: 10px;
+    background-color: var(--file-odd);
+    margin-bottom: 6px;
+    overflow: auto;
+}
+
+ul#formPreview .FormView_question::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+ul#formPreview .FormView_question.dragging {
+    padding: 15px;
+    background-color: var(--light-exe-color);
+}
+
+ul#formPreview .FormView_question.dragging:nth-child(even) {
+    padding: 15px;
+    background-color: var(--light-exe-color);
+}
+
+/* ul#formPreview li:nth-child(even) {
+  background-color: rgba(220, 220, 220, 0.8);
+} */
+
+ul#formPreview [id^="questionTopBar"] {
+    overflow: auto;
+    clear: both;
+}
+
+ul#formPreview [id^="questionTopBar"]::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+ul#formPreview .FormView_question .QuestionLabel_ButtonsContainer {
+    float: right;
+}
+
+ul#formPreview .FormView_question .QuestionLabel_actionButton {
+    font-family: var(--icons-ff);
+    text-align: center;
+    height: 26px;
+    width: 26px;
+    padding: 2px;
+    cursor: pointer;
+    color: black;
+    border-radius: 50%;
+    border-style: none;
+    background-color: transparent;
+    opacity: .5;
+}
+
+ul#formPreview .FormView_question .QuestionLabel_actionButton:hover {
+    opacity: 1;
+}
+
+ul#formPreview .FormView_question .QuestionLabel_edit {
+    background-image: url("editar.svg");
+    background-repeat: no-repeat;
+    background-position-x: center;
+    background-position-y: center;
+    background-size: 16px;
+}
+
+ul#formPreview .FormView_question .FormViewContainer {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    overflow: auto;
+}
+
+ul#formPreview .FormView_question .FormViewContainer > div[title] {
+    overflow: auto;
+    clear: both;
+}
+
+ul#formPreview .FormView_question .FormViewContainer > div[title]::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+ul#formPreview .FormView_question .FormViewContainer p {
+    margin: 0.8em 0;
+}
+
+ul#formPreview .FormView_question .FormViewContainer .true-false-radio-buttons-container p {
+    margin-right: 20px;
+}
+
+ul#formPreview {
+    gap: var(--margin-s);
+    display: flex;
+    flex-direction: column;
+}
+
+ul#formPreview>li {
+    padding: var(--margin-m);
+    border-radius: var(--radius);
+    color: var(--body-text-color);
+}
+
+ul#formPreview>li label.activity-title {
+    font-weight: bold;
+}
+
+ul#formPreview>li div[class*="QuestionLabel"] {
+    border-radius: 50%;
+}
+
+ul#formPreview>li p {
+    margin-block: var(--margin-s);
+}
+
+#formIdeviceForm .exe-icon {
+    font-family: var(--icons-ff);
+    width: 16px;
+    height: 16px;
+    font-size: 14px;
+    color: var(--dark-exe-color);
+    background: none;
+    margin-left: var(--margin-m);
+    border: 1px solid var(--dark-exe-color);
+    border-radius: 100%;
+    padding: 2px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+    margin-inline: 5px;
+    cursor: pointer;
+}
+
+#formIdeviceForm .exe-icon-remove {
+    color: var(--remove);
+    border: 1px solid var(--remove);
+}
+
+#formIdeviceForm .exe-icon-remove.remove-option {
+    color: var(--remove);
+    border: 0px;
+    border-radius: 0%;
+    text-align: center;
+    filter: grayscale(1);
+}
+
+#formIdeviceForm .exe-icon-remove:hover {
+    filter: grayscale(0);
+}
+
+#formIdeviceForm .exe-icon[disabled="true"] {
+    color: var(--icon-color);
+    border: 1px solid var(--icon-color);
+    pointer-events: none;
+    cursor: default;
+}
+
+#formIdeviceForm .inline {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+#formIdeviceForm .inline.footer-buttons-container {
+    justify-content: right;
+    margin-top: 20px;
+}
+
+#formIdeviceForm .inline.footer-buttons-container div {
+    margin-left: 10px;
+}
+
+#formIdeviceForm .show-questions {
+    margin: 0px auto;
+}
+
+#formIdeviceForm .hide-questions {
+    margin: 0px auto;
+}
+
+#formIdeviceForm .exe-button {
+    font-size: 14px;
+    color: var(--dark-exe-color);
+    margin-left: var(--margin-m);
+    border: 2px solid var(--brand-primary-100);
+    border-radius: 5px;
+    padding: 2px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+    margin-inline: 5px;
+    width: fit-content;
+}
+
+#formIdeviceForm .exe-button:hover {
+    color: var(--light-exe-color);
+    background-color: var(--dark-exe-color);
+    border-color: var(--dark-exe-color);
+}
+
+#formIdeviceForm .exe-button-remove {
+    color: var(--remove);
+    border: 0px;
+}
+
+#formIdeviceForm .exe-button-remove:hover {
+    color: var(--light-exe-color);
+    background-color: var(--remove);
+}
+
+#formIdeviceForm .container {
+    max-width: 100%;
+    padding: 0;
+    margin: 10px 0;
+}
+
+#formIdeviceForm .inline-icon {
+    font-family: var(--icons-ff);
+    font-size: 20px;
+    color: var(--dark-exe-color);
+    margin-right: 10px;
+}
+
+#formIdeviceForm .inline-icon.toggle-icon {
+    font-size: 30px;
+    cursor: pointer;
+    border-style: none;
+    margin-right: 0px;
+    background-color: transparent;
+}
+
+#formIdeviceForm .inline.check-options input[type="checkbox"]{
+    margin-right: .2em;
+}
+
+#formIdeviceForm .inline-icon.help-icon {
+    color: var(--dark-exe-color);
+    filter: grayscale(1);
+    background-color: transparent;
+    border-style: none;
+    padding: 0px;
+    margin-left: 5px;
+}
+
+#formIdeviceForm .inline-icon.help-icon:hover,
+#formIdeviceForm .inline-icon.help-icon:focus {
+    filter: grayscale(0);
+}
+
+#formIdeviceForm .exe-button.add-question-button {
+    min-width: 130px;
+    margin: 5px;
+    background-color: var(--bg-lighter-gray);
+    cursor: pointer;
+}
+
+#formIdeviceForm .exe-button.exe-button.add-question-button:hover {
+    background-color: var(--dark-exe-color);
+    color: #FFF;
+}
+
+#formIdeviceForm .dropdown-popup {
+    z-index: 3;
+    width: auto;
+    height: auto;
+    /* background-color: var(--bg-lighter-gray); */
+    position: absolute;
+    /* top: 50%;   */
+    left: 50%;
+    transform: translate(-50%, 0);
+    background: #fff;
+    box-shadow: 0 5px 5px 5px rgba(0,0,0,0.15);
+    border-radius: 4px;
+    margin-top: 5px
+}
+
+#formIdeviceForm .dropup-popup {
+    z-index: 3;
+    width: auto;
+    height: auto;
+    position: absolute;
+    /* top: 50%;   */
+    left: 50%;
+    transform: translate(-50%, calc(-100% - 20px));
+    background: #fff;
+    box-shadow: 0 -5px 5px 5px rgba(0,0,0,0.15);
+    border-radius: 4px;
+    margin-top: -5px
+}
+
+#formIdeviceForm .question-button {
+    margin: 10px 0;
+}
+
+#formIdeviceForm .question-input-text {
+    margin-top: 10px;
+}
+
+#formIdeviceForm .question-in-edition {
+    padding: 10px;
+}
+
+#formIdeviceForm .container-add-questions {
+    position: relative;
+}
+
+#formIdeviceForm .dropdownPassRate {
+    margin: 0 10px;
+    min-width: 80px;
+}
+
+#formPreview .true-false-radio-buttons-container label{
+    margin-right: 1em!important;
+}
+
+#formPreview .true-false-radio-buttons-container label input{
+    margin-right: .5em!important;
+}
+
+#formPreview .selection-buttons-container div.inline{
+    margin: 1em 0;
+}
+
+#formIdeviceForm .true-false-radio-buttons-container p {
+    margin-right: 20px;
+}
+
+#formIdeviceForm .instructions {
+    cursor: help;
+    width: fit-content;
+    margin-right: 10px;
+}
+
+#formIdeviceForm .check-options {
+    margin-right: 30px;
+}
+
+#formIdeviceForm .check-options span {
+    margin-right: 10px;
+}
+
+ul#formPreview .FormView_question .QuestionLabel_actionButton[disabled="true"] {
+    color: var(--dark-exe-color-06);
+    pointer-events: none;
+    cursor: default;
+}
+
+#formIdeviceForm .small-textarea {
+    height: 50px;
+    width: calc(100% - var(--margin-m));
+}
+
+#formIdeviceForm .question-button {
+    min-width: 70px;
+}
+
+#formIdeviceForm #removeQuestion.question-button {
+    color: rgba(255, 0, 0, 0.8);
+    /* border-color: var(--remove); */
+    border-color: rgba(255, 0, 0, 0.3);
+}
+
+#formIdeviceForm #removeQuestion.question-button:hover {
+    color: var(--remove);
+    border-color: var(--remove);
+    box-shadow: 0px 0px 5px var(--remove);
+}
+
+#formIdeviceForm #removeQuestion.question-button:focus {
+    color: var(--remove);
+    border-color: var(--remove);
+    box-shadow: 0px 0px 5px var(--remove);
+}
+
+#formIdeviceForm #saveQuestion.question-button {
+    color: rgb(0, 110, 255, 0.8);
+    border-color: rgba(0, 110, 255, 0.3);
+}
+
+#formIdeviceForm #saveQuestion.question-button:hover {
+    color: rgb(0, 110, 255);
+    border-color: rgba(0, 110, 255);
+    box-shadow: 0px 0px 5px rgba(0, 110, 255);
+}
+
+#formIdeviceForm #saveQuestion.question-button:focus {
+    color: rgb(0, 110, 255);
+    border-color: rgba(0, 110, 255);
+    box-shadow: 0px 0px 5px rgba(0, 110, 255);
+}
+
+#formIdeviceForm #cancelQuestion.question-button {
+    color: rgba(155, 139, 0, 0.8);
+    border-color: rgba(155, 139, 0, 0.3);
+}
+
+#formIdeviceForm #cancelQuestion.question-button:hover {
+    color: rgb(155, 139, 0);
+    border-color: rgba(155, 139, 0);
+    box-shadow: 0px 0px 5px rgba(155, 139, 0);
+}
+
+#formIdeviceForm #cancelQuestion.question-button:focus {
+    color: rgb(155, 139, 0);
+    border-color: rgba(155, 139, 0);
+    box-shadow: 0px 0px 5px rgba(155, 139, 0);
+}
+
+#formIdeviceForm .grid-container {
+    display: grid;
+    column-gap: 40px;
+    row-gap: 30px;
+    grid-template-columns: repeat(2, minmax(200px, 1fr));
+}
+
+#formIdeviceForm .lang-option {
+    display: flex;
+    flex-direction: column;
+}
+
+#formIdeviceForm .lang-option label {
+    font-weight: 700;
+}
+
+#formIdeviceForm #formPreview_buttonAddOption.question-button {
+    color: var(--icon-gray);
+    border-color: var(--elements-hover);
+}
+
+#formIdeviceForm #formPreview_buttonAddOption.question-button:hover {
+    color: var(--dark-exe-color);
+    border-color: var(--dark-exe-color);
+    box-shadow: 0px 0px 5px var(--dark-exe-color);
+}
+
+#formIdeviceForm #formPreview_buttonAddOption.question-button:focus {
+    color: var(--dark-exe-color);
+    border-color: var(--dark-exe-color);
+    box-shadow: 0px 0px 5px var(--dark-exe-color);
+}
+
+#formIdeviceForm #buttonshowhide.question-button {
+    color: var(--icon-gray);
+    border-color: var(--elements-hover);
+}
+
+#formIdeviceForm #buttonshowhide.question-button:hover {
+    color: var(--dark-exe-color);
+    border-color: var(--dark-exe-color);
+    box-shadow: 0px 0px 5px var(--dark-exe-color);
+}
+
+#formIdeviceForm #buttonshowhide.question-button:focus {
+    color: var(--dark-exe-color);
+    border-color: var(--dark-exe-color);
+    box-shadow: 0px 0px 5px var(--dark-exe-color);
+}
+
+#formIdeviceForm .FormViewContainer input.fillInput {
+    margin: 6px 2px !important;
+    max-width: 120px !important;
+}
+
+#formIdeviceForm .FormViewContainer select.dropdownSelect {
+    margin: 6px 2px !important;
+}
+
+#formIdeviceForm .Games-Reportdiv {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 2px;
+}
+
+#formIdeviceForm .GameModeHelpLink {
+    margin: 0 2px;
+    vertical-align: middle;
+}
+
+#formIdeviceForm .GameModeLabel {
+    font-weight: normal
+}
+
+#formIdeviceFormTab2 p:first-child {
+    margin-top: 0;
+}
+
+#formIdeviceFormTab2 {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2%;
+}
+
+#formIdeviceFormTab2>* {
+    flex: 0 0 48%;
+}
+
+#formIdeviceFormTab2> :first-child {
+    flex: 0 0 100%;
+}
+
+
+@media screen and (max-width:720px) {
+    #formIdeviceFormTab2>* {
+        flex: 0 0 100%;
+    }
+}
+
+
+#formPreview .FormViewContainer img {
+    max-width: 100%;
+    height: auto;
+}
+
+#formPreview .FormViewContainer img[style*="float"] {
+    max-width: 60%;
+}
+
+#formIdeviceForm #formIdeviceFormTab2 label {
+    display: block;
+    margin-bottom: .2em;
+    color: #0BA1A1;
+    font-weight: 500;
+}
+
+#formIdeviceForm #formIdeviceFormTab2 input {
+    width: 100%;
+}
+
+
+/* Tabs (this should be common) */
+.exe-form-tabs {
+    margin: 0 0 1.5em 0;
+    padding: 0;
+    list-style: none
+}
+
+#main .exe-form-tabs li {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    list-style-image: none;
+    display: inline
+}
+
+.exe-form-tabs li:first-child a {
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px
+}
+
+.exe-form-tabs li:last-child a {
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px
+}
+
+.exe-form-tabs a {
+    display: inline-block;
+    padding: .5em 1em;
+    border: 1px solid #CCC;
+    background: #F9F9F9;
+    color: #666
+}
+
+.exe-form-tabs li:not(:last-child) a {
+    border-right: none;
+}
+
+.exe-form-tabs .exe-form-active-tab {
+    color: #000;
+    background: #FFF;
+    font-weight: 500
+}
+
+/* Question editing - Bootstrap improvements */
+#formIdeviceForm .feedback-container {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 6px;
+}
+
+#formIdeviceForm .feedback-container .form-label {
+    font-weight: 500;
+    color: #495057;
+    margin-bottom: 6px;
+}
+
+#formIdeviceForm .feedback-container .form-control {
+    font-size: 0.95rem;
+}
+
+#formIdeviceForm .row.g-3 {
+    margin-top: 0;
+}
