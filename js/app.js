@@ -9,7 +9,7 @@
     // Configuration
     const config = {
         // Application version (displayed in footer)
-        version: '1.0.0',
+        version: '1.0.1',
         // Automatically restore and display content from IndexedDB on page load
         autoRestoreContent: true,
         // Open external links in a new window/tab (prevents navigation issues in iframes)
