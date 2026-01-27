@@ -2,7 +2,7 @@
 
 ## v1.0.1 – 2026-01-27
 
-- Support for loading content from Google Drive shared links (requires Google Apps Script proxy configuration).
+- Support loading content from Google Drive shared links (requires Google Apps Script proxy configuration).
 
 ---
 
