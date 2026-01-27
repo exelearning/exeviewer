@@ -8,6 +8,7 @@
         "or": "o",
         "browseFiles": "Selecciona el fichero",
         "loadFromUrl": "Cargar desde URL (admite enlaces de Nextcloud y ownCloud)",
+        "loadFromUrlWithDrive": "Cargar desde URL (admite enlaces de Nextcloud, ownCloud y Google Drive)",
         "shareHint": "Podrás generar un enlace directo para compartir el contenido.",
         "urlPlaceholder": "https://ejemplo.com/contenido.zip",
         "loadUrl": "Cargar",
@@ -28,7 +29,8 @@
         "loadingContent": "Cargando el contenido...",
         "processingFile": "Procesando el archivo...",
         "downloadingFile": "Descargando archivo...",
-        "downloading": "Descargando..."
+        "downloading": "Descargando...",
+        "downloadingViaProxy": "Descargando desde Google Drive..."
     },
     "errors": {
         "invalidFile": "Selecciona un archivo .zip o .elpx válido",
@@ -49,7 +51,8 @@
         "notExeContent": "No parece un contenido generado con eXeLearning. Selecciona un .zip o .elpx válido exportado desde eXeLearning.",
         "storageQuotaExceeded": "El archivo es demasiado grande para el límite de tu navegador. Intenta cerrar otras pestañas o borrar datos de navegación.",
         "storageQuotaWarning": "El archivo ({fileSize}) podría exceder el almacenamiento disponible ({available}). El guardado podría fallar.",
-        "googleDriveBlocked": "Google Drive bloquea las descargas directas desde aplicaciones web. Descarga el archivo desde Google Drive y arrástralo aquí."
+        "googleDriveBlocked": "Google Drive bloquea las descargas directas desde aplicaciones web. Descarga el archivo desde Google Drive y arrástralo aquí.",
+        "gasProxyFailed": "No se pudo descargar desde Google Drive. Puede que el proxy no esté disponible o que el archivo no sea público."
     },
     "accessibility": {
         "loading": "Cargando...",

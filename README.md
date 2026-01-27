@@ -15,6 +15,7 @@ The application runs entirely in your browser. When you load a file from your de
 - Load `.zip` or `.elpx` files from your device (drag and drop or file browser)
 - Load content from a URL (direct links to `.zip` or `.elpx` files)
 - Support for shared links from Nextcloud or ownCloud
+- Google Drive support (requires proxy configuration)
 - Generate shareable links when viewing URL-loaded content
 - In-memory extraction (no files written to disk)
 - Full navigation support for HTML, CSS, JavaScript, images, and media
@@ -42,6 +43,35 @@ The file never leaves your device. All processing happens in your browser.
 This works with:
 - Direct links to files on any server
 - Shared links from Nextcloud and ownCloud
+- Shared links from Google Drive (requires proxy configuration, see below)
+
+### Google Drive support
+
+Google Drive blocks direct downloads from web applications due to CORS restrictions. To enable Google Drive support, you need to deploy a Google Apps Script proxy and configure its URL in eXeViewer.
+
+**Why is this needed?** eXeViewer runs entirely in the browser. Google Drive blocks browser requests from other domains. A Google Apps Script proxy runs on Google's servers and can access Drive files without these restrictions.
+
+**Setup instructions:**
+
+1. Go to [script.google.com](https://script.google.com) and create a new project
+2. Replace the default code with the proxy code (see `docs/gas-proxy.js` or the example below)
+3. Click **Deploy** > **New deployment**
+4. Select **Web app** as the type
+5. Set "Execute as" to **Me** and "Who has access" to **Anyone**
+6. Click **Deploy** and authorize the permissions
+7. Copy the deployment URL (ends with `/exec`)
+8. Edit `js/app.js` and set `gasProxyUrl` to your deployment URL:
+   ```javascript
+   const config = {
+       // ...
+       gasProxyUrl: 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec'
+   };
+   ```
+
+**Limitations:**
+- Maximum file size: 100 MB (Google Apps Script limit)
+- The proxy uses your Google account's quotas
+- Files must be shared publicly ("Anyone with the link")
 
 ### Downloading and sharing content
 
@@ -199,6 +229,13 @@ Firefox doesn't support PWA installation natively. Use the [PWAs for Firefox](ht
    ```javascript
    const config = {
        allowDownloadByDefault: true  // Set to false to uncheck by default
+   };
+   ```
+
+9. **Google Drive proxy**: To enable Google Drive support, set the URL of your deployed Google Apps Script proxy. See the "Google Drive support" section above for setup instructions:
+   ```javascript
+   const config = {
+       gasProxyUrl: 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec'
    };
    ```
 

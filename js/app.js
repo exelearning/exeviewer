@@ -19,7 +19,12 @@
         // Available languages (ISO 639-1 codes). Each language must have a corresponding lang/XX.json file.
         availableLanguages: ['en', 'es'],
         // Default state of "Download button" checkbox in share modal
-        allowDownloadByDefault: true
+        allowDownloadByDefault: true,
+        // Google Apps Script proxy URL for Google Drive downloads
+        // Set this to your deployed GAS web app URL to enable Google Drive support
+        // Example: 'https://script.google.com/macros/s/XXXX/exec'
+        // Leave empty to disable (shows informative message for Drive URLs)
+        gasProxyUrl: ''
     };
 
     // Application state
@@ -61,7 +66,9 @@
         linkUpdated: null,
         allowDownloadCheck: null,
         // Footer element
-        footerInfo: null
+        footerInfo: null,
+        // URL label element
+        urlLabel: null
     };
 
     /**
@@ -162,6 +169,8 @@
         elements.allowDownloadCheck = document.getElementById('allowDownloadCheck');
         // Footer element
         elements.footerInfo = document.getElementById('footerInfo');
+        // URL label element
+        elements.urlLabel = document.getElementById('urlLabel');
     }
 
     /**
@@ -190,6 +199,17 @@
         const footerHtml = `<i class="bi bi-info-circle me-1"></i>${text}`;
 
         elements.footerInfo.innerHTML = footerHtml;
+    }
+
+    /**
+     * Update the URL label text based on whether GAS proxy is configured
+     * Shows different text depending on Google Drive support availability
+     */
+    function updateUrlLabel() {
+        if (!elements.urlLabel) return;
+
+        const key = config.gasProxyUrl ? 'welcome.loadFromUrlWithDrive' : 'welcome.loadFromUrl';
+        elements.urlLabel.textContent = i18n.t(key);
     }
 
     /**
@@ -552,6 +572,43 @@
     }
 
     /**
+     * Check if a URL is a Google Drive URL
+     * @param {string} url - The URL to check
+     * @returns {boolean} True if it's a Google Drive URL
+     */
+    function isGoogleDriveUrl(url) {
+        return url.includes('drive.google.com') || url.includes('drive.usercontent.google.com');
+    }
+
+    /**
+     * Download a file from Google Drive using a GAS proxy
+     * @param {string} url - The Google Drive URL
+     * @returns {Promise<Blob>} The downloaded file as a Blob
+     */
+    async function fetchViaGasProxy(url) {
+        const endpoint = config.gasProxyUrl + '?url=' + encodeURIComponent(url) + '&bundle=1';
+
+        const response = await fetch(endpoint);
+        if (!response.ok) {
+            throw new Error(i18n.t('errors.gasProxyFailed'));
+        }
+
+        const data = await response.json();
+        if (data.error) {
+            throw new Error(data.error);
+        }
+
+        // Convert base64 to Blob
+        const binaryString = atob(data.base64);
+        const bytes = new Uint8Array(binaryString.length);
+        for (let i = 0; i < binaryString.length; i++) {
+            bytes[i] = binaryString.charCodeAt(i);
+        }
+
+        return new Blob([bytes], { type: 'application/zip' });
+    }
+
+    /**
      * Extract filename from URL or Content-Disposition header
      * @param {string} url - The URL
      * @param {Response} response - The fetch response (optional)
@@ -666,89 +723,99 @@
             console.log('[App] Downloading from:', downloadUrl);
 
             // Check if this is a Google Drive URL
-            // Google Drive blocks CORS and public proxies, so we only try direct fetch
-            const isGoogleDrive = url.includes('drive.google.com') || url.includes('drive.usercontent.google.com');
-
-            let response;
-            let usedProxy = false;
-
-            // Try direct fetch first, then fallback to CORS proxy (except for Google Drive)
-            try {
-                response = await fetchWithCorsProxy(downloadUrl, false);
-                if (!response.ok) {
-                    throw new Error('Direct fetch failed');
-                }
-            } catch (directError) {
-                // For Google Drive, don't try proxies - they are blocked
-                // Show specific error message immediately
-                if (isGoogleDrive) {
-                    throw new Error('GOOGLE_DRIVE_BLOCKED');
-                }
-
-                console.log('[App] Direct fetch failed, trying CORS proxy...');
-                usedProxy = true;
-                response = await fetchWithCorsProxy(downloadUrl, true);
-            }
-
-            if (!response.ok) {
-                if (response.status === 401 || response.status === 403) {
-                    throw new Error(i18n.t('errors.urlAccessDenied'));
-                } else if (response.status === 404) {
-                    throw new Error(i18n.t('errors.urlNotFound'));
-                } else {
-                    throw new Error(i18n.t('errors.downloadFailed'));
-                }
-            }
-
-            // Check content type
-            const contentType = response.headers.get('Content-Type') || '';
-            const isValidType = contentType.includes('application/zip') ||
-                               contentType.includes('application/x-zip') ||
-                               contentType.includes('application/octet-stream') ||
-                               contentType.includes('application/x-compressed');
-
-            // Get filename from original URL (not proxy URL)
-            const filename = extractFilename(downloadUrl, response);
-
-            // Validate file extension or content type
-            const lowerFilename = filename.toLowerCase();
-            if (!lowerFilename.endsWith('.zip') && !lowerFilename.endsWith('.elpx') && !isValidType) {
-                throw new Error(i18n.t('errors.invalidFileType'));
-            }
-
-            // Get content length for progress tracking
-            const contentLength = response.headers.get('Content-Length');
-            const totalBytes = contentLength ? parseInt(contentLength, 10) : 0;
+            const isGoogleDrive = isGoogleDriveUrl(url);
 
             let blob;
-            if (response.body) {
-                // Stream download with progress
-                const reader = response.body.getReader();
-                const chunks = [];
-                let receivedBytes = 0;
+            let filename;
+            let usedProxy = false;
 
-                while (true) {
-                    const { done, value } = await reader.read();
-                    if (done) break;
+            if (isGoogleDrive) {
+                // Google Drive URL handling
+                if (config.gasProxyUrl) {
+                    // Use GAS proxy for Google Drive
+                    console.log('[App] Using GAS proxy for Google Drive URL');
+                    updateLoadingText(i18n.t('loading.downloadingViaProxy'));
+                    blob = await fetchViaGasProxy(url.trim());
+                    filename = extractFilename(url);
+                    usedProxy = true;
+                } else {
+                    // No proxy configured, show informative message
+                    throw new Error('GOOGLE_DRIVE_BLOCKED');
+                }
+            } else {
+                // Non-Drive URL: try direct fetch, then fallback to CORS proxy
+                let response;
 
-                    chunks.push(value);
-                    receivedBytes += value.length;
+                try {
+                    response = await fetchWithCorsProxy(downloadUrl, false);
+                    if (!response.ok) {
+                        throw new Error('Direct fetch failed');
+                    }
+                } catch (directError) {
+                    console.log('[App] Direct fetch failed, trying CORS proxy...');
+                    usedProxy = true;
+                    response = await fetchWithCorsProxy(downloadUrl, true);
+                }
 
-                    // Update progress
-                    const size = formatBytes(receivedBytes);
-                    if (totalBytes > 0) {
-                        const percent = Math.round((receivedBytes / totalBytes) * 100);
-                        updateLoadingText(`${i18n.t('loading.downloading')} ${percent}% (${size})`);
+                if (!response.ok) {
+                    if (response.status === 401 || response.status === 403) {
+                        throw new Error(i18n.t('errors.urlAccessDenied'));
+                    } else if (response.status === 404) {
+                        throw new Error(i18n.t('errors.urlNotFound'));
                     } else {
-                        updateLoadingText(`${i18n.t('loading.downloading')} ${size}`);
+                        throw new Error(i18n.t('errors.downloadFailed'));
                     }
                 }
 
-                // Combine chunks into blob
-                blob = new Blob(chunks);
-            } else {
-                // Fallback: streaming not available
-                blob = await response.blob();
+                // Check content type
+                const contentType = response.headers.get('Content-Type') || '';
+                const isValidType = contentType.includes('application/zip') ||
+                                   contentType.includes('application/x-zip') ||
+                                   contentType.includes('application/octet-stream') ||
+                                   contentType.includes('application/x-compressed');
+
+                // Get filename from original URL (not proxy URL)
+                filename = extractFilename(downloadUrl, response);
+
+                // Validate file extension or content type
+                const lowerFilename = filename.toLowerCase();
+                if (!lowerFilename.endsWith('.zip') && !lowerFilename.endsWith('.elpx') && !isValidType) {
+                    throw new Error(i18n.t('errors.invalidFileType'));
+                }
+
+                // Get content length for progress tracking
+                const contentLength = response.headers.get('Content-Length');
+                const totalBytes = contentLength ? parseInt(contentLength, 10) : 0;
+
+                if (response.body) {
+                    // Stream download with progress
+                    const reader = response.body.getReader();
+                    const chunks = [];
+                    let receivedBytes = 0;
+
+                    while (true) {
+                        const { done, value } = await reader.read();
+                        if (done) break;
+
+                        chunks.push(value);
+                        receivedBytes += value.length;
+
+                        // Update progress
+                        const size = formatBytes(receivedBytes);
+                        if (totalBytes > 0) {
+                            const percent = Math.round((receivedBytes / totalBytes) * 100);
+                            updateLoadingText(`${i18n.t('loading.downloading')} ${percent}% (${size})`);
+                        } else {
+                            updateLoadingText(`${i18n.t('loading.downloading')} ${size}`);
+                        }
+                    }
+
+                    // Combine chunks into blob
+                    blob = new Blob(chunks);
+                } else {
+                    // Fallback: streaming not available
+                    blob = await response.blob();
+                }
             }
 
             if (blob.size === 0) {
@@ -1457,9 +1524,13 @@
         // Update footer with dynamic links (after i18n is ready)
         updateFooter();
 
-        // Listen for language changes to update footer, restored content name, and error message
+        // Update URL label based on GAS proxy configuration
+        updateUrlLabel();
+
+        // Listen for language changes to update footer, URL label, restored content name, and error message
         window.addEventListener('languagechange', () => {
             updateFooter();
+            updateUrlLabel();
             updateRestoredContentName();
             updateErrorMessage();
         });

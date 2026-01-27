@@ -15,6 +15,7 @@ La aplicación se ejecuta completamente en tu navegador. Cuando cargas un ficher
 - Carga ficheros `.zip` o `.elpx` desde tu dispositivo (arrastrándolos o seleccionándolos)
 - Carga contenido desde una URL (enlaces directos a ficheros `.zip` o `.elpx`)
 - Admite enlaces compartidos de Nextcloud y ownCloud
+- Soporte para Google Drive (requiere configuración de proxy)
 - Genera enlaces para compartir cuando visualizas contenido cargado desde URL
 - Extracción en memoria (no se escribe nada en disco)
 - Navegación completa con soporte para HTML, CSS, JavaScript, imágenes y multimedia
@@ -42,6 +43,35 @@ El fichero nunca sale de tu dispositivo. Todo el procesamiento ocurre en tu nave
 Funciona con:
 - Enlaces directos a ficheros .zip o .elpx en cualquier servidor
 - Enlaces compartidos de Nextcloud y ownCloud
+- Enlaces compartidos de Google Drive (requiere configuración de proxy, ver más abajo)
+
+### Soporte de Google Drive
+
+Google Drive bloquea las descargas directas desde aplicaciones web debido a restricciones CORS. Para habilitar el soporte de Google Drive, necesitas desplegar un proxy de Google Apps Script y configurar su URL en eXeViewer.
+
+**¿Por qué es necesario?** eXeViewer se ejecuta completamente en el navegador. Google Drive bloquea las peticiones del navegador desde otros dominios. Un proxy de Google Apps Script se ejecuta en los servidores de Google y puede acceder a los archivos de Drive sin estas restricciones.
+
+**Instrucciones de configuración:**
+
+1. Ve a [script.google.com](https://script.google.com) y crea un nuevo proyecto
+2. Reemplaza el código por defecto con el código del proxy (ver `docs/gas-proxy.js` o el ejemplo de abajo)
+3. Haz clic en **Implementar** > **Nueva implementación**
+4. Selecciona **Aplicación web** como tipo
+5. Configura "Ejecutar como" a **Yo** y "Quién tiene acceso" a **Cualquiera**
+6. Haz clic en **Implementar** y autoriza los permisos
+7. Copia la URL de implementación (termina en `/exec`)
+8. Edita `js/app.js` y establece `gasProxyUrl` con tu URL de implementación:
+   ```javascript
+   const config = {
+       // ...
+       gasProxyUrl: 'https://script.google.com/macros/s/TU_ID_DE_SCRIPT/exec'
+   };
+   ```
+
+**Limitaciones:**
+- Tamaño máximo de archivo: 100 MB (límite de Google Apps Script)
+- El proxy usa las cuotas de tu cuenta de Google
+- Los archivos deben estar compartidos públicamente ("Cualquier persona con el enlace")
 
 ### Descargar y compartir contenido
 
@@ -199,6 +229,13 @@ Firefox no soporta la instalación de PWA de forma nativa. Usa la extensión [PW
    ```javascript
    const config = {
        allowDownloadByDefault: true  // Cambiar a false para que esté desmarcada por defecto
+   };
+   ```
+
+9. **Proxy de Google Drive**: Para habilitar el soporte de Google Drive, establece la URL de tu proxy de Google Apps Script desplegado. Consulta la sección "Soporte de Google Drive" más arriba para las instrucciones de configuración:
+   ```javascript
+   const config = {
+       gasProxyUrl: 'https://script.google.com/macros/s/TU_ID_DE_SCRIPT/exec'
    };
    ```
 
