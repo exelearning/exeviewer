@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## v1.0.1 – 2026-01-27
+
+- Support for loading content from Google Drive shared links (requires Google Apps Script proxy configuration).
+
+---
+
 ## v1.0.0 – 2026-01-08
 
 - First official release of eXeViewer
