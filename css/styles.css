@@ -92,9 +92,12 @@ body {
 #welcomeLanguageBtn {
     min-width: 100px;
 }
+
+/* Small buttons (only icon) */
 #topNavbar #btnDownload,
 #topNavbar #btnShare,
-#topNavbar #btnNewWindow {
+#topNavbar #btnNewWindow,
+#topNavbar #btnLoadNew {
     min-width: 0;
     border-color: transparent;
 }
@@ -206,6 +209,19 @@ body {
     font-weight: 600;
     color: var(--text-muted);
     font-size: 0.95rem;
+}
+
+.url-help-icon {
+    color: var(--text-muted);
+    cursor: pointer;
+    margin-left: 0.25rem;
+    opacity: 0.7;
+    transition: opacity 0.15s ease-in-out;
+}
+
+.url-help-icon:hover,
+.url-help-icon:focus {
+    opacity: 1;
 }
 
 .url-input-group {
@@ -448,6 +464,10 @@ body {
 
 .modal-body {
     min-height: 250px;
+}
+
+#exitModal .modal-body {
+    min-height: 0;
 }
 
 /* Success text with good contrast in both modes */

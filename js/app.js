@@ -9,7 +9,7 @@
     // Configuration
     const config = {
         // Application version (displayed in footer)
-        version: '1.0.1',
+        version: '1.0.2',
         // Automatically restore and display content from IndexedDB on page load
         autoRestoreContent: true,
         // Open external links in a new window/tab (prevents navigation issues in iframes)
@@ -68,7 +68,12 @@
         // Footer element
         footerInfo: null,
         // URL label element
-        urlLabel: null
+        urlLabel: null,
+        // URL help icon element
+        urlHelpIcon: null,
+        // Exit modal elements
+        exitModal: null,
+        btnConfirmExit: null
     };
 
     /**
@@ -171,6 +176,11 @@
         elements.footerInfo = document.getElementById('footerInfo');
         // URL label element
         elements.urlLabel = document.getElementById('urlLabel');
+        // URL help icon element
+        elements.urlHelpIcon = document.getElementById('urlHelpIcon');
+        // Exit modal elements
+        elements.exitModal = document.getElementById('exitModal');
+        elements.btnConfirmExit = document.getElementById('btnConfirmExit');
     }
 
     /**
@@ -208,8 +218,18 @@
     function updateUrlLabel() {
         if (!elements.urlLabel) return;
 
-        const key = config.gasProxyUrl ? 'welcome.loadFromUrlWithDrive' : 'welcome.loadFromUrl';
-        elements.urlLabel.textContent = i18n.t(key);
+        elements.urlLabel.textContent = i18n.t('welcome.loadFromUrl');
+
+        // Update tooltip on help icon
+        if (elements.urlHelpIcon) {
+            const tooltipKey = config.gasProxyUrl ? 'welcome.loadFromUrlTooltipWithDrive' : 'welcome.loadFromUrlTooltip';
+            elements.urlHelpIcon.setAttribute('title', i18n.t(tooltipKey));
+            // Refresh Bootstrap tooltip if already initialized
+            const tooltipInstance = bootstrap.Tooltip.getInstance(elements.urlHelpIcon);
+            if (tooltipInstance) {
+                tooltipInstance.setContent({ '.tooltip-inner': i18n.t(tooltipKey) });
+            }
+        }
     }
 
     /**
@@ -220,6 +240,8 @@
             state.currentPackageName = i18n.t('navbar.restoredContent');
             elements.packageName.textContent = state.currentPackageName;
             elements.packageName.title = state.currentPackageName;
+            // Show package name visually only for restored content
+            elements.packageName.classList.remove('visually-hidden');
         }
     }
 
@@ -535,7 +557,7 @@
     }
 
     /**
-     * Convert special URLs (Google Drive, ownCloud/Nextcloud) to direct download links
+     * Convert special URLs (Google Drive, ownCloud/Nextcloud, Dropbox) to direct download links
      * @param {string} url - The original URL
      * @returns {string} The converted URL for direct download
      */
@@ -562,6 +584,15 @@
             if (urlObj.pathname.match(/^\/s\/[^/]+\/?$/)) {
                 const cleanPath = urlObj.pathname.replace(/\/$/, '');
                 return `${urlObj.origin}${cleanPath}/download`;
+            }
+
+            // Dropbox shared links
+            // Format: https://www.dropbox.com/s/HASH/filename.zip?dl=0
+            //     or: https://www.dropbox.com/scl/fi/HASH/filename.zip?rlkey=xxx&dl=0
+            // Convert to: same URL with dl=1 for direct download
+            if (urlObj.hostname === 'www.dropbox.com' || urlObj.hostname === 'dropbox.com') {
+                urlObj.searchParams.set('dl', '1');
+                return urlObj.toString();
             }
 
             // Return original URL if no conversion needed
@@ -960,14 +991,19 @@
         if (state.currentPackageName) {
             elements.packageName.textContent = state.currentPackageName;
             elements.packageName.title = state.currentPackageName;
+            // Show package name visually only for restored content
+            if (state.isRestoredContent) {
+                elements.packageName.classList.remove('visually-hidden');
+            }
         }
 
         // Update share and download button visibility
         updateShareButtonVisibility();
         updateDownloadButtonVisibility();
 
-        // Show open in new window button
+        // Show open in new window and exit buttons
         elements.btnNewWindow.classList.remove('d-none');
+        elements.btnLoadNew.classList.remove('d-none');
 
         // Set up history states: first mark current state as welcome, then push viewer state
         const welcomeState = { isWelcome: true };
@@ -1008,6 +1044,8 @@
         elements.btnDownload.classList.add('d-none');
         elements.btnShare.classList.add('d-none');
         elements.btnNewWindow.classList.add('d-none');
+        elements.btnLoadNew.classList.add('d-none');
+        elements.packageName.classList.add('visually-hidden');
         elements.welcomeScreen.classList.remove('d-none');
 
         // Clear file input and URL input
@@ -1157,9 +1195,25 @@
             event.preventDefault();
         });
 
-        // Load new file button
+        // Load new file button - show confirmation modal
         elements.btnLoadNew.addEventListener('click', () => {
+            const modal = new bootstrap.Modal(elements.exitModal);
+            modal.show();
+        });
+
+        // Confirm exit button in modal
+        elements.btnConfirmExit.addEventListener('click', () => {
+            const modal = bootstrap.Modal.getInstance(elements.exitModal);
+            modal.hide();
             resetApplication();
+        });
+
+        // Handle Enter key in exit modal (like native confirm)
+        elements.exitModal.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                elements.btnConfirmExit.click();
+            }
         });
 
         // URL input - load button click
@@ -1207,6 +1261,9 @@
         }
         if (elements.btnLoadNew) {
             new bootstrap.Tooltip(elements.btnLoadNew);
+        }
+        if (elements.urlHelpIcon) {
+            new bootstrap.Tooltip(elements.urlHelpIcon);
         }
 
         // Setup language selector
@@ -1460,6 +1517,7 @@
                 elements.viewerContainer.classList.remove('d-none');
                 elements.topNavbar.classList.remove('d-none');
                 elements.btnNewWindow.classList.remove('d-none');
+                elements.btnLoadNew.classList.remove('d-none');
                 updateShareButtonVisibility();
                 updateDownloadButtonVisibility();
             }
@@ -1489,6 +1547,7 @@
         elements.btnDownload.classList.add('d-none');
         elements.btnShare.classList.add('d-none');
         elements.btnNewWindow.classList.add('d-none');
+        elements.btnLoadNew.classList.add('d-none');
         elements.welcomeScreen.classList.remove('d-none');
         // Don't change iframe.src here - it would invalidate forward history
     }

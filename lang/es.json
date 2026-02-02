@@ -7,15 +7,16 @@
         "dragDrop": "Arrastra y suelta tu archivo <strong>.zip</strong> o <strong>.elpx</strong> aquí",
         "or": "o",
         "browseFiles": "Selecciona el fichero",
-        "loadFromUrl": "Cargar desde URL (admite enlaces de Nextcloud y ownCloud)",
-        "loadFromUrlWithDrive": "Cargar desde URL (admite enlaces de Nextcloud, ownCloud y Google Drive)",
+        "loadFromUrl": "Cargar desde URL",
+        "loadFromUrlTooltip": "Admite enlaces compartidos de Nextcloud, ownCloud y Dropbox",
+        "loadFromUrlTooltipWithDrive": "Admite enlaces compartidos de Nextcloud, ownCloud, Dropbox y Google Drive",
         "shareHint": "Podrás generar un enlace directo para compartir el contenido.",
-        "urlPlaceholder": "https://ejemplo.com/contenido.zip",
+        "urlPlaceholder": "https://ejemplo.com/contenido.zip (o .elpx)",
         "loadUrl": "Cargar",
         "supportedFormats": "eXeViewer %s, compatible con sitios web y .elpx de eXeLearning"
     },
     "navbar": {
-        "loadAnother": "Otro archivo",
+        "loadAnother": "Cargar otro contenido",
         "newFile": "Salir",
         "openNewWindow": "Abrir en ventana nueva",
         "restoredContent": "Contenido recuperado"
@@ -81,5 +82,11 @@
     },
     "download": {
         "tooltip": "Descargar fichero original"
+    },
+    "exit": {
+        "modalTitle": "Salir",
+        "message": "Volverás a la página principal, desde donde podrás cargar contenidos.",
+        "cancel": "Cancelar",
+        "confirm": "Salir"
     }
 }

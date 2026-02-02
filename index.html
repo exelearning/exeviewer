@@ -55,7 +55,7 @@
             </span>
 
             <div class="d-flex align-items-center">
-                <span id="packageName" class="text-light me-3 d-none d-sm-inline"></span>
+                <span id="packageName" class="text-light me-3 visually-hidden"></span>
 
                 <!-- Download Button (hidden by default, shown only for URL-loaded content in browser) -->
                 <button id="btnDownload" class="btn btn-outline-light btn-sm me-2 d-none" type="button"
@@ -78,8 +78,15 @@
                     <span class="visually-hidden" data-i18n="navbar.openNewWindow">Open in new window</span>
                 </button>
 
-                <!-- Language Selector -->
-                <div class="dropdown me-2">
+                <!-- Exit Button (hidden by default, shown when content is loaded) -->
+                <button id="btnLoadNew" class="btn btn-outline-light btn-sm me-2 d-none" type="button"
+                        data-bs-toggle="tooltip" data-bs-placement="bottom" data-i18n-title="navbar.loadAnother">
+                    <i class="bi bi-x-lg me-1"></i>
+                    <span class="visually-hidden" data-i18n="navbar.newFile">Exit</span>
+                </button>
+
+                <!-- Language Selector (always visible, fixed position) -->
+                <div class="dropdown">
                     <button id="languageDropdownBtn" class="btn btn-outline-light btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Select language" data-i18n-aria="accessibility.languageSelector">
                         <i class="bi bi-globe me-1"></i><span data-i18n="language.en">English</span>
                     </button>
@@ -88,12 +95,6 @@
                         <li><a class="dropdown-item" href="#" data-lang="es">Español</a></li>
                     </ul>
                 </div>
-
-                <button id="btnLoadNew" class="btn btn-outline-light btn-sm" type="button"
-                        data-bs-toggle="tooltip" data-bs-placement="bottom" data-i18n-title="navbar.loadAnother">
-                    <i class="bi bi-escape me-1"></i>
-                    <span class="d-none d-sm-inline" data-i18n="navbar.newFile">Exit</span>
-                </button>
             </div>
         </div>
     </nav>
@@ -145,6 +146,11 @@
                 <!-- URL Input Section (outside drop zone) -->
                 <div class="url-section mt-4">
                     <label id="urlLabel" for="urlInput" class="url-section-title mb-2">Load from URL</label>
+                    <span id="urlHelpIcon" class="url-help-icon" tabindex="0" role="button"
+                          data-bs-toggle="tooltip" data-bs-placement="top"
+                          title="">
+                        <i class="bi bi-question-circle" aria-hidden="true"></i>
+                    </span>
                     <div class="url-input-group">
                         <input type="url" id="urlInput" class="form-control"
                                aria-describedby="urlLabel"
@@ -226,6 +232,25 @@
                     <div id="linkUpdated" class="alert-success-text small mt-2 d-none" role="status" aria-live="polite" data-i18n="share.linkUpdated">
                         Link updated!
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Exit Confirmation Modal -->
+    <div class="modal fade" id="exitModal" tabindex="-1" aria-labelledby="exitModalLabel" aria-hidden="true" aria-modal="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exitModalLabel" data-i18n="exit.modalTitle">Exit</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" data-i18n-aria="accessibility.closeModal"></button>
+                </div>
+                <div class="modal-body">
+                    <p data-i18n="exit.message">You will return to the main page, where you can load content.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-i18n="exit.cancel">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="btnConfirmExit" data-i18n="exit.confirm">Exit</button>
                 </div>
             </div>
         </div>
