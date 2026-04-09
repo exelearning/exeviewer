@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## v1.0.3 – 2026-04-09
+
+- Fix SW content loss after browser-induced termination.
+
+---
+
 ## v1.0.2 – 2026-02-02
 
 - Support loading content from Dropbox.
