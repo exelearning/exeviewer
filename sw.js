@@ -593,7 +593,21 @@ async function handleViewerRequest(pathname, viewerIndex) {
 
     console.log(`[SW] Request for: ${filePath}`);
 
-    // Check if content is ready
+    // Check if content is ready; if not, try to restore from IndexedDB
+    // (the activate event does not re-fire after the SW is terminated by the browser,
+    // so in-memory state can be lost even though IndexedDB still holds the content)
+    if (!contentReady || contentFiles.size === 0) {
+        const stored = await loadFromIndexedDB();
+        if (stored.files && Object.keys(stored.files).length > 0) {
+            contentFiles = new Map(Object.entries(stored.files));
+            contentReady = true;
+            if (stored.options) {
+                contentOptions = { ...contentOptions, ...stored.options };
+            }
+            console.log(`[SW] Content auto-restored from IndexedDB after SW restart: ${contentFiles.size} files`);
+        }
+    }
+
     if (!contentReady || contentFiles.size === 0) {
         console.warn('[SW] Content not ready yet');
         return new Response('Content not loaded. Please upload a ZIP file first.', {
