@@ -6,8 +6,8 @@
 (function() {
     'use strict';
 
-    // Configuration
-    const config = {
+    // Configuration defaults — override via js/config.js (window.exeViewerConfig)
+    const config = Object.assign({
         // Application version (displayed in footer)
         version: '1.0.3',
         // Automatically restore and display content from IndexedDB on page load
@@ -25,7 +25,7 @@
         // Example: 'https://script.google.com/macros/s/XXXX/exec'
         // Leave empty to disable (shows informative message for Drive URLs)
         gasProxyUrl: ''
-    };
+    }, window.exeViewerConfig || {});
 
     // Application state
     const state = {
