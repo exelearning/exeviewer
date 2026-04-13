@@ -60,10 +60,9 @@ Google Drive bloquea las descargas directas desde aplicaciones web debido a rest
 5. Configura "Ejecutar como" a **Yo** y "Quién tiene acceso" a **Cualquiera**
 6. Haz clic en **Implementar** y autoriza los permisos
 7. Copia la URL de implementación (termina en `/exec`)
-8. Edita `js/app.js` y establece `gasProxyUrl` con tu URL de implementación:
+8. Edita `js/config.js` y establece `gasProxyUrl` con tu URL de implementación:
    ```javascript
-   const config = {
-       // ...
+   window.exeViewerConfig = {
        gasProxyUrl: 'https://script.google.com/macros/s/TU_ID_DE_SCRIPT/exec'
    };
    ```
@@ -204,37 +203,37 @@ Firefox no soporta la instalación de PWA de forma nativa. Usa la extensión [PW
 
 4. **Gestión de URLs**: Para enlaces de servicios en la nube, la aplicación transforma las URLs de compartir en URLs de descarga directa antes de hacer la petición.
 
-5. **Persistencia del contenido**: El contenido extraído se guarda en IndexedDB y se restaura automáticamente al recargar la página. Este comportamiento se puede deshabilitar en `js/app.js`:
+5. **Persistencia del contenido**: El contenido extraído se guarda en IndexedDB y se restaura automáticamente al recargar la página. La aplicación también solicita almacenamiento persistente al navegador para reducir el riesgo de que lo elimine por falta de espacio. Este comportamiento se puede deshabilitar en `js/config.js`:
    ```javascript
-   const config = {
-       autoRestoreContent: false  // Cambiar a false para deshabilitar
+   window.exeViewerConfig = {
+       autoRestoreContent: false
    };
    ```
 
-6. **Gestión de enlaces externos**: Los enlaces externos del contenido se abren por defecto en ventana/pestaña nueva. Eso evita problemas cuando el contenido se muestra en un iframe. El comportamiento se puede cambiar en `js/app.js`:
+6. **Gestión de enlaces externos**: Los enlaces externos del contenido se abren por defecto en ventana/pestaña nueva. Eso evita problemas cuando el contenido se muestra en un iframe. El comportamiento se puede cambiar en `js/config.js`:
    ```javascript
-   const config = {
-       openExternalLinksInNewWindow: false  // Cambiar a false para deshabilitar
+   window.exeViewerConfig = {
+       openExternalLinksInNewWindow: false
    };
    ```
 
-7. **Validación del contenido**: Por defecto, la aplicación valida que los ZIP tengan contenido de eXeLearning. Reconoce tanto las exportaciones antiguas (eXeLearning 2.x) como las modernas (eXeLearning 3.x). Esta validación se puede deshabilitar en `js/app.js`:
+7. **Validación del contenido**: Por defecto, la aplicación valida que los ZIP tengan contenido de eXeLearning. Reconoce tanto las exportaciones antiguas (eXeLearning 2.x) como las modernas (eXeLearning 3.x). Esta validación se puede deshabilitar en `js/config.js`:
    ```javascript
-   const config = {
-       validateExeContent: false  // Cambiar a false para permitir cualquier ZIP con index.html
+   window.exeViewerConfig = {
+       validateExeContent: false
    };
    ```
 
-8. **Botón de descarga**: Cuando el contenido se carga desde una URL y se genera un enlace para compartir, los usuarios pueden habilitar opcionalmente un botón de descarga para los destinatarios. La casilla "Botón de descarga" del modal para compartir añade un parámetro `download=1` a la URL compartida. Puedes establecer el estado inicial de la casilla en `js/app.js`:
+8. **Botón de descarga**: Cuando el contenido se carga desde una URL y se genera un enlace para compartir, los usuarios pueden habilitar opcionalmente un botón de descarga para los destinatarios. La casilla "Botón de descarga" del modal para compartir añade un parámetro `download=1` a la URL compartida. Puedes establecer el estado inicial de la casilla en `js/config.js`:
    ```javascript
-   const config = {
-       allowDownloadByDefault: true  // Cambiar a false para que esté desmarcada por defecto
+   window.exeViewerConfig = {
+       allowDownloadByDefault: false
    };
    ```
 
 9. **Proxy de Google Drive**: Para habilitar el soporte de Google Drive, establece la URL de tu proxy de Google Apps Script desplegado. Consulta la sección "Soporte de Google Drive" más arriba para las instrucciones de configuración:
    ```javascript
-   const config = {
+   window.exeViewerConfig = {
        gasProxyUrl: 'https://script.google.com/macros/s/TU_ID_DE_SCRIPT/exec'
    };
    ```
@@ -251,9 +250,9 @@ Firefox no soporta la instalación de PWA de forma nativa. Usa la extensión [PW
    }
    ```
 
-3. Añade el código del idioma a `availableLanguages` en `js/app.js`:
+3. Añade el código del idioma a `availableLanguages` en `js/config.js`:
    ```javascript
-   const config = {
+   window.exeViewerConfig = {
        availableLanguages: ['en', 'es', 'XX']
    };
    ```
@@ -271,6 +270,7 @@ exeviewer/
 │   └── styles.css      # Estilos personalizados
 ├── js/
 │   ├── app.js          # Lógica principal de la aplicación
+│   ├── config.js       # Configuración del despliegue (sobreescribe los valores por defecto de app.js)
 │   ├── i18n.js         # Módulo de internacionalización
 │   └── zip.worker.js   # Web Worker para extracción ZIP
 ├── lang/

@@ -60,10 +60,9 @@ Google Drive blocks direct downloads from web applications due to CORS restricti
 5. Set "Execute as" to **Me** and "Who has access" to **Anyone**
 6. Click **Deploy** and authorize the permissions
 7. Copy the deployment URL (ends with `/exec`)
-8. Edit `js/app.js` and set `gasProxyUrl` to your deployment URL:
+8. Edit `js/config.js` and set `gasProxyUrl` to your deployment URL:
    ```javascript
-   const config = {
-       // ...
+   window.exeViewerConfig = {
        gasProxyUrl: 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec'
    };
    ```
@@ -204,37 +203,37 @@ Firefox doesn't support PWA installation natively. Use the [PWAs for Firefox](ht
 
 4. **URL handling**: For cloud service links, the application transforms share URLs into direct download URLs before fetching.
 
-5. **Content persistence**: Extracted content is stored in IndexedDB and automatically restored on page reload. This behavior can be disabled in `js/app.js`:
+5. **Content persistence**: Extracted content is stored in IndexedDB and automatically restored on page reload. The application also requests persistent storage from the browser to reduce the risk of it evicting the data under storage pressure. This behavior can be disabled in `js/config.js`:
    ```javascript
-   const config = {
-       autoRestoreContent: false  // Set to false to disable
+   window.exeViewerConfig = {
+       autoRestoreContent: false
    };
    ```
 
-6. **External links handling**: External links inside the displayed content are opened in a new window/tab by default. This prevents navigation issues when content is displayed in an iframe. This behavior can be disabled in `js/app.js`:
+6. **External links handling**: External links inside the displayed content are opened in a new window/tab by default. This prevents navigation issues when content is displayed in an iframe. This behavior can be disabled in `js/config.js`:
    ```javascript
-   const config = {
-       openExternalLinksInNewWindow: false  // Set to false to disable
+   window.exeViewerConfig = {
+       openExternalLinksInNewWindow: false
    };
    ```
 
-7. **Content validation**: By default, the application validates that ZIP files contain eXeLearning content before displaying them. It recognizes both legacy exports (eXeLearning 2.x) and modern exports (eXeLearning 3.x). This validation can be disabled in `js/app.js`:
+7. **Content validation**: By default, the application validates that ZIP files contain eXeLearning content before displaying them. It recognizes both legacy exports (eXeLearning 2.x) and modern exports (eXeLearning 3.x). This validation can be disabled in `js/config.js`:
    ```javascript
-   const config = {
-       validateExeContent: false  // Set to false to allow any ZIP with an index.html
+   window.exeViewerConfig = {
+       validateExeContent: false
    };
    ```
 
-8. **Download button**: When content is loaded from a URL and shared, users can optionally enable a download button for recipients. In the share modal, there's a checkbox "Download button" that adds a `download=1` parameter to the shared URL. You can set the default state of this checkbox in `js/app.js`:
+8. **Download button**: When content is loaded from a URL and shared, users can optionally enable a download button for recipients. In the share modal, there's a checkbox "Download button" that adds a `download=1` parameter to the shared URL. You can set the default state of this checkbox in `js/config.js`:
    ```javascript
-   const config = {
-       allowDownloadByDefault: true  // Set to false to uncheck by default
+   window.exeViewerConfig = {
+       allowDownloadByDefault: false
    };
    ```
 
 9. **Google Drive proxy**: To enable Google Drive support, set the URL of your deployed Google Apps Script proxy. See the "Google Drive support" section above for setup instructions:
    ```javascript
-   const config = {
+   window.exeViewerConfig = {
        gasProxyUrl: 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec'
    };
    ```
@@ -251,9 +250,9 @@ Firefox doesn't support PWA installation natively. Use the [PWAs for Firefox](ht
    }
    ```
 
-3. Add the language code to `availableLanguages` in `js/app.js`:
+3. Add the language code to `availableLanguages` in `js/config.js`:
    ```javascript
-   const config = {
+   window.exeViewerConfig = {
        availableLanguages: ['en', 'es', 'XX']
    };
    ```
@@ -271,6 +270,7 @@ exeviewer/
 │   └── styles.css      # Custom styles
 ├── js/
 │   ├── app.js          # Main application logic
+│   ├── config.js       # Deployment configuration (overrides defaults in app.js)
 │   ├── i18n.js         # Internationalization module
 │   └── zip.worker.js   # Web Worker for ZIP extraction
 ├── lang/
