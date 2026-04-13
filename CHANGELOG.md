@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## v1.0.4 – 2026-04-13
+
+- Request persistent storage to prevent the browser from evicting IndexedDB content.
+- Improve Web Worker lifecycle management by properly terminating the worker, clearing its reference and standardizing error reporting.
+- Align license declaration for consistency across the project.
+- Improve error handling and user feedback for storage-related failures, including insufficient storage space conditions.
+- Add a deployment configuration file to override default settings defined in `app.js`.
+
+---
+
 ## v1.0.3 – 2026-04-09
 
 - Fix SW content loss after browser-induced termination.
