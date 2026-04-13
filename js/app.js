@@ -514,8 +514,10 @@
             };
 
             worker.onerror = (error) => {
-                console.error('[App] Worker error:', error);
-                reject(new Error(error.message || i18n.t('errors.processingFailed')));
+                console.error('[App] Worker crashed:', error);
+                state.zipWorker.terminate();
+                state.zipWorker = null;
+                reject(new Error(i18n.t('errors.processingFailed')));
             };
 
             // Send file to worker for processing
