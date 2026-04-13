@@ -375,6 +375,15 @@
             await waitForController();
         }
 
+        // Request persistent storage so the browser does not evict IndexedDB content
+        if (config.autoRestoreContent && navigator.storage && navigator.storage.persist) {
+            navigator.storage.persist().then(granted => {
+                console.log(`[App] Persistent storage ${granted ? 'granted' : 'not granted'}`);
+            }).catch(err => {
+                console.warn('[App] Could not request persistent storage:', err);
+            });
+        }
+
         // Preventive storage check
         let storageWarning = null;
         const filesSize = calculateFilesSize(files);
