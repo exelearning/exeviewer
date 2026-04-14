@@ -117,6 +117,54 @@ The application will work on:
 
 For the share functionality to work, the application must be served over HTTPS (or HTTP on localhost).
 
+### Docker
+
+A pre-built image is published to the GitHub Container Registry on every release. It uses nginx on Alpine Linux (~8 MB base image).
+
+#### Quick start
+
+```bash
+docker run -p 8080:80 ghcr.io/exelearning/exeviewer:latest
+```
+
+Then open `http://localhost:8080` in your browser.
+
+#### Docker Compose (recommended)
+
+Download the provided `docker-compose.yml` and the configuration template:
+
+```bash
+curl -O https://raw.githubusercontent.com/exelearning/exeviewer/main/docker-compose.yml
+curl -O https://raw.githubusercontent.com/exelearning/exeviewer/main/.env.dist
+cp .env.dist .env
+```
+
+Edit `.env` if you need to customise any settings (e.g. Google Drive proxy), then start the container:
+
+```bash
+docker compose up -d
+```
+
+#### Configuration via environment variables
+
+Instead of editing `js/config.js`, Docker deployments are configured through environment variables, either in `.env` or in the `environment:` block of your Compose file:
+
+| Variable | Default | Description |
+|---|---|---|
+| `GAS_PROXY_URL` | _(empty)_ | Google Apps Script proxy URL for Google Drive support |
+| `AUTO_RESTORE_CONTENT` | `true` | Restore last viewed content on page load |
+| `OPEN_EXTERNAL_LINKS_IN_NEW_WINDOW` | `true` | Open external links in a new tab |
+| `VALIDATE_EXE_CONTENT` | `true` | Reject ZIPs that are not valid eXeLearning packages |
+| `ALLOW_DOWNLOAD_BY_DEFAULT` | `true` | Show download button enabled by default in share dialog |
+
+Variables not set in `.env` keep their default values. You only need to include the ones you want to change.
+
+#### HTTPS
+
+**HTTPS is required.** The Service Worker (the core mechanism that serves extracted ZIP content) will not register on non-secure origins. This is a browser security restriction, not an eXeViewer limitation. The only exception is `localhost`, which works without HTTPS for local development.
+
+For production deployments, ensure TLS is terminated before reaching the browser. The most common approach is a reverse proxy in front of the container (Nginx, Traefik, Caddy, etc.), but cloud load balancers or any other TLS termination point work equally well.
+
 ### Running locally without a web server
 
 If you don't have a web server installed, you can use the included `server.js`:
@@ -261,26 +309,32 @@ Firefox doesn't support PWA installation natively. Use the [PWAs for Firefox](ht
 
 ```
 exeviewer/
-├── index.html          # Main application page
-├── manifest.json       # PWA manifest
-├── sw.js               # Service Worker
-├── server.js           # Development server (Bun/Node.js)
-├── package.json        # Project configuration
+├── index.html              # Main application page
+├── manifest.json           # PWA manifest
+├── sw.js                   # Service Worker
+├── server.js               # Development server (Bun/Node.js)
+├── package.json            # Project configuration
+├── Dockerfile              # Docker image definition
+├── nginx.conf              # nginx configuration for the Docker image
+├── docker-compose.yml      # Docker Compose example
+├── .env.dist            # Environment variable template for Docker deployments
+├── docker/
+│   └── entrypoint.sh       # Generates js/config.js from environment variables at startup
 ├── css/
-│   └── styles.css      # Custom styles
+│   └── styles.css          # Custom styles
 ├── js/
-│   ├── app.js          # Main application logic
-│   ├── config.js       # Deployment configuration (overrides defaults in app.js)
-│   ├── i18n.js         # Internationalization module
-│   └── zip.worker.js   # Web Worker for ZIP extraction
+│   ├── app.js              # Main application logic
+│   ├── config.js           # Deployment configuration (overrides defaults in app.js)
+│   ├── i18n.js             # Internationalization module
+│   └── zip.worker.js       # Web Worker for ZIP extraction
 ├── lang/
-│   ├── en.json         # English translations
-│   └── es.json         # Spanish translations
-├── img/                # Icons and images
-├── vendor/             # Third-party libraries
-│   ├── bootstrap/      # Bootstrap 5.3.2
-│   ├── bootstrap-icons/# Bootstrap Icons 1.11.1
-│   └── fflate/         # fflate 0.8.2
+│   ├── en.json             # English translations
+│   └── es.json             # Spanish translations
+├── img/                    # Icons and images
+├── vendor/                 # Third-party libraries
+│   ├── bootstrap/          # Bootstrap 5.3.2
+│   ├── bootstrap-icons/    # Bootstrap Icons 1.11.1
+│   └── fflate/             # fflate 0.8.2
 └── scripts/
     └── generate-icons.js   # Icon generation script (requires Node.js + sharp)
 ```

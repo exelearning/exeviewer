@@ -1,0 +1,13 @@
+.git
+.github
+.vscode
+.idea
+.claude
+node_modules
+scripts
+docs
+server.js
+package.json
+package-lock.json
+*.md
+IDEAS*.md
