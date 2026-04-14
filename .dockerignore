@@ -11,3 +11,5 @@ package.json
 package-lock.json
 *.md
 IDEAS*.md
+.env
+.env.dist
