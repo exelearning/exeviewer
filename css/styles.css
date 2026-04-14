@@ -310,6 +310,13 @@ body {
     height: 100%;
     border: none;
     display: block;
+    background-color: #fff;
+}
+
+@media (prefers-color-scheme: dark) {
+    .content-frame {
+        background-color: var(--dark-bg-surface);
+    }
 }
 
 /* Responsive Adjustments */

@@ -124,10 +124,10 @@ A pre-built image is published to the GitHub Container Registry on every release
 #### Quick start
 
 ```bash
-docker run -p 8080:80 ghcr.io/exelearning/exeviewer:latest
+docker run -p 8888:80 ghcr.io/exelearning/exeviewer:latest
 ```
 
-Then open `http://localhost:8080` in your browser.
+Then open `http://localhost:8888` in your browser.
 
 #### Docker Compose (recommended)
 
