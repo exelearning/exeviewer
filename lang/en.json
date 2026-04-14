@@ -50,7 +50,8 @@
         "networkError": "Please check your connection and try again.",
         "notAZipFile": "Could not process the file. It may not be a valid .zip or .elpx file.",
         "notExeContent": "The file does not appear to be an eXeLearning package. Please select a valid .zip or .elpx file exported from eXeLearning.",
-        "storageQuotaExceeded": "The file is too large for your browser's storage limit. Try closing other tabs or clearing browser data.",
+        "storageQuotaExceeded": "Not enough storage space to save the content. It will be available this session only and will not be restored on reload.",
+        "storageError": "Content could not be saved to your browser. It will be available this session only and will not be restored on reload.",
         "storageQuotaWarning": "The file ({fileSize}) may exceed available storage ({available}). Saving might fail.",
         "googleDriveBlocked": "Google Drive blocks direct downloads from web applications. Please download the file from Google Drive, then drag and drop it here.",
         "gasProxyFailed": "Could not download from Google Drive. The proxy may be unavailable or the file may not be publicly shared."

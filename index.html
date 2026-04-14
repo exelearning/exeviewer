@@ -46,6 +46,16 @@
         <span data-i18n="status.offline">Offline</span>
     </div>
 
+    <!-- Storage Warning Banner -->
+    <div id="storageWarningBanner" class="storage-warning-banner d-none" role="alert" aria-live="assertive">
+        <i class="bi bi-exclamation-triangle-fill flex-shrink-0" aria-hidden="true"></i>
+        <span id="storageWarningMessage"></span>
+        <button type="button" id="storageWarningDismiss" class="storage-warning-dismiss ms-2"
+                data-i18n-aria="accessibility.closeModal" aria-label="Close">
+            <i class="bi bi-x-lg" aria-hidden="true"></i>
+        </button>
+    </div>
+
     <!-- Top Navigation Bar (hidden until content is loaded) -->
     <nav id="topNavbar" class="navbar navbar-expand navbar-dark fixed-top d-none">
         <div class="container-fluid">

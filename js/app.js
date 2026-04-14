@@ -36,7 +36,8 @@
         historyNavigationCount: 0,  // Counter to track pending history navigations
         zipWorker: null,  // Web Worker for ZIP extraction
         isRestoredContent: false,  // True if content was restored from IndexedDB
-        currentErrorKey: null  // Current error translation key (for language updates)
+        currentErrorKey: null,  // Current error translation key (for language updates)
+        currentStorageWarningKey: null  // Current storage warning key (for language updates)
     };
 
     // DOM Elements
@@ -58,6 +59,9 @@
         loadingText: null,
         errorAlert: null,
         errorMessage: null,
+        storageWarningBanner: null,
+        storageWarningMessage: null,
+        storageWarningDismiss: null,
         // Share modal elements
         shareModal: null,
         shareUrlInput: null,
@@ -165,6 +169,9 @@
         elements.loadingText = document.getElementById('loadingText');
         elements.errorAlert = document.getElementById('errorAlert');
         elements.errorMessage = document.getElementById('errorMessage');
+        elements.storageWarningBanner = document.getElementById('storageWarningBanner');
+        elements.storageWarningMessage = document.getElementById('storageWarningMessage');
+        elements.storageWarningDismiss = document.getElementById('storageWarningDismiss');
         // Share modal elements
         elements.shareModal = document.getElementById('shareModal');
         elements.shareUrlInput = document.getElementById('shareUrlInput');
@@ -951,16 +958,6 @@
             // Send content to Service Worker
             const result = await sendContentToServiceWorker(files);
 
-            // Handle storage errors - content is still in memory but won't persist
-            if (result.storageError === 'QUOTA_EXCEEDED') {
-                console.error('[App] Storage quota exceeded');
-                // Show error but still display content (it's in memory)
-                showError('errors.storageQuotaExceeded');
-            } else if (result.storageWarning) {
-                // Log warning but continue
-                console.warn('[App] Storage warning:', result.storageWarning);
-            }
-
             // Store package name
             state.currentPackageName = file.name;
 
@@ -969,6 +966,17 @@
 
             // Show the viewer
             showViewer();
+
+            // Show storage warning after viewer is visible (content is in memory but won't persist)
+            if (result.storageError === 'QUOTA_EXCEEDED') {
+                console.error('[App] Storage quota exceeded');
+                showStorageWarning('errors.storageQuotaExceeded');
+            } else if (result.storageError) {
+                console.error('[App] Storage error:', result.storageError);
+                showStorageWarning('errors.storageError');
+            } else if (result.storageWarning) {
+                console.warn('[App] Storage warning:', result.storageWarning);
+            }
 
         } catch (error) {
             console.error('[App] Error processing file:', error);
@@ -1066,6 +1074,7 @@
         // Hide any messages
         hideLoading();
         hideError();
+        hideStorageWarning();
     }
 
     /**
@@ -1116,6 +1125,32 @@
     }
 
     /**
+     * Show a non-fatal storage warning banner (visible during viewer mode)
+     */
+    function showStorageWarning(key) {
+        state.currentStorageWarningKey = key;
+        elements.storageWarningMessage.textContent = i18n.t(key);
+        elements.storageWarningBanner.classList.remove('d-none');
+    }
+
+    /**
+     * Hide the storage warning banner
+     */
+    function hideStorageWarning() {
+        elements.storageWarningBanner.classList.add('d-none');
+        state.currentStorageWarningKey = null;
+    }
+
+    /**
+     * Update storage warning message when language changes
+     */
+    function updateStorageWarningMessage() {
+        if (state.currentStorageWarningKey && !elements.storageWarningBanner.classList.contains('d-none')) {
+            elements.storageWarningMessage.textContent = i18n.t(state.currentStorageWarningKey);
+        }
+    }
+
+    /**
      * Hide error message
      */
     function hideError() {
@@ -1153,6 +1188,9 @@
      * Set up event listeners
      */
     function setupEventListeners() {
+        // Storage warning dismiss
+        elements.storageWarningDismiss.addEventListener('click', hideStorageWarning);
+
         // File input change
         elements.fileInput.addEventListener('change', (event) => {
             const file = event.target.files[0];
@@ -1560,6 +1598,7 @@
         elements.btnNewWindow.classList.add('d-none');
         elements.btnLoadNew.classList.add('d-none');
         elements.welcomeScreen.classList.remove('d-none');
+        hideStorageWarning();
         // Don't change iframe.src here - it would invalidate forward history
     }
 
@@ -1603,6 +1642,7 @@
             updateUrlLabel();
             updateRestoredContentName();
             updateErrorMessage();
+            updateStorageWarningMessage();
         });
 
         // Set up event listeners
