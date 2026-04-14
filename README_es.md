@@ -117,6 +117,54 @@ La aplicación funcionará en:
 
 Para que la opción de compartir funcione, la aplicación se debe servir por HTTPS (o HTTP en localhost).
 
+### Docker
+
+Se publica una imagen precompilada en el GitHub Container Registry con cada nueva versión. Usa nginx sobre Alpine Linux (~8 MB de imagen base).
+
+#### Inicio rápido
+
+```bash
+docker run -p 8080:80 ghcr.io/exelearning/exeviewer:latest
+```
+
+Abre `http://localhost:8080` en tu navegador.
+
+#### Docker Compose (recomendado)
+
+Descarga el `docker-compose.yml` incluido y la plantilla de configuración:
+
+```bash
+curl -O https://raw.githubusercontent.com/exelearning/exeviewer/main/docker-compose.yml
+curl -O https://raw.githubusercontent.com/exelearning/exeviewer/main/.env.dist
+cp .env.dist .env
+```
+
+Edita `.env` si necesitas personalizar algún parámetro (por ejemplo, la URL del proxy de Google Drive) y arranca el contenedor:
+
+```bash
+docker compose up -d
+```
+
+#### Configuración mediante variables de entorno
+
+En lugar de editar `js/config.js`, los despliegues con Docker se configuran mediante variables de entorno, ya sea en el fichero `.env` o en el bloque `environment:` de tu fichero Compose:
+
+| Variable | Valor por defecto | Descripción |
+|---|---|---|
+| `GAS_PROXY_URL` | _(vacío)_ | URL del proxy de Google Apps Script para Google Drive |
+| `AUTO_RESTORE_CONTENT` | `true` | Restaurar el último contenido visto al cargar la página |
+| `OPEN_EXTERNAL_LINKS_IN_NEW_WINDOW` | `true` | Abrir los enlaces externos en una pestaña nueva |
+| `VALIDATE_EXE_CONTENT` | `true` | Rechazar ZIP que no sean paquetes eXeLearning válidos |
+| `ALLOW_DOWNLOAD_BY_DEFAULT` | `true` | Mostrar el botón de descarga activado por defecto en el diálogo de compartir |
+
+Las variables no definidas en `.env` conservan sus valores por defecto; solo es necesario incluir las que se quieran cambiar.
+
+#### HTTPS
+
+**HTTPS es obligatorio.** El Service Worker (el mecanismo central que sirve el contenido ZIP extraído) no se registra en orígenes no seguros. Es una restricción del navegador, no de eXeViewer. La única excepción es `localhost`, que funciona sin HTTPS para desarrollo local.
+
+En despliegues en producción, asegúrate de que TLS se termina antes de que la petición llegue al navegador. Lo más habitual es un proxy inverso delante del contenedor (Nginx, Traefik, Caddy, etc.), pero también funcionan los balanceadores de carga o cualquier otro punto de terminación TLS.
+
 ### Ejecución local sin servidor web
 
 Si no tienes un servidor web instalado, puedes usar el `server.js` incluido:
@@ -261,26 +309,32 @@ Firefox no soporta la instalación de PWA de forma nativa. Usa la extensión [PW
 
 ```
 exeviewer/
-├── index.html          # Página principal de la aplicación
-├── manifest.json       # Manifiesto PWA
-├── sw.js               # Service Worker
-├── server.js           # Servidor de desarrollo (Bun/Node.js)
-├── package.json        # Configuración del proyecto
+├── index.html              # Página principal de la aplicación
+├── manifest.json           # Manifiesto PWA
+├── sw.js                   # Service Worker
+├── server.js               # Servidor de desarrollo (Bun/Node.js)
+├── package.json            # Configuración del proyecto
+├── Dockerfile              # Definición de la imagen Docker
+├── nginx.conf              # Configuración de nginx para la imagen Docker
+├── docker-compose.yml      # Ejemplo de Docker Compose
+├── .env.dist            # Plantilla de variables de entorno para despliegues Docker
+├── docker/
+│   └── entrypoint.sh       # Genera js/config.js a partir de variables de entorno al arrancar
 ├── css/
-│   └── styles.css      # Estilos personalizados
+│   └── styles.css          # Estilos personalizados
 ├── js/
-│   ├── app.js          # Lógica principal de la aplicación
-│   ├── config.js       # Configuración del despliegue (sobreescribe los valores por defecto de app.js)
-│   ├── i18n.js         # Módulo de internacionalización
-│   └── zip.worker.js   # Web Worker para extracción ZIP
+│   ├── app.js              # Lógica principal de la aplicación
+│   ├── config.js           # Configuración del despliegue (sobreescribe los valores por defecto de app.js)
+│   ├── i18n.js             # Módulo de internacionalización
+│   └── zip.worker.js       # Web Worker para extracción ZIP
 ├── lang/
-│   ├── en.json         # Traducciones en inglés
-│   └── es.json         # Traducciones en español
-├── img/                # Iconos e imágenes
-├── vendor/             # Bibliotecas de terceros
-│   ├── bootstrap/      # Bootstrap 5.3.2
-│   ├── bootstrap-icons/# Bootstrap Icons 1.11.1
-│   └── fflate/         # fflate 0.8.2
+│   ├── en.json             # Traducciones en inglés
+│   └── es.json             # Traducciones en español
+├── img/                    # Iconos e imágenes
+├── vendor/                 # Bibliotecas de terceros
+│   ├── bootstrap/          # Bootstrap 5.3.2
+│   ├── bootstrap-icons/    # Bootstrap Icons 1.11.1
+│   └── fflate/             # fflate 0.8.2
 └── scripts/
     └── generate-icons.js   # Script de generación de iconos (requiere Node.js + sharp)
 ```

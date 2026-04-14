@@ -1,12 +1,14 @@
 # CHANGELOG
 
-## v1.0.4 – 2026-04-13
+## v4.0.0-rc1 – 2026-04-14
 
+- Version jump to 4.0.0 to align numbering with eXeLearning for consistency across related projects.
+- Add Docker image (published to GitHub Container Registry) for optional containerized deployment.
+- Add a deployment configuration file to override default settings defined in `app.js`.
 - Request persistent storage to prevent the browser from evicting IndexedDB content.
 - Improve Web Worker lifecycle management by properly terminating the worker, clearing its reference and standardizing error reporting.
 - Align license declaration for consistency across the project.
 - Improve error handling and user feedback for storage-related failures, including insufficient storage space conditions.
-- Add a deployment configuration file to override default settings defined in `app.js`.
 
 ---
 
