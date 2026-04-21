@@ -613,6 +613,16 @@
                 return urlObj.toString();
             }
 
+            // GitHub blob viewer: convert to raw content URL
+            // Format: https://github.com/{user}/{repo}/blob/{ref}/{path}
+            // Convert to: https://raw.githubusercontent.com/{user}/{repo}/{ref}/{path}
+            if (urlObj.hostname === 'github.com') {
+                const match = urlObj.pathname.match(/^\/([^/]+)\/([^/]+)\/blob\/(.+)$/);
+                if (match) {
+                    return `https://raw.githubusercontent.com/${match[1]}/${match[2]}/${match[3]}`;
+                }
+            }
+
             // Return original URL if no conversion needed
             return url;
         } catch (e) {
