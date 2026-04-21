@@ -696,10 +696,29 @@
      * Each proxy has a different URL format
      */
     const CORS_PROXIES = [
+        { url: 'https://github-proxy.exelearning.dev/?url=', encode: true, githubOnly: true },
         { url: 'https://corsproxy.io/?', encode: true },
         { url: 'https://api.allorigins.win/raw?url=', encode: true },
         { url: 'https://cors.eu.org/', encode: false }
     ];
+
+    const GITHUB_HOSTNAMES = new Set([
+        'github.com',
+        'raw.githubusercontent.com',
+        'gist.githubusercontent.com',
+        'objects.githubusercontent.com',
+        'codeload.github.com',
+        'releases.githubusercontent.com',
+        'media.githubusercontent.com'
+    ]);
+
+    function isGithubUrl(url) {
+        try {
+            return GITHUB_HOSTNAMES.has(new URL(url).hostname);
+        } catch {
+            return false;
+        }
+    }
 
     /**
      * Fetch with CORS proxy fallback
@@ -717,25 +736,34 @@
         }
 
         // Try each proxy until one works
+        const isGithub = isGithubUrl(url);
         let lastError;
         for (const proxy of CORS_PROXIES) {
-            try {
-                const proxyUrl = proxy.encode
-                    ? proxy.url + encodeURIComponent(url)
-                    : proxy.url + url;
+            if (proxy.githubOnly && !isGithub) continue;
 
+            const proxyUrl = proxy.encode
+                ? proxy.url + encodeURIComponent(url)
+                : proxy.url + url;
+
+            const controller = new AbortController();
+            const timer = setTimeout(() => controller.abort(), 8000);
+
+            try {
                 console.log(`[App] Trying proxy: ${proxy.url}`);
                 const response = await fetch(proxyUrl, {
                     method: 'GET',
                     mode: 'cors',
-                    credentials: 'omit'
+                    credentials: 'omit',
+                    signal: controller.signal
                 });
+                clearTimeout(timer);
 
                 if (response.ok) {
                     console.log(`[App] Proxy ${proxy.url} succeeded`);
                     return response;
                 }
             } catch (err) {
+                clearTimeout(timer);
                 console.warn(`[App] Proxy ${proxy.url} failed:`, err.message);
                 lastError = err;
             }
