@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## v4.0.0-rc2 – 2026-04-21
+## v4.0.0 – 2026-04-28
 
 - Version jump to 4.0.0 to align numbering with eXeLearning for consistency across related projects.
 - Add Docker image (published to GitHub Container Registry) for optional containerized deployment.
