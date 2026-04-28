@@ -9,7 +9,7 @@
     // Configuration defaults — override via js/config.js (window.exeViewerConfig)
     const config = Object.assign({
         // Application version (displayed in footer)
-        version: '4.0.0-rc1',
+        version: '4.0.0',
         // Automatically restore and display content from IndexedDB on page load
         autoRestoreContent: true,
         // Open external links in a new window/tab (prevents navigation issues in iframes)
@@ -229,7 +229,7 @@
 
         // Update tooltip on help icon
         if (elements.urlHelpIcon) {
-            const tooltipKey = config.gasProxyUrl ? 'welcome.loadFromUrlTooltipWithDrive' : 'welcome.loadFromUrlTooltip';
+            const tooltipKey = 'welcome.loadFromUrlTooltipWithDrive';
             elements.urlHelpIcon.setAttribute('title', i18n.t(tooltipKey));
             // Refresh Bootstrap tooltip if already initialized
             const tooltipInstance = bootstrap.Tooltip.getInstance(elements.urlHelpIcon);
@@ -817,17 +817,63 @@
             let usedProxy = false;
 
             if (isGoogleDrive) {
-                // Google Drive URL handling
-                if (config.gasProxyUrl) {
-                    // Use GAS proxy for Google Drive
-                    console.log('[App] Using GAS proxy for Google Drive URL');
+                // Try github-proxy first (also supports Drive content)
+                let githubProxySucceeded = false;
+                try {
+                    console.log('[App] Trying github-proxy for Google Drive URL');
                     updateLoadingText(i18n.t('loading.downloadingViaProxy'));
-                    blob = await fetchViaGasProxy(url.trim());
-                    filename = extractFilename(url);
-                    usedProxy = true;
-                } else {
-                    // No proxy configured, show informative message
-                    throw new Error('GOOGLE_DRIVE_BLOCKED');
+                    const proxyUrl = 'https://github-proxy.exelearning.dev/?url=' + encodeURIComponent(downloadUrl);
+                    const controller = new AbortController();
+                    const timer = setTimeout(() => controller.abort(), 8000);
+                    const response = await fetch(proxyUrl, { method: 'GET', mode: 'cors', credentials: 'omit', signal: controller.signal });
+                    clearTimeout(timer);
+                    if (response.ok) {
+                        const contentLength = response.headers.get('Content-Length');
+                        const totalBytes = contentLength ? parseInt(contentLength, 10) : 0;
+
+                        if (response.body) {
+                            const reader = response.body.getReader();
+                            const chunks = [];
+                            let receivedBytes = 0;
+
+                            while (true) {
+                                const { done, value } = await reader.read();
+                                if (done) break;
+
+                                chunks.push(value);
+                                receivedBytes += value.length;
+
+                                const size = formatBytes(receivedBytes);
+                                if (totalBytes > 0) {
+                                    const percent = Math.round((receivedBytes / totalBytes) * 100);
+                                    updateLoadingText(`${i18n.t('loading.downloading')} ${percent}% (${size})`);
+                                } else {
+                                    updateLoadingText(`${i18n.t('loading.downloading')} ${size}`);
+                                }
+                            }
+
+                            blob = new Blob(chunks);
+                        } else {
+                            blob = await response.blob();
+                        }
+
+                        filename = extractFilename(url);
+                        usedProxy = true;
+                        githubProxySucceeded = true;
+                    }
+                } catch (err) {
+                    console.warn('[App] github-proxy failed for Drive:', err.message);
+                }
+
+                if (!githubProxySucceeded) {
+                    if (config.gasProxyUrl) {
+                        console.log('[App] Falling back to GAS proxy for Google Drive URL');
+                        blob = await fetchViaGasProxy(url.trim());
+                        filename = extractFilename(url);
+                        usedProxy = true;
+                    } else {
+                        throw new Error('GOOGLE_DRIVE_BLOCKED');
+                    }
                 }
             } else {
                 // Non-Drive URL: try direct fetch, then fallback to CORS proxy

@@ -15,7 +15,7 @@ The application runs entirely in your browser. When you load a file from your de
 - Load `.zip` or `.elpx` files from your device (drag and drop or file browser)
 - Load content from a URL (direct links to `.zip` or `.elpx` files)
 - Support for shared links from Nextcloud, ownCloud and Dropbox
-- Google Drive support (requires proxy configuration)
+- Google Drive support
 - Generate shareable links when viewing URL-loaded content
 - In-memory extraction (no files written to disk)
 - Full navigation support for HTML, CSS, JavaScript, images, and media
@@ -43,18 +43,18 @@ The file never leaves your device. All processing happens in your browser.
 This works with:
 - Direct links to files on any server
 - Shared links from Nextcloud, ownCloud and Dropbox
-- Shared links from Google Drive (requires proxy configuration, see below)
+- Shared links from Google Drive
 
 ### Google Drive support
 
-Google Drive blocks direct downloads from web applications due to CORS restrictions. To enable Google Drive support, you need to deploy a Google Apps Script proxy and configure its URL in eXeViewer.
+Google Drive links work out of the box via a built-in proxy (`github-proxy.exelearning.dev`). Files must be shared publicly ("Anyone with the link").
 
-**Why is this needed?** eXeViewer runs entirely in the browser. Google Drive blocks browser requests from other domains. A Google Apps Script proxy runs on Google's servers and can access Drive files without these restrictions.
+If you need an alternative — for example, if the built-in proxy is unavailable or you hit size limits — you can deploy a Google Apps Script proxy and configure it as a fallback.
 
-**Setup instructions:**
+**Google Apps Script proxy setup (optional fallback):**
 
 1. Go to [script.google.com](https://script.google.com) and create a new project
-2. Replace the default code with the proxy code (see `docs/gas-proxy.js` or the example below)
+2. Replace the default code with the proxy code (see `docs/gas-proxy.js`)
 3. Click **Deploy** > **New deployment**
 4. Select **Web app** as the type
 5. Set "Execute as" to **Me** and "Who has access" to **Anyone**
@@ -67,10 +67,9 @@ Google Drive blocks direct downloads from web applications due to CORS restricti
    };
    ```
 
-**Limitations:**
+**Limitations of the GAS proxy fallback:**
 - Maximum file size: 100 MB (Google Apps Script limit)
 - The proxy uses your Google account's quotas
-- Files must be shared publicly ("Anyone with the link")
 
 ### Downloading and sharing content
 
@@ -119,9 +118,15 @@ For the share functionality to work, the application must be served over HTTPS (
 
 ### Docker
 
-A pre-built image is published to the GitHub Container Registry on every release. It uses nginx on Alpine Linux (~8 MB base image).
+A pre-built image is published to Docker Hub and the GitHub Container Registry on every release. It uses nginx on Alpine Linux (~8 MB base image).
 
 #### Quick start
+
+```bash
+docker run -p 8888:80 exelearning/exeviewer:latest
+```
+
+GitHub Container Registry alternative:
 
 ```bash
 docker run -p 8888:80 ghcr.io/exelearning/exeviewer:latest
@@ -151,7 +156,7 @@ Instead of editing `js/config.js`, Docker deployments are configured through env
 
 | Variable | Default | Description |
 |---|---|---|
-| `GAS_PROXY_URL` | _(empty)_ | Google Apps Script proxy URL for Google Drive support |
+| `GAS_PROXY_URL` | _(empty)_ | Google Apps Script proxy URL used as fallback for Google Drive downloads if the built-in proxy fails |
 | `AUTO_RESTORE_CONTENT` | `true` | Restore last viewed content on page load |
 | `OPEN_EXTERNAL_LINKS_IN_NEW_WINDOW` | `true` | Open external links in a new tab |
 | `VALIDATE_EXE_CONTENT` | `true` | Reject ZIPs that are not valid eXeLearning packages |
@@ -279,7 +284,7 @@ Firefox doesn't support PWA installation natively. Use the [PWAs for Firefox](ht
    };
    ```
 
-9. **Google Drive proxy**: To enable Google Drive support, set the URL of your deployed Google Apps Script proxy. See the "Google Drive support" section above for setup instructions:
+9. **Google Drive proxy**: Google Drive is supported by default via a built-in proxy. Optionally, set a Google Apps Script proxy URL to use as fallback if the built-in proxy fails. See the "Google Drive support" section above for setup instructions:
    ```javascript
    window.exeViewerConfig = {
        gasProxyUrl: 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec'

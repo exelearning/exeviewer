@@ -1,15 +1,15 @@
 # CHANGELOG
 
-## v4.0.0 – 2026-04-27
+## v4.0.0 – 2026-04-28
 
 - Version jump to 4.0.0 to align numbering with eXeLearning for consistency across related projects.
-- Add Docker image (published to GitHub Container Registry) for optional containerized deployment.
+- Add Docker image (published to GitHub Container Registry and Docker Hub) for optional containerized deployment
 - Add a deployment configuration file to override default settings defined in `app.js`.
 - Request persistent storage to prevent the browser from evicting IndexedDB content.
 - Improve Web Worker lifecycle management by properly terminating the worker, clearing its reference and standardizing error reporting.
 - Align license declaration for consistency across the project.
 - Improve error handling and user feedback for storage-related failures, including insufficient storage space conditions.
-- Add `github-proxy.exelearning.dev` as the primary CORS proxy fallback for GitHub URL downloads, improving reliability when loading files from CORS-restricted sources.
+- Add `github-proxy.exelearning.dev` as the primary proxy for GitHub and Google Drive downloads, with `gasProxyUrl` as an optional fallback for Google Drive
 
 ---
 
