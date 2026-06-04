@@ -705,13 +705,6 @@
      * CORS proxies - used as fallback when direct fetch fails
      * Each proxy has a different URL format
      */
-    const CORS_PROXIES = [
-        { url: 'https://github-proxy.exelearning.dev/?url=', encode: true, githubOnly: true },
-        { url: 'https://corsproxy.io/?', encode: true },
-        { url: 'https://api.allorigins.win/raw?url=', encode: true },
-        { url: 'https://cors.eu.org/', encode: false }
-    ];
-
     const GITHUB_HOSTNAMES = new Set([
         'github.com',
         'raw.githubusercontent.com',
@@ -731,6 +724,39 @@
     }
 
     /**
+     * Check if a URL is a Nextcloud/ownCloud public share link.
+     * These live on arbitrary self-hosted domains, so they are matched by their
+     * well-known share path shape (/s/{token}[/download], including the
+     * /index.php/s/... variant) rather than by hostname.
+     * @param {string} url - The URL to check
+     * @returns {boolean} True if it looks like a Nextcloud/ownCloud share link
+     */
+    function isNextcloudShareUrl(url) {
+        try {
+            return /^(?:\/index\.php)?\/s\/[^/]+(?:\/download)?\/?$/.test(new URL(url).pathname);
+        } catch {
+            return false;
+        }
+    }
+
+    /**
+     * CORS proxies - used as fallback when direct fetch fails
+     * Each proxy has a different URL format. A proxy may declare a `supports`
+     * predicate to restrict which URLs it is tried for (github-proxy only
+     * handles the resources it allowlists server-side).
+     */
+    const CORS_PROXIES = [
+        {
+            url: 'https://github-proxy.exelearning.dev/?url=',
+            encode: true,
+            supports: (u) => isGithubUrl(u) || isNextcloudShareUrl(u)
+        },
+        { url: 'https://corsproxy.io/?', encode: true },
+        { url: 'https://api.allorigins.win/raw?url=', encode: true },
+        { url: 'https://cors.eu.org/', encode: false }
+    ];
+
+    /**
      * Fetch with CORS proxy fallback
      * @param {string} url - The URL to fetch
      * @param {boolean} useProxy - Whether to use a CORS proxy
@@ -746,10 +772,9 @@
         }
 
         // Try each proxy until one works
-        const isGithub = isGithubUrl(url);
         let lastError;
         for (const proxy of CORS_PROXIES) {
-            if (proxy.githubOnly && !isGithub) continue;
+            if (proxy.supports && !proxy.supports(url)) continue;
 
             const proxyUrl = proxy.encode
                 ? proxy.url + encodeURIComponent(url)

@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## Unreleased
+
+- Fix Nextcloud/ownCloud public share links failing to download by routing them through the `github-proxy.exelearning.dev` CORS proxy (the public fallback proxies cannot reach these instances). Requires the matching server-side support in the proxy.
+
+---
+
 ## v4.0.0 – 2026-04-28
 
 - Version jump to 4.0.0 to align numbering with eXeLearning for consistency across related projects.
