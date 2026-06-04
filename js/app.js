@@ -607,9 +607,10 @@
             // Dropbox shared links
             // Format: https://www.dropbox.com/s/HASH/filename.zip?dl=0
             //     or: https://www.dropbox.com/scl/fi/HASH/filename.zip?rlkey=xxx&dl=0
-            // Convert to: same URL with dl=1 for direct download
+            // Convert to: same URL with download=1 for direct download (dl=1 is legacy)
             if (urlObj.hostname === 'www.dropbox.com' || urlObj.hostname === 'dropbox.com') {
-                urlObj.searchParams.set('dl', '1');
+                urlObj.searchParams.delete('dl');
+                urlObj.searchParams.set('download', '1');
                 return urlObj.toString();
             }
 
