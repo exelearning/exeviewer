@@ -47,7 +47,7 @@ This works with:
 
 ### Google Drive support
 
-Google Drive links work out of the box via a built-in proxy (`github-proxy.exelearning.dev`). Files must be shared publicly ("Anyone with the link").
+Google Drive links work out of the box via a built-in proxy (`github-proxy.exelearning.dev`). Files must be shared publicly ("Anyone with the link"). To self-host this Cloudflare Worker, see `docs/github-proxy-worker.js`.
 
 If you need an alternative — for example, if the built-in proxy is unavailable or you hit size limits — you can deploy a Google Apps Script proxy and configure it as a fallback.
 
