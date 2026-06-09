@@ -1,6 +1,6 @@
 {
     "name": "exeviewer",
-    "version": "4.0.0",
+    "version": "4.0.1",
     "description": "A web application to view eXeLearning content packages (.zip/.elpx)",
     "main": "server.js",
     "type": "module",
