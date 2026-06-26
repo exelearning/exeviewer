@@ -9,7 +9,7 @@
     // Configuration defaults — override via js/config.js (window.exeViewerConfig)
     const config = Object.assign({
         // Application version (displayed in footer)
-        version: '4.0.1',
+        version: '4.0.2',
         // Automatically restore and display content from IndexedDB on page load
         autoRestoreContent: true,
         // Open external links in a new window/tab (prevents navigation issues in iframes)
