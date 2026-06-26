@@ -37,7 +37,8 @@
         zipWorker: null,  // Web Worker for ZIP extraction
         isRestoredContent: false,  // True if content was restored from IndexedDB
         currentErrorKey: null,  // Current error translation key (for language updates)
-        currentStorageWarningKey: null  // Current storage warning key (for language updates)
+        currentStorageWarningKey: null,  // Current storage warning key (for language updates)
+        fullscreenMode: false  // True when ?fullscreen=1 is present in the URL
     };
 
     // DOM Elements
@@ -69,6 +70,7 @@
         copySuccess: null,
         linkUpdated: null,
         allowDownloadCheck: null,
+        fullscreenCheck: null,
         // Footer element
         footerInfo: null,
         // URL label element
@@ -179,6 +181,7 @@
         elements.copySuccess = document.getElementById('copySuccess');
         elements.linkUpdated = document.getElementById('linkUpdated');
         elements.allowDownloadCheck = document.getElementById('allowDownloadCheck');
+        elements.fullscreenCheck = document.getElementById('fullscreenCheck');
         // Footer element
         elements.footerInfo = document.getElementById('footerInfo');
         // URL label element
@@ -1126,25 +1129,31 @@
         // Update UI
         elements.welcomeScreen.classList.add('d-none');
         elements.viewerContainer.classList.remove('d-none');
-        elements.topNavbar.classList.remove('d-none');
 
-        // Update package name in navbar
-        if (state.currentPackageName) {
-            elements.packageName.textContent = state.currentPackageName;
-            elements.packageName.title = state.currentPackageName;
-            // Show package name visually only for restored content
-            if (state.isRestoredContent) {
-                elements.packageName.classList.remove('visually-hidden');
+        if (state.fullscreenMode) {
+            // Keep navbar hidden; viewer fills full viewport via CSS
+            elements.topNavbar.classList.add('d-none');
+        } else {
+            elements.topNavbar.classList.remove('d-none');
+
+            // Update package name in navbar
+            if (state.currentPackageName) {
+                elements.packageName.textContent = state.currentPackageName;
+                elements.packageName.title = state.currentPackageName;
+                // Show package name visually only for restored content
+                if (state.isRestoredContent) {
+                    elements.packageName.classList.remove('visually-hidden');
+                }
             }
+
+            // Update share and download button visibility
+            updateShareButtonVisibility();
+            updateDownloadButtonVisibility();
+
+            // Show open in new window and exit buttons
+            elements.btnNewWindow.classList.remove('d-none');
+            elements.btnLoadNew.classList.remove('d-none');
         }
-
-        // Update share and download button visibility
-        updateShareButtonVisibility();
-        updateDownloadButtonVisibility();
-
-        // Show open in new window and exit buttons
-        elements.btnNewWindow.classList.remove('d-none');
-        elements.btnLoadNew.classList.remove('d-none');
 
         // Set up history states: first mark current state as welcome, then push viewer state
         const welcomeState = { isWelcome: true };
@@ -1479,14 +1488,18 @@
     /**
      * Generate the share URL for the current content
      * @param {boolean} allowDownload - Whether to include the download parameter
+     * @param {boolean} fullscreen - Whether to hide the toolbar (fullscreen mode)
      * @returns {string} The share URL
      */
-    function generateShareUrl(allowDownload = false) {
+    function generateShareUrl(allowDownload = false, fullscreen = false) {
         const baseUrl = window.location.origin + window.location.pathname;
         const resourceUrl = state.contentFromUrl;
         let url = `${baseUrl}?url=${encodeURIComponent(resourceUrl)}`;
         if (allowDownload) {
             url += '&download=1';
+        }
+        if (fullscreen) {
+            url += '&fullscreen=1';
         }
         return url;
     }
@@ -1555,36 +1568,39 @@
      * Open the share modal with the generated URL
      */
     function openShareModal() {
-        // Initialize checkbox state based on config
+        // Initialize checkbox states
         elements.allowDownloadCheck.checked = config.allowDownloadByDefault;
+        elements.fullscreenCheck.checked = false;
 
-        // Generate URL with current checkbox state
-        const shareUrl = generateShareUrl(elements.allowDownloadCheck.checked);
+        // Generate URL with current checkbox states
+        const shareUrl = generateShareUrl(elements.allowDownloadCheck.checked, elements.fullscreenCheck.checked);
         elements.shareUrlInput.value = shareUrl;
 
         // Hide feedback messages
         elements.copySuccess.classList.add('d-none');
         elements.linkUpdated.classList.add('d-none');
 
-        // Remove any previous event listener to avoid duplicates
-        const newCheckbox = elements.allowDownloadCheck.cloneNode(true);
-        elements.allowDownloadCheck.parentNode.replaceChild(newCheckbox, elements.allowDownloadCheck);
-        elements.allowDownloadCheck = newCheckbox;
+        // Remove any previous event listeners to avoid duplicates
+        const newDownloadCheck = elements.allowDownloadCheck.cloneNode(true);
+        elements.allowDownloadCheck.parentNode.replaceChild(newDownloadCheck, elements.allowDownloadCheck);
+        elements.allowDownloadCheck = newDownloadCheck;
 
-        // Add event listener for checkbox changes
-        elements.allowDownloadCheck.addEventListener('change', function() {
-            const newUrl = generateShareUrl(this.checked);
+        const newFullscreenCheck = elements.fullscreenCheck.cloneNode(true);
+        elements.fullscreenCheck.parentNode.replaceChild(newFullscreenCheck, elements.fullscreenCheck);
+        elements.fullscreenCheck = newFullscreenCheck;
+
+        function updateShareUrl() {
+            const newUrl = generateShareUrl(elements.allowDownloadCheck.checked, elements.fullscreenCheck.checked);
             elements.shareUrlInput.value = newUrl;
-
-            // Show "Link updated" feedback
             elements.copySuccess.classList.add('d-none');
             elements.linkUpdated.classList.remove('d-none');
-
-            // Hide feedback after 2 seconds
             setTimeout(() => {
                 elements.linkUpdated.classList.add('d-none');
             }, 2000);
-        });
+        }
+
+        elements.allowDownloadCheck.addEventListener('change', updateShareUrl);
+        elements.fullscreenCheck.addEventListener('change', updateShareUrl);
 
         const modal = new bootstrap.Modal(elements.shareModal);
         modal.show();
@@ -1686,11 +1702,13 @@
             if (elements.viewerContainer.classList.contains('d-none')) {
                 elements.welcomeScreen.classList.add('d-none');
                 elements.viewerContainer.classList.remove('d-none');
-                elements.topNavbar.classList.remove('d-none');
-                elements.btnNewWindow.classList.remove('d-none');
-                elements.btnLoadNew.classList.remove('d-none');
-                updateShareButtonVisibility();
-                updateDownloadButtonVisibility();
+                if (!state.fullscreenMode) {
+                    elements.topNavbar.classList.remove('d-none');
+                    elements.btnNewWindow.classList.remove('d-none');
+                    elements.btnLoadNew.classList.remove('d-none');
+                    updateShareButtonVisibility();
+                    updateDownloadButtonVisibility();
+                }
             }
             // Increment counter to ignore the upcoming iframe load event
             state.historyNavigationCount++;
@@ -1788,6 +1806,13 @@
 
         // Check for URL parameter and auto-load if present
         const urlParams = new URLSearchParams(window.location.search);
+
+        // Detect fullscreen mode (?fullscreen=1) and apply body class immediately
+        if (urlParams.get('fullscreen') === '1') {
+            state.fullscreenMode = true;
+            document.body.classList.add('fullscreen-mode');
+        }
+
         if (urlParams.get('url')) {
             await checkUrlParameter();
         } else if (config.autoRestoreContent) {

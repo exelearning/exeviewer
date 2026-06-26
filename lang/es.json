@@ -79,7 +79,9 @@
         "copied": "Enlace copiado al portapapeles.",
         "linkUpdated": "Enlace actualizado.",
         "allowDownload": "Botón de descarga",
-        "allowDownloadDesc": "Los usuarios que accedan al enlace verán un botón para descargar el fichero original."
+        "allowDownloadDesc": "Los usuarios que accedan al enlace verán un botón para descargar el fichero original.",
+        "fullscreen": "Solo contenido",
+        "fullscreenDesc": "Oculta la barra superior. Ideal para enviar a alumnos."
     },
     "download": {
         "tooltip": "Descargar fichero original"
