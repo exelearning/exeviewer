@@ -1599,8 +1599,14 @@
             }, 2000);
         }
 
-        elements.allowDownloadCheck.addEventListener('change', updateShareUrl);
-        elements.fullscreenCheck.addEventListener('change', updateShareUrl);
+        elements.allowDownloadCheck.addEventListener('change', () => {
+            if (elements.allowDownloadCheck.checked) elements.fullscreenCheck.checked = false;
+            updateShareUrl();
+        });
+        elements.fullscreenCheck.addEventListener('change', () => {
+            if (elements.fullscreenCheck.checked) elements.allowDownloadCheck.checked = false;
+            updateShareUrl();
+        });
 
         const modal = new bootstrap.Modal(elements.shareModal);
         modal.show();
