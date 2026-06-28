@@ -305,6 +305,12 @@ body {
     background-color: var(--surface-color);
 }
 
+/* Fullscreen mode: hide navbar, expand viewer to full viewport */
+body.fullscreen-mode .viewer-container {
+    height: 100vh;
+    margin-top: 0;
+}
+
 .content-frame {
     width: 100%;
     height: 100%;
