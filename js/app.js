@@ -1479,9 +1479,12 @@
      * @returns {boolean} True if running as installed app
      */
     function isInstalledPWA() {
-        // Check for standalone display mode (installed PWA)
+        // Check for standalone display mode (installed PWA).
+        // Note: do NOT check '(display-mode: fullscreen)' here — on macOS the
+        // browser's own fullscreen mode matches it too (Chrome and Firefox),
+        // which would wrongly hide the share/download buttons. The manifest uses
+        // display: standalone, so installed PWAs still match below.
         return window.matchMedia('(display-mode: standalone)').matches ||
-               window.matchMedia('(display-mode: fullscreen)').matches ||
                window.navigator.standalone === true; // iOS Safari
     }
 
