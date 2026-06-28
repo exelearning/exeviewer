@@ -1,15 +1,10 @@
 # CHANGELOG
 
-## Unreleased
-
-- Offer the eXeLearning teacher-layer selector again after eXeLearning started hiding teacher-only content by default: eXeViewer now appends `?exe-teacher=1` to the embedded package. Controlled by an `?exe-teacher=1` page URL parameter and a `teacherMode` / `TEACHER_MODE` config default (off), with a "Teacher selector" checkbox in the share dialog.
-
----
-
 ## v4.0.2 – 2026-07-07
 
 - Add fullscreen mode (hides navbar and expands viewer to full viewport) and a new share-link option to hide the toolbar, ideal for student-facing links.
 - Fix share/download buttons being hidden in macOS browser fullscreen mode.
+- Offer the eXeLearning teacher-layer selector again after eXeLearning started hiding teacher-only content by default: eXeViewer now appends `?exe-teacher=1` to the embedded package. Controlled by an `?exe-teacher=1` page URL parameter and a `teacherMode` / `TEACHER_MODE` config default (off), with a "Teacher selector" checkbox in the share dialog.
 
 ---
 
