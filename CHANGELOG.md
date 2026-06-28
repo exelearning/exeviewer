@@ -3,6 +3,7 @@
 ## v4.0.2 – 2026-07-07
 
 - Add fullscreen mode (hides navbar and expands viewer to full viewport) and a new share-link option to hide the toolbar, ideal for student-facing links.
+- Fix share/download buttons being hidden in macOS browser fullscreen mode.
 
 ---
 
