@@ -9,7 +9,7 @@
     // Configuration defaults — override via js/config.js (window.exeViewerConfig)
     const config = Object.assign({
         // Application version (displayed in footer)
-        version: '4.0.1',
+        version: '4.0.2',
         // Automatically restore and display content from IndexedDB on page load
         autoRestoreContent: true,
         // Open external links in a new window/tab (prevents navigation issues in iframes)
@@ -42,7 +42,8 @@
         zipWorker: null,  // Web Worker for ZIP extraction
         isRestoredContent: false,  // True if content was restored from IndexedDB
         currentErrorKey: null,  // Current error translation key (for language updates)
-        currentStorageWarningKey: null  // Current storage warning key (for language updates)
+        currentStorageWarningKey: null,  // Current storage warning key (for language updates)
+        fullscreenMode: false  // True when ?fullscreen=1 is present in the URL
     };
 
     // DOM Elements
@@ -75,6 +76,7 @@
         linkUpdated: null,
         allowDownloadCheck: null,
         allowTeacherCheck: null,
+        fullscreenCheck: null,
         // Footer element
         footerInfo: null,
         // URL label element
@@ -218,6 +220,7 @@
         elements.linkUpdated = document.getElementById('linkUpdated');
         elements.allowDownloadCheck = document.getElementById('allowDownloadCheck');
         elements.allowTeacherCheck = document.getElementById('allowTeacherCheck');
+        elements.fullscreenCheck = document.getElementById('fullscreenCheck');
         // Footer element
         elements.footerInfo = document.getElementById('footerInfo');
         // URL label element
@@ -1165,25 +1168,31 @@
         // Update UI
         elements.welcomeScreen.classList.add('d-none');
         elements.viewerContainer.classList.remove('d-none');
-        elements.topNavbar.classList.remove('d-none');
 
-        // Update package name in navbar
-        if (state.currentPackageName) {
-            elements.packageName.textContent = state.currentPackageName;
-            elements.packageName.title = state.currentPackageName;
-            // Show package name visually only for restored content
-            if (state.isRestoredContent) {
-                elements.packageName.classList.remove('visually-hidden');
+        if (state.fullscreenMode) {
+            // Keep navbar hidden; viewer fills full viewport via CSS
+            elements.topNavbar.classList.add('d-none');
+        } else {
+            elements.topNavbar.classList.remove('d-none');
+
+            // Update package name in navbar
+            if (state.currentPackageName) {
+                elements.packageName.textContent = state.currentPackageName;
+                elements.packageName.title = state.currentPackageName;
+                // Show package name visually only for restored content
+                if (state.isRestoredContent) {
+                    elements.packageName.classList.remove('visually-hidden');
+                }
             }
+
+            // Update share and download button visibility
+            updateShareButtonVisibility();
+            updateDownloadButtonVisibility();
+
+            // Show open in new window and exit buttons
+            elements.btnNewWindow.classList.remove('d-none');
+            elements.btnLoadNew.classList.remove('d-none');
         }
-
-        // Update share and download button visibility
-        updateShareButtonVisibility();
-        updateDownloadButtonVisibility();
-
-        // Show open in new window and exit buttons
-        elements.btnNewWindow.classList.remove('d-none');
-        elements.btnLoadNew.classList.remove('d-none');
 
         // Set up history states: first mark current state as welcome, then push viewer state
         const welcomeState = { isWelcome: true };
@@ -1509,9 +1518,12 @@
      * @returns {boolean} True if running as installed app
      */
     function isInstalledPWA() {
-        // Check for standalone display mode (installed PWA)
+        // Check for standalone display mode (installed PWA).
+        // Note: do NOT check '(display-mode: fullscreen)' here — on macOS the
+        // browser's own fullscreen mode matches it too (Chrome and Firefox),
+        // which would wrongly hide the share/download buttons. The manifest uses
+        // display: standalone, so installed PWAs still match below.
         return window.matchMedia('(display-mode: standalone)').matches ||
-               window.matchMedia('(display-mode: fullscreen)').matches ||
                window.navigator.standalone === true; // iOS Safari
     }
 
@@ -1519,9 +1531,10 @@
      * Generate the share URL for the current content
      * @param {boolean} allowDownload - Whether to include the download parameter
      * @param {boolean} includeTeacher - Whether to offer the teacher-layer selector (?exe-teacher=1)
+     * @param {boolean} fullscreen - Whether to hide the toolbar (fullscreen mode)
      * @returns {string} The share URL
      */
-    function generateShareUrl(allowDownload = false, includeTeacher = false) {
+    function generateShareUrl(allowDownload = false, includeTeacher = false, fullscreen = false) {
         const baseUrl = window.location.origin + window.location.pathname;
         const resourceUrl = state.contentFromUrl;
         let url = `${baseUrl}?url=${encodeURIComponent(resourceUrl)}`;
@@ -1530,6 +1543,9 @@
         }
         if (includeTeacher) {
             url += '&exe-teacher=1';
+        }
+        if (fullscreen) {
+            url += '&fullscreen=1';
         }
         return url;
     }
@@ -1601,12 +1617,14 @@
         // Initialize checkbox state based on config and the current viewing mode
         elements.allowDownloadCheck.checked = config.allowDownloadByDefault;
         elements.allowTeacherCheck.checked = isTeacherModeEnabled();
+        elements.fullscreenCheck.checked = false;
 
         // Regenerate the share URL from the current checkbox states
         const refreshShareUrl = (showUpdated) => {
             elements.shareUrlInput.value = generateShareUrl(
                 elements.allowDownloadCheck.checked,
-                elements.allowTeacherCheck.checked
+                elements.allowTeacherCheck.checked,
+                elements.fullscreenCheck.checked
             );
             if (showUpdated) {
                 // Show "Link updated" feedback briefly
@@ -1626,12 +1644,22 @@
         elements.linkUpdated.classList.add('d-none');
 
         // Re-bind change listeners, cloning each checkbox to avoid duplicate handlers
-        ['allowDownloadCheck', 'allowTeacherCheck'].forEach((key) => {
+        ['allowDownloadCheck', 'allowTeacherCheck', 'fullscreenCheck'].forEach((key) => {
             const fresh = elements[key].cloneNode(true);
             elements[key].parentNode.replaceChild(fresh, elements[key]);
             elements[key] = fresh;
-            elements[key].addEventListener('change', () => refreshShareUrl(true));
         });
+
+        // "Download button" and "Content only" are effectively mutually exclusive
+        elements.allowDownloadCheck.addEventListener('change', () => {
+            if (elements.allowDownloadCheck.checked) elements.fullscreenCheck.checked = false;
+            refreshShareUrl(true);
+        });
+        elements.fullscreenCheck.addEventListener('change', () => {
+            if (elements.fullscreenCheck.checked) elements.allowDownloadCheck.checked = false;
+            refreshShareUrl(true);
+        });
+        elements.allowTeacherCheck.addEventListener('change', () => refreshShareUrl(true));
 
         const modal = new bootstrap.Modal(elements.shareModal);
         modal.show();
@@ -1733,11 +1761,13 @@
             if (elements.viewerContainer.classList.contains('d-none')) {
                 elements.welcomeScreen.classList.add('d-none');
                 elements.viewerContainer.classList.remove('d-none');
-                elements.topNavbar.classList.remove('d-none');
-                elements.btnNewWindow.classList.remove('d-none');
-                elements.btnLoadNew.classList.remove('d-none');
-                updateShareButtonVisibility();
-                updateDownloadButtonVisibility();
+                if (!state.fullscreenMode) {
+                    elements.topNavbar.classList.remove('d-none');
+                    elements.btnNewWindow.classList.remove('d-none');
+                    elements.btnLoadNew.classList.remove('d-none');
+                    updateShareButtonVisibility();
+                    updateDownloadButtonVisibility();
+                }
             }
             // Increment counter to ignore the upcoming iframe load event
             state.historyNavigationCount++;
@@ -1835,6 +1865,13 @@
 
         // Check for URL parameter and auto-load if present
         const urlParams = new URLSearchParams(window.location.search);
+
+        // Detect fullscreen mode (?fullscreen=1) and apply body class immediately
+        if (urlParams.get('fullscreen') === '1') {
+            state.fullscreenMode = true;
+            document.body.classList.add('fullscreen-mode');
+        }
+
         if (urlParams.get('url')) {
             await checkUrlParameter();
         } else if (config.autoRestoreContent) {

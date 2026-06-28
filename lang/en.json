@@ -81,7 +81,9 @@
         "allowDownload": "Download button",
         "allowDownloadDesc": "Users accessing the link will see a button to download the original file.",
         "allowTeacher": "Teacher selector",
-        "allowTeacherDesc": "Viewers will be able to switch on the teacher layer (off until they do)."
+        "allowTeacherDesc": "Viewers will be able to switch on the teacher layer (off until they do).",
+        "fullscreen": "Content only",
+        "fullscreenDesc": "Hides the toolbar. Ideal for sending to students."
     },
     "download": {
         "tooltip": "Download original file"
