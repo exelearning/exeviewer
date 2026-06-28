@@ -20,6 +20,11 @@
         availableLanguages: ['en', 'es'],
         // Default state of "Download button" checkbox in share modal
         allowDownloadByDefault: true,
+        // Offer the eXeLearning teacher-layer selector when no ?exe-teacher /
+        // ?teacher-mode URL parameter is present on the eXeViewer page.
+        // When enabled, eXeViewer appends ?exe-teacher=1 to the embedded package
+        // so its in-page selector becomes available (still OFF until toggled).
+        teacherMode: false,
         // Google Apps Script proxy URL for Google Drive downloads
         // Set this to your deployed GAS web app URL to enable Google Drive support
         // Example: 'https://script.google.com/macros/s/XXXX/exec'
@@ -69,6 +74,7 @@
         copySuccess: null,
         linkUpdated: null,
         allowDownloadCheck: null,
+        allowTeacherCheck: null,
         // Footer element
         footerInfo: null,
         // URL label element
@@ -86,6 +92,38 @@
     function getBasePath() {
         const path = window.location.pathname;
         return path.substring(0, path.lastIndexOf('/') + 1);
+    }
+
+    /**
+     * Whether the embedded package should offer the eXeLearning teacher-layer selector.
+     * Honors the ?exe-teacher / ?teacher-mode / ?exe-teacher-toggler parameter on the
+     * eXeViewer page (1/true/yes = on, 0/false/no = off); falls back to config.teacherMode
+     * when no such parameter is present.
+     * @returns {boolean}
+     */
+    function isTeacherModeEnabled() {
+        const params = new URLSearchParams(window.location.search);
+        for (const key of ['exe-teacher', 'teacher-mode', 'exe-teacher-toggler']) {
+            if (params.has(key)) {
+                const value = (params.get(key) || '').toLowerCase();
+                return value === '' || value === '1' || value === 'true' || value === 'yes';
+            }
+        }
+        return !!config.teacherMode;
+    }
+
+    /**
+     * Append ?exe-teacher=1 to a viewer URL when teacher mode is enabled.
+     * The eXeLearning package reads its own location.search to offer the selector, and the
+     * Service Worker matches on pathname only, so the query string is safe to add here.
+     * @param {string} url - The viewer URL (e.g. ".../viewer/index.html")
+     * @returns {string} The URL, with ?exe-teacher=1 appended when applicable
+     */
+    function withTeacherParam(url) {
+        if (!isTeacherModeEnabled() || /[?&]exe-teacher=/.test(url)) {
+            return url;
+        }
+        return url + (url.includes('?') ? '&' : '?') + 'exe-teacher=1';
     }
 
     /**
@@ -179,6 +217,7 @@
         elements.copySuccess = document.getElementById('copySuccess');
         elements.linkUpdated = document.getElementById('linkUpdated');
         elements.allowDownloadCheck = document.getElementById('allowDownloadCheck');
+        elements.allowTeacherCheck = document.getElementById('allowTeacherCheck');
         // Footer element
         elements.footerInfo = document.getElementById('footerInfo');
         // URL label element
@@ -1120,7 +1159,7 @@
         const basePath = getBasePath();
 
         // Set up the iframe URL
-        const viewerUrl = basePath + 'viewer/index.html';
+        const viewerUrl = withTeacherParam(basePath + 'viewer/index.html');
         console.log('[App] Loading viewer URL:', viewerUrl);
 
         // Update UI
@@ -1479,14 +1518,18 @@
     /**
      * Generate the share URL for the current content
      * @param {boolean} allowDownload - Whether to include the download parameter
+     * @param {boolean} includeTeacher - Whether to offer the teacher-layer selector (?exe-teacher=1)
      * @returns {string} The share URL
      */
-    function generateShareUrl(allowDownload = false) {
+    function generateShareUrl(allowDownload = false, includeTeacher = false) {
         const baseUrl = window.location.origin + window.location.pathname;
         const resourceUrl = state.contentFromUrl;
         let url = `${baseUrl}?url=${encodeURIComponent(resourceUrl)}`;
         if (allowDownload) {
             url += '&download=1';
+        }
+        if (includeTeacher) {
+            url += '&exe-teacher=1';
         }
         return url;
     }
@@ -1555,35 +1598,39 @@
      * Open the share modal with the generated URL
      */
     function openShareModal() {
-        // Initialize checkbox state based on config
+        // Initialize checkbox state based on config and the current viewing mode
         elements.allowDownloadCheck.checked = config.allowDownloadByDefault;
+        elements.allowTeacherCheck.checked = isTeacherModeEnabled();
 
-        // Generate URL with current checkbox state
-        const shareUrl = generateShareUrl(elements.allowDownloadCheck.checked);
-        elements.shareUrlInput.value = shareUrl;
+        // Regenerate the share URL from the current checkbox states
+        const refreshShareUrl = (showUpdated) => {
+            elements.shareUrlInput.value = generateShareUrl(
+                elements.allowDownloadCheck.checked,
+                elements.allowTeacherCheck.checked
+            );
+            if (showUpdated) {
+                // Show "Link updated" feedback briefly
+                elements.copySuccess.classList.add('d-none');
+                elements.linkUpdated.classList.remove('d-none');
+                setTimeout(() => {
+                    elements.linkUpdated.classList.add('d-none');
+                }, 2000);
+            }
+        };
+
+        // Generate URL with initial checkbox states
+        refreshShareUrl(false);
 
         // Hide feedback messages
         elements.copySuccess.classList.add('d-none');
         elements.linkUpdated.classList.add('d-none');
 
-        // Remove any previous event listener to avoid duplicates
-        const newCheckbox = elements.allowDownloadCheck.cloneNode(true);
-        elements.allowDownloadCheck.parentNode.replaceChild(newCheckbox, elements.allowDownloadCheck);
-        elements.allowDownloadCheck = newCheckbox;
-
-        // Add event listener for checkbox changes
-        elements.allowDownloadCheck.addEventListener('change', function() {
-            const newUrl = generateShareUrl(this.checked);
-            elements.shareUrlInput.value = newUrl;
-
-            // Show "Link updated" feedback
-            elements.copySuccess.classList.add('d-none');
-            elements.linkUpdated.classList.remove('d-none');
-
-            // Hide feedback after 2 seconds
-            setTimeout(() => {
-                elements.linkUpdated.classList.add('d-none');
-            }, 2000);
+        // Re-bind change listeners, cloning each checkbox to avoid duplicate handlers
+        ['allowDownloadCheck', 'allowTeacherCheck'].forEach((key) => {
+            const fresh = elements[key].cloneNode(true);
+            elements[key].parentNode.replaceChild(fresh, elements[key]);
+            elements[key] = fresh;
+            elements[key].addEventListener('change', () => refreshShareUrl(true));
         });
 
         const modal = new bootstrap.Modal(elements.shareModal);
@@ -1695,7 +1742,7 @@
             // Increment counter to ignore the upcoming iframe load event
             state.historyNavigationCount++;
             const basePath = getBasePath();
-            const targetUrl = basePath + 'viewer/' + historyState.iframePath;
+            const targetUrl = withTeacherParam(basePath + 'viewer/' + historyState.iframePath);
             console.log('[App] Navigating iframe to:', targetUrl);
             elements.contentFrame.src = targetUrl;
         } else if (historyState && historyState.isWelcome) {

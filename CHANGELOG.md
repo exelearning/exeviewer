@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## Unreleased
+
+- Offer the eXeLearning teacher-layer selector again after eXeLearning started hiding teacher-only content by default: eXeViewer now appends `?exe-teacher=1` to the embedded package. Controlled by an `?exe-teacher=1` page URL parameter and a `teacherMode` / `TEACHER_MODE` config default (off), with a "Teacher selector" checkbox in the share dialog.
+
+---
+
 ## v4.0.1 – 2026-06-09
 
 - Fix Dropbox, Nextcloud and ownCloud shared-link downloads by routing them through `github-proxy.exelearning.dev`.

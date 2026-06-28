@@ -161,6 +161,7 @@ Instead of editing `js/config.js`, Docker deployments are configured through env
 | `OPEN_EXTERNAL_LINKS_IN_NEW_WINDOW` | `true` | Open external links in a new tab |
 | `VALIDATE_EXE_CONTENT` | `true` | Reject ZIPs that are not valid eXeLearning packages |
 | `ALLOW_DOWNLOAD_BY_DEFAULT` | `true` | Show download button enabled by default in share dialog |
+| `TEACHER_MODE` | `false` | Offer the eXeLearning teacher-layer selector by default (when no `?exe-teacher` URL parameter is present) |
 
 Variables not set in `.env` keep their default values. You only need to include the ones you want to change.
 
@@ -290,6 +291,16 @@ Firefox doesn't support PWA installation natively. Use the [PWAs for Firefox](ht
        gasProxyUrl: 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec'
    };
    ```
+
+10. **Teacher mode**: eXeLearning packages hide teacher-only content by default and only offer the in-page "teacher layer" selector when the package URL carries `?exe-teacher=1`. eXeViewer appends this parameter to the embedded package when teacher mode is on (the selector then appears, but stays **off** until the viewer toggles it). It is controlled, in order of precedence, by:
+    - the `?exe-teacher=1` parameter on the eXeViewer page URL (`?exe-teacher=0` forces it off; aliases `?teacher-mode` and `?exe-teacher-toggler` are also accepted), and
+    - the `teacherMode` config default (false) for visits without that parameter:
+      ```javascript
+      window.exeViewerConfig = {
+          teacherMode: true
+      };
+      ```
+    When sharing content loaded from a URL, the share dialog includes a "Teacher selector" checkbox that adds `&exe-teacher=1` to the generated link.
 
 ### Adding a new language
 

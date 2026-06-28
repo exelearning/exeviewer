@@ -17,4 +17,8 @@ window.exeViewerConfig = {
     // Set this to your deployed GAS web app URL to enable Google Drive support.
     // Leave empty or omit to disable (shows an informative message for Drive URLs).
     // gasProxyUrl: 'https://script.google.com/macros/s/XXXX/exec'
+
+    // Offer the eXeLearning teacher-layer selector by default, even when no
+    // ?exe-teacher URL parameter is present. Defaults to false (student view).
+    // teacherMode: true
 };
