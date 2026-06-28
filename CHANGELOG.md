@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## v4.0.2 – 2026-07-07
+
+- Add fullscreen mode (hides navbar and expands viewer to full viewport) and a new share-link option to hide the toolbar, ideal for student-facing links.
+
+---
+
 ## v4.0.1 – 2026-06-09
 
 - Fix Dropbox, Nextcloud and ownCloud shared-link downloads by routing them through `github-proxy.exelearning.dev`.

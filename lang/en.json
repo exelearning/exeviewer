@@ -79,7 +79,9 @@
         "copied": "Link copied to clipboard!",
         "linkUpdated": "Link updated!",
         "allowDownload": "Download button",
-        "allowDownloadDesc": "Users accessing the link will see a button to download the original file."
+        "allowDownloadDesc": "Users accessing the link will see a button to download the original file.",
+        "fullscreen": "Content only",
+        "fullscreenDesc": "Hides the toolbar. Ideal for sending to students."
     },
     "download": {
         "tooltip": "Download original file"
