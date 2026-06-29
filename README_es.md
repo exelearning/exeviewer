@@ -161,6 +161,7 @@ En lugar de editar `js/config.js`, los despliegues con Docker se configuran medi
 | `OPEN_EXTERNAL_LINKS_IN_NEW_WINDOW` | `true` | Abrir los enlaces externos en una pestaña nueva |
 | `VALIDATE_EXE_CONTENT` | `true` | Rechazar ZIP que no sean paquetes eXeLearning válidos |
 | `ALLOW_DOWNLOAD_BY_DEFAULT` | `true` | Mostrar el botón de descarga activado por defecto en el diálogo de compartir |
+| `TEACHER_MODE` | `false` | Ofrecer el selector de capa docente de eXeLearning por defecto (cuando no hay parámetro `?exe-teacher` en la URL) |
 
 Las variables no definidas en `.env` conservan sus valores por defecto; solo es necesario incluir las que se quieran cambiar.
 
@@ -290,6 +291,16 @@ Firefox no soporta la instalación de PWA de forma nativa. Usa la extensión [PW
        gasProxyUrl: 'https://script.google.com/macros/s/TU_ID_DE_SCRIPT/exec'
    };
    ```
+
+10. **Modo docente**: los paquetes de eXeLearning ocultan el contenido exclusivo del profesorado por defecto y solo ofrecen el selector de "capa docente" cuando la URL del paquete incluye `?exe-teacher=1`. eXeViewer añade ese parámetro al paquete incrustado cuando el modo docente está activo (entonces aparece el selector, pero permanece **desactivado** hasta que la persona lo active). Se controla, por orden de prioridad, mediante:
+    - el parámetro `?exe-teacher=1` en la URL de la página de eXeViewer (`?exe-teacher=0` lo fuerza a desactivado; también se aceptan los alias `?teacher-mode` y `?exe-teacher-toggler`), y
+    - el valor por defecto `teacherMode` (false) de la configuración, para visitas sin ese parámetro:
+      ```javascript
+      window.exeViewerConfig = {
+          teacherMode: true
+      };
+      ```
+    Al compartir contenido cargado desde una URL, el diálogo de compartir incluye una casilla "Selector docente" que añade `&exe-teacher=1` al enlace generado.
 
 ### Añadir un nuevo idioma
 

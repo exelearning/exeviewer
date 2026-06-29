@@ -9,7 +9,8 @@ window.exeViewerConfig = {
     autoRestoreContent: ${AUTO_RESTORE_CONTENT:-true},
     openExternalLinksInNewWindow: ${OPEN_EXTERNAL_LINKS_IN_NEW_WINDOW:-true},
     validateExeContent: ${VALIDATE_EXE_CONTENT:-true},
-    allowDownloadByDefault: ${ALLOW_DOWNLOAD_BY_DEFAULT:-true}
+    allowDownloadByDefault: ${ALLOW_DOWNLOAD_BY_DEFAULT:-true},
+    teacherMode: ${TEACHER_MODE:-false}
 };
 EOF
 
