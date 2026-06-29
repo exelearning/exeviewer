@@ -228,32 +228,52 @@
                         </button>
                     </div>
                     <div class="form-check mt-3">
-                        <input class="form-check-input" type="checkbox" id="allowDownloadCheck" aria-describedby="allowDownloadDesc">
-                        <label class="form-check-label" for="allowDownloadCheck" data-i18n="share.allowDownload">
-                            Download button
+                        <input class="form-check-input" type="checkbox" id="navbarCheck" checked>
+                        <label class="form-check-label" for="navbarCheck" data-i18n="share.navbar">
+                            Show toolbar
                         </label>
+                        <span class="ms-1 text-muted share-info-icon"
+                              role="button" tabindex="0"
+                              data-bs-toggle="tooltip"
+                              data-bs-placement="top"
+                              data-bs-container="body"
+                              data-bs-trigger="hover focus"
+                              data-i18n-title="share.navbarDesc"
+                              data-i18n-aria="share.navbarDesc"
+                              title="Uncheck to hide the toolbar. Ideal for links sent to students.">ⓘ</span>
                     </div>
-                    <p id="allowDownloadDesc" class="text-muted small mt-1 mb-0" data-i18n="share.allowDownloadDesc">
-                        Users accessing the link will see a button to download the original file.
-                    </p>
-                    <div class="form-check mt-3">
-                        <input class="form-check-input" type="checkbox" id="allowTeacherCheck" aria-describedby="allowTeacherDesc">
-                        <label class="form-check-label" for="allowTeacherCheck" data-i18n="share.allowTeacher">
-                            Teacher selector
-                        </label>
+                    <div id="navbarOptions" class="ms-4 mt-2 border-start ps-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="allowDownloadCheck">
+                            <label class="form-check-label" for="allowDownloadCheck" data-i18n="share.allowDownload">
+                                Download button
+                            </label>
+                            <span class="ms-1 text-muted share-info-icon"
+                                  role="button" tabindex="0"
+                                  data-bs-toggle="tooltip"
+                                  data-bs-placement="top"
+                                  data-bs-container="body"
+                                  data-bs-trigger="hover focus"
+                                  data-i18n-title="share.allowDownloadDesc"
+                                  data-i18n-aria="share.allowDownloadDesc"
+                                  title="Users accessing the link will see a button to download the original file.">ⓘ</span>
+                        </div>
+                        <div class="form-check mt-2">
+                            <input class="form-check-input" type="checkbox" id="allowTeacherCheck">
+                            <label class="form-check-label" for="allowTeacherCheck" data-i18n="share.allowTeacher">
+                                Show teacher content
+                            </label>
+                            <span class="ms-1 text-muted share-info-icon"
+                                  role="button" tabindex="0"
+                                  data-bs-toggle="tooltip"
+                                  data-bs-placement="top"
+                                  data-bs-container="body"
+                                  data-bs-trigger="hover focus"
+                                  data-i18n-title="share.allowTeacherDesc"
+                                  data-i18n-aria="share.allowTeacherDesc"
+                                  title="Enables a selector to show or hide teacher content on the page.">ⓘ</span>
+                        </div>
                     </div>
-                    <p id="allowTeacherDesc" class="text-muted small mt-1 mb-0" data-i18n="share.allowTeacherDesc">
-                        Viewers will be able to switch on the teacher layer (off until they do).
-                    </p>
-                    <div class="form-check mt-3">
-                        <input class="form-check-input" type="checkbox" id="fullscreenCheck" aria-describedby="fullscreenCheckDesc">
-                        <label class="form-check-label" for="fullscreenCheck" data-i18n="share.fullscreen">
-                            Content only
-                        </label>
-                    </div>
-                    <p id="fullscreenCheckDesc" class="text-muted small mt-1 mb-0" data-i18n="share.fullscreenDesc">
-                        Hides the toolbar. Ideal for sending to students.
-                    </p>
                     <div id="copySuccess" class="alert-success-text small mt-2 d-none" role="status" aria-live="polite" data-i18n="share.copied">
                         Link copied to clipboard!
                     </div>
