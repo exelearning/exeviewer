@@ -74,9 +74,10 @@
         btnCopyShareUrl: null,
         copySuccess: null,
         linkUpdated: null,
+        navbarCheck: null,
+        navbarOptions: null,
         allowDownloadCheck: null,
         allowTeacherCheck: null,
-        fullscreenCheck: null,
         // Footer element
         footerInfo: null,
         // URL label element
@@ -218,9 +219,10 @@
         elements.btnCopyShareUrl = document.getElementById('btnCopyShareUrl');
         elements.copySuccess = document.getElementById('copySuccess');
         elements.linkUpdated = document.getElementById('linkUpdated');
+        elements.navbarCheck = document.getElementById('navbarCheck');
+        elements.navbarOptions = document.getElementById('navbarOptions');
         elements.allowDownloadCheck = document.getElementById('allowDownloadCheck');
         elements.allowTeacherCheck = document.getElementById('allowTeacherCheck');
-        elements.fullscreenCheck = document.getElementById('fullscreenCheck');
         // Footer element
         elements.footerInfo = document.getElementById('footerInfo');
         // URL label element
@@ -1614,20 +1616,21 @@
      * Open the share modal with the generated URL
      */
     function openShareModal() {
-        // Initialize checkbox state based on config and the current viewing mode
+        // Reset to default state: navbar visible, sub-options at their defaults
+        elements.navbarCheck.checked = true;
+        elements.navbarOptions.classList.remove('d-none');
         elements.allowDownloadCheck.checked = config.allowDownloadByDefault;
         elements.allowTeacherCheck.checked = isTeacherModeEnabled();
-        elements.fullscreenCheck.checked = false;
 
         // Regenerate the share URL from the current checkbox states
         const refreshShareUrl = (showUpdated) => {
+            const navbarOn = elements.navbarCheck.checked;
             elements.shareUrlInput.value = generateShareUrl(
-                elements.allowDownloadCheck.checked,
-                elements.allowTeacherCheck.checked,
-                elements.fullscreenCheck.checked
+                navbarOn && elements.allowDownloadCheck.checked,
+                navbarOn && elements.allowTeacherCheck.checked,
+                !navbarOn
             );
             if (showUpdated) {
-                // Show "Link updated" feedback briefly
                 elements.copySuccess.classList.add('d-none');
                 elements.linkUpdated.classList.remove('d-none');
                 setTimeout(() => {
@@ -1644,22 +1647,34 @@
         elements.linkUpdated.classList.add('d-none');
 
         // Re-bind change listeners, cloning each checkbox to avoid duplicate handlers
-        ['allowDownloadCheck', 'allowTeacherCheck', 'fullscreenCheck'].forEach((key) => {
+        ['navbarCheck', 'allowDownloadCheck', 'allowTeacherCheck'].forEach((key) => {
             const fresh = elements[key].cloneNode(true);
             elements[key].parentNode.replaceChild(fresh, elements[key]);
             elements[key] = fresh;
         });
 
-        // "Download button" and "Content only" are effectively mutually exclusive
-        elements.allowDownloadCheck.addEventListener('change', () => {
-            if (elements.allowDownloadCheck.checked) elements.fullscreenCheck.checked = false;
+        // Navbar toggle: hide/show sub-options and restore previous state
+        let savedDownload = null;
+        let savedTeacher = null;
+        elements.navbarCheck.addEventListener('change', () => {
+            if (!elements.navbarCheck.checked) {
+                savedDownload = elements.allowDownloadCheck.checked;
+                savedTeacher = elements.allowTeacherCheck.checked;
+                elements.navbarOptions.classList.add('d-none');
+            } else {
+                elements.navbarOptions.classList.remove('d-none');
+                if (savedDownload !== null) elements.allowDownloadCheck.checked = savedDownload;
+                if (savedTeacher !== null) elements.allowTeacherCheck.checked = savedTeacher;
+            }
             refreshShareUrl(true);
         });
-        elements.fullscreenCheck.addEventListener('change', () => {
-            if (elements.fullscreenCheck.checked) elements.allowDownloadCheck.checked = false;
-            refreshShareUrl(true);
-        });
+        elements.allowDownloadCheck.addEventListener('change', () => refreshShareUrl(true));
         elements.allowTeacherCheck.addEventListener('change', () => refreshShareUrl(true));
+
+        // Initialize tooltips for the info icons (idempotent)
+        elements.shareModal.querySelectorAll('.share-info-icon').forEach((el) => {
+            bootstrap.Tooltip.getOrCreateInstance(el);
+        });
 
         const modal = new bootstrap.Modal(elements.shareModal);
         modal.show();

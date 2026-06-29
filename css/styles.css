@@ -476,7 +476,13 @@ body.fullscreen-mode .viewer-container {
 }
 
 .modal-body {
-    min-height: 250px;
+    min-height: 262px;
+}
+
+.share-info-icon {
+    cursor: help;
+    font-style: normal;
+    user-select: none;
 }
 
 #exitModal .modal-body {
