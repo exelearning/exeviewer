@@ -56,6 +56,18 @@
         </button>
     </div>
 
+    <!-- Update Available Banner -->
+    <div id="updateBanner" class="update-banner d-none" role="status" aria-live="polite">
+        <i class="bi bi-arrow-clockwise flex-shrink-0" aria-hidden="true"></i>
+        <span data-i18n="update.available">A new version is available</span>
+        <button type="button" id="updateReloadBtn" class="update-banner-action"
+                data-i18n="update.action">Update</button>
+        <button type="button" id="updateDismissBtn" class="update-banner-dismiss"
+                data-i18n-aria="accessibility.closeModal" aria-label="Close">
+            <i class="bi bi-x-lg" aria-hidden="true"></i>
+        </button>
+    </div>
+
     <!-- Top Navigation Bar (hidden until content is loaded) -->
     <nav id="topNavbar" class="navbar navbar-expand navbar-dark fixed-top d-none">
         <div class="container-fluid">

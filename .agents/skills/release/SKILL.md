@@ -41,7 +41,7 @@ entry must describe real user-facing behaviour, not commit subjects.
 
 ## Step 2 — Update the version
 
-The version string lives in **exactly these four files**. Verify with
+The version string lives in **exactly these five files**. Verify with
 `git grep -n "<old-version>"` afterwards that nothing is left behind.
 
 | File | What to change |
@@ -49,14 +49,19 @@ The version string lives in **exactly these four files**. Verify with
 | `package.json` | top-level `"version"` |
 | `package-lock.json` | top-level `"version"` **and** `packages[""].version` (two occurrences) |
 | `js/app.js` | `version: '<x.y.z>'` inside the `config` defaults block (~line 12) |
+| `sw.js` | `SW_VERSION` constant (~line 6) |
 | `CHANGELOG.md` | new entry at the top |
+
+`SW_VERSION` **must** be bumped with the release. `CACHE_NAME` derives from it,
+and the `activate` handler purges every cache whose name differs — so if
+`SW_VERSION` does not change, the previous release's app shell is never evicted
+and users keep being served stale files. It also means the precache list can be
+edited safely: the new list only takes effect for existing users once the cache
+name changes.
 
 Do **not** touch:
 
-- `SW_VERSION` in `sw.js` — that is an independent Service Worker cache version,
-  bumped only when the cached app shell must be invalidated. It has never
-  followed the release version.
-- `DB_VERSION` in `sw.js` — IndexedDB schema version.
+- `DB_VERSION` in `sw.js` — IndexedDB schema version, unrelated to the release.
 - Do not run `npm version`; it creates a git tag and commit as a side effect.
 
 ## Step 3 — Write the CHANGELOG entry
