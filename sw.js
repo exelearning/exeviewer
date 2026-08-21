@@ -3,7 +3,9 @@
  * Handles PWA caching and serves extracted ZIP content from memory/IndexedDB
  */
 
-const SW_VERSION = '1.0.0';
+// Keep in sync with the version in package.json. The cache name derives from it,
+// so bumping this is what makes `activate` purge the previous release's cache.
+const SW_VERSION = '4.0.3';
 const CACHE_NAME = `exeviewer-v${SW_VERSION}`;
 
 // IndexedDB configuration
@@ -18,12 +20,23 @@ const APP_SHELL_FILES = [
     './css/styles.css',
     './js/app.js',
     './js/i18n.js',
+    './js/config.js',
     './js/zip.worker.js',
     './lang/en.json',
     './lang/es.json',
     './img/logo.svg',
     './img/icon.svg',
     './img/favicon.ico',
+    './img/icon-72.png',
+    './img/icon-96.png',
+    './img/icon-128.png',
+    './img/icon-144.png',
+    './img/icon-152.png',
+    './img/icon-192.png',
+    './img/icon-384.png',
+    './img/icon-512.png',
+    './img/icon-maskable-192.png',
+    './img/icon-maskable-512.png',
     './manifest.json',
     './vendor/bootstrap/css/bootstrap.min.css',
     './vendor/bootstrap/js/bootstrap.bundle.min.js',
@@ -36,6 +49,9 @@ const APP_SHELL_FILES = [
 // In-memory storage for the extracted ZIP contents
 let contentFiles = new Map();
 let contentReady = false;
+
+// In-flight IndexedDB restore, shared so concurrent callers await the same one
+let contentRestorePromise = null;
 
 // Content options
 let contentOptions = {
@@ -141,6 +157,45 @@ async function loadFromIndexedDB() {
 }
 
 /**
+ * Restore content into memory from IndexedDB, at most once at a time.
+ *
+ * Both `activate` and `/viewer/*` requests need this, and several viewer
+ * requests can land in the same tick, so the in-flight promise is shared to
+ * avoid concurrent restores racing each other.
+ *
+ * @returns {Promise<boolean>} True if content is ready afterwards
+ */
+function ensureContentReady() {
+    if (contentReady && contentFiles.size > 0) {
+        return Promise.resolve(true);
+    }
+
+    if (!contentRestorePromise) {
+        contentRestorePromise = loadFromIndexedDB()
+            .then(stored => {
+                if (stored.files && Object.keys(stored.files).length > 0) {
+                    contentFiles = new Map(Object.entries(stored.files));
+                    contentReady = true;
+                    console.log(`[SW] Content restored from IndexedDB: ${contentFiles.size} files`);
+                }
+                if (stored.options) {
+                    contentOptions = { ...contentOptions, ...stored.options };
+                }
+                return contentReady && contentFiles.size > 0;
+            })
+            .catch(err => {
+                console.warn('[SW] Content restore failed:', err);
+                return false;
+            })
+            .finally(() => {
+                contentRestorePromise = null;
+            });
+    }
+
+    return contentRestorePromise;
+}
+
+/**
  * Clear content from IndexedDB
  * @returns {Promise<void>}
  */
@@ -243,18 +298,46 @@ self.addEventListener('install', (event) => {
 
     event.waitUntil(
         caches.open(CACHE_NAME)
-            .then(cache => {
+            .then(async cache => {
                 console.log('[SW] Caching app shell...');
-                return cache.addAll(APP_SHELL_FILES).catch(err => {
-                    console.warn('[SW] Some app shell files failed to cache:', err);
-                });
-            })
-            .then(() => {
-                console.log('[SW] App shell cached successfully');
-                // Skip waiting to activate immediately
-                return self.skipWaiting();
+
+                // `cache: 'reload'` bypasses the HTTP cache so the precache is
+                // refreshed deterministically instead of possibly re-storing a
+                // stale copy. Each file is fetched individually so one failure
+                // does not silently discard the whole batch (cache.addAll is
+                // all-or-nothing).
+                const failures = [];
+
+                await Promise.all(APP_SHELL_FILES.map(async file => {
+                    try {
+                        const request = new Request(file, { cache: 'reload' });
+                        const response = await fetch(request);
+                        if (!response.ok) {
+                            throw new Error(`HTTP ${response.status}`);
+                        }
+                        await cache.put(file, response);
+                    } catch (err) {
+                        failures.push(`${file}: ${err.message}`);
+                    }
+                }));
+
+                if (failures.length) {
+                    // Surfaced loudly: a partially primed cache means the app
+                    // will not work offline, and that must not pass unnoticed.
+                    console.error(
+                        `[SW] App shell incomplete - ${failures.length}/${APP_SHELL_FILES.length} file(s) failed to cache:\n` +
+                        failures.join('\n')
+                    );
+                } else {
+                    console.log(`[SW] App shell cached successfully (${APP_SHELL_FILES.length} files)`);
+                }
             })
     );
+
+    // No skipWaiting() here on purpose: a new worker must not take over a tab
+    // whose page JS is still running. The page shows an update prompt and sends
+    // SKIP_WAITING when the user accepts. The very first install has no worker
+    // to displace, so it activates immediately anyway.
 });
 
 /**
@@ -276,19 +359,10 @@ self.addEventListener('activate', (event) => {
                 );
             })
             .then(() => {
-                // Restore content from IndexedDB if available
-                return loadFromIndexedDB();
-            })
-            .then(stored => {
-                if (stored.files) {
-                    contentFiles = new Map(Object.entries(stored.files));
-                    contentReady = true;
-                    console.log(`[SW] Content restored from IndexedDB: ${contentFiles.size} files`);
-                }
-                if (stored.options) {
-                    contentOptions = { ...contentOptions, ...stored.options };
-                    console.log('[SW] Options restored from IndexedDB:', contentOptions);
-                }
+                // Restore content from IndexedDB BEFORE claiming any client, so
+                // the first /viewer/* request this worker sees already has the
+                // content in memory.
+                return ensureContentReady();
             })
             .then(() => {
                 // Claim all clients immediately
@@ -403,6 +477,26 @@ self.addEventListener('message', (event) => {
 });
 
 /**
+ * Look a request up in the cache, falling back to a query-string-insensitive
+ * match.
+ *
+ * The app shell is precached by plain path, but some assets are requested with
+ * a cache-busting query string that the precache cannot know in advance - the
+ * bootstrap-icons stylesheet asks for `fonts/bootstrap-icons.woff2?2820a385...`.
+ * Without the second attempt those requests miss the cache and fail offline.
+ *
+ * @param {Request} request
+ * @returns {Promise<Response|undefined>}
+ */
+async function matchCache(request) {
+    const exact = await caches.match(request);
+    if (exact) {
+        return exact;
+    }
+    return caches.match(request, { ignoreSearch: true });
+}
+
+/**
  * Fetch event - intercept requests and serve from cache or memory
  */
 self.addEventListener('fetch', (event) => {
@@ -421,7 +515,10 @@ self.addEventListener('fetch', (event) => {
     // For navigation requests, use cache-first with network fallback
     if (event.request.mode === 'navigate') {
         event.respondWith(
-            caches.match(event.request)
+            // ignoreSearch so ?url=, ?fullscreen=1 and ?download=1 navigations
+            // are served from the cached shell instead of waiting for a network
+            // that may not be there.
+            matchCache(event.request)
                 .then(cachedResponse => {
                     if (cachedResponse) {
                         return cachedResponse;
@@ -446,27 +543,49 @@ self.addEventListener('fetch', (event) => {
         return;
     }
 
-    // For language files, use network-first to ensure translations are up to date
-    if (pathname.endsWith('.json') && pathname.includes('/lang/')) {
+    // Stale-while-revalidate for:
+    //  - lang/*.json: the UI text is blocked on this request (js/i18n.js), so it
+    //    must never wait for the network.
+    //  - js/config.js: generated per deployment (docker/entrypoint.sh), so it
+    //    must not be pinned to a cached copy until the next version bump.
+    // Serve the cached copy immediately and refresh it in the background.
+    const isLangFile = pathname.endsWith('.json') && pathname.includes('/lang/');
+    const isConfigFile = pathname.endsWith('/js/config.js');
+
+    if (isLangFile || isConfigFile) {
         event.respondWith(
-            fetch(event.request)
-                .then(response => {
-                    if (response.ok) {
-                        const responseClone = response.clone();
-                        caches.open(CACHE_NAME).then(cache => {
-                            cache.put(event.request, responseClone);
-                        });
-                    }
-                    return response;
-                })
-                .catch(() => caches.match(event.request))
+            caches.match(event.request).then(cachedResponse => {
+                const networkFetch = fetch(event.request)
+                    .then(response => {
+                        if (response.ok) {
+                            const responseClone = response.clone();
+                            caches.open(CACHE_NAME).then(cache => {
+                                cache.put(event.request, responseClone);
+                            });
+                        }
+                        return response;
+                    })
+                    .catch(err => {
+                        // Offline is expected here; the cached copy already served
+                        if (!cachedResponse) {
+                            throw err;
+                        }
+                        return cachedResponse;
+                    });
+
+                if (cachedResponse) {
+                    event.waitUntil(networkFetch.catch(() => {}));
+                    return cachedResponse;
+                }
+                return networkFetch;
+            })
         );
         return;
     }
 
     // For other requests, use cache-first strategy
     event.respondWith(
-        caches.match(event.request)
+        matchCache(event.request)
             .then(cachedResponse => {
                 if (cachedResponse) {
                     return cachedResponse;
@@ -596,17 +715,7 @@ async function handleViewerRequest(pathname, viewerIndex) {
     // Check if content is ready; if not, try to restore from IndexedDB
     // (the activate event does not re-fire after the SW is terminated by the browser,
     // so in-memory state can be lost even though IndexedDB still holds the content)
-    if (!contentReady || contentFiles.size === 0) {
-        const stored = await loadFromIndexedDB();
-        if (stored.files && Object.keys(stored.files).length > 0) {
-            contentFiles = new Map(Object.entries(stored.files));
-            contentReady = true;
-            if (stored.options) {
-                contentOptions = { ...contentOptions, ...stored.options };
-            }
-            console.log(`[SW] Content auto-restored from IndexedDB after SW restart: ${contentFiles.size} files`);
-        }
-    }
+    await ensureContentReady();
 
     if (!contentReady || contentFiles.size === 0) {
         console.warn('[SW] Content not ready yet');

@@ -93,5 +93,10 @@
         "message": "Volverás a la página principal, desde donde podrás cargar contenidos.",
         "cancel": "Cancelar",
         "confirm": "Salir"
+    },
+    "update": {
+        "available": "Hay una nueva versión disponible",
+        "action": "Actualizar",
+        "applying": "Actualizando…"
     }
 }

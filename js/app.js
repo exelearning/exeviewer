@@ -43,7 +43,9 @@
         isRestoredContent: false,  // True if content was restored from IndexedDB
         currentErrorKey: null,  // Current error translation key (for language updates)
         currentStorageWarningKey: null,  // Current storage warning key (for language updates)
-        fullscreenMode: false  // True when ?fullscreen=1 is present in the URL
+        fullscreenMode: false,  // True when ?fullscreen=1 is present in the URL
+        updateBannerShown: false,  // True once the "new version" banner has been shown
+        reloadingForUpdate: false  // Guards against a double reload on controllerchange
     };
 
     // DOM Elements
@@ -322,6 +324,89 @@
     }
 
     /**
+     * Show the "new version available" banner and wire it to the waiting worker
+     * @param {ServiceWorker} waitingWorker - The worker sitting in 'waiting'
+     */
+    function showUpdateBanner(waitingWorker) {
+        const banner = document.getElementById('updateBanner');
+        if (!banner || state.updateBannerShown) {
+            return;
+        }
+        state.updateBannerShown = true;
+
+        const reloadBtn = document.getElementById('updateReloadBtn');
+        const dismissBtn = document.getElementById('updateDismissBtn');
+
+        if (reloadBtn) {
+            reloadBtn.addEventListener('click', () => {
+                // Show progress: the update takes a moment and the button would
+                // otherwise look like it did nothing.
+                reloadBtn.disabled = true;
+                reloadBtn.textContent = i18n.t('update.applying');
+                reloadBtn.setAttribute('data-i18n', 'update.applying');
+
+                // Reload once the new worker has taken control
+                navigator.serviceWorker.addEventListener('controllerchange', () => {
+                    if (state.reloadingForUpdate) {
+                        return;
+                    }
+                    state.reloadingForUpdate = true;
+                    window.location.reload();
+                });
+                waitingWorker.postMessage({ type: 'SKIP_WAITING' });
+
+                // If the worker never takes control, reload anyway rather than
+                // leaving the user staring at a spinner-less "Updating…".
+                setTimeout(() => {
+                    if (!state.reloadingForUpdate) {
+                        state.reloadingForUpdate = true;
+                        window.location.reload();
+                    }
+                }, 5000);
+            });
+        }
+
+        if (dismissBtn) {
+            dismissBtn.addEventListener('click', () => banner.classList.add('d-none'));
+        }
+
+        banner.classList.remove('d-none');
+        console.log('[App] New Service Worker version is waiting');
+    }
+
+    /**
+     * Watch a registration for an updated worker and surface it to the user.
+     * The new worker is left in 'waiting' so it never takes over mid-session.
+     * @param {ServiceWorkerRegistration} registration
+     */
+    function watchForUpdates(registration) {
+        if (!registration || registration.__exeUpdateWatched) {
+            return;
+        }
+        registration.__exeUpdateWatched = true;
+
+        // A worker may already be waiting from a previous page load
+        if (registration.waiting && navigator.serviceWorker.controller) {
+            showUpdateBanner(registration.waiting);
+        }
+
+        registration.addEventListener('updatefound', () => {
+            const newWorker = registration.installing;
+            if (!newWorker) {
+                return;
+            }
+
+            newWorker.addEventListener('statechange', () => {
+                // 'installed' with an existing controller means this is an
+                // update, not the very first install.
+                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                    showUpdateBanner(newWorker);
+                }
+            });
+        });
+    }
+
+    /**
      * Register the Service Worker
      */
     async function registerServiceWorker() {
@@ -344,11 +429,11 @@
             if (existingReg) {
                 console.log('[App] Found existing Service Worker registration');
                 state.serviceWorkerRegistration = existingReg;
+                watchForUpdates(existingReg);
 
-                // Update the SW if needed
-                await existingReg.update();
-
-                // If there's an active worker, we're good
+                // If there's an active worker, we're good. Check this BEFORE any
+                // network work: offline, update() rejects and must never be able
+                // to invalidate a perfectly usable active worker.
                 if (existingReg.active) {
                     console.log('[App] Service Worker is active');
 
@@ -359,14 +444,30 @@
                     }
 
                     state.serviceWorkerReady = true;
+
+                    // Opportunistic update check, fire-and-forget. It is never a
+                    // precondition for using the worker we already have.
+                    existingReg.update().catch(err => {
+                        console.log('[App] Update check skipped (offline?):', err.message);
+                    });
+
                     return;
                 }
             }
 
-            // Register new Service Worker
-            const registration = await navigator.serviceWorker.register(swPath, {
-                scope: basePath
-            });
+            // Reuse a registration that is still installing/waiting rather than
+            // calling register() again, which would need the network.
+            let registration = (existingReg && (existingReg.installing || existingReg.waiting))
+                ? existingReg
+                : null;
+
+            if (!registration) {
+                // Register new Service Worker (requires network - first visit only)
+                registration = await navigator.serviceWorker.register(swPath, {
+                    scope: basePath
+                });
+                watchForUpdates(registration);
+            }
 
             state.serviceWorkerRegistration = registration;
             console.log('[App] Service Worker registered with scope:', registration.scope);
@@ -380,16 +481,22 @@
                 } else {
                     console.log('[App] Waiting for Service Worker to activate...');
                     await new Promise((resolve) => {
+                        // A worker stuck in 'waiting' would never activate on its
+                        // own, so never block indefinitely on this.
+                        const timeoutId = setTimeout(resolve, 10000);
+
                         sw.addEventListener('statechange', function onStateChange(e) {
                             console.log('[App] Service Worker state:', e.target.state);
-                            if (e.target.state === 'activated') {
+                            if (e.target.state === 'activated' || e.target.state === 'redundant') {
                                 sw.removeEventListener('statechange', onStateChange);
+                                clearTimeout(timeoutId);
                                 resolve();
                             }
                         });
 
                         // Check if already activated
                         if (sw.state === 'activated') {
+                            clearTimeout(timeoutId);
                             resolve();
                         }
                     });

@@ -93,5 +93,10 @@
         "message": "You will return to the main page, where you can load content.",
         "cancel": "Cancel",
         "confirm": "Exit"
+    },
+    "update": {
+        "available": "A new version is available",
+        "action": "Update",
+        "applying": "Updating…"
     }
 }
