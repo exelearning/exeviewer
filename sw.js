@@ -5,7 +5,7 @@
 
 // Keep in sync with the version in package.json. The cache name derives from it,
 // so bumping this is what makes `activate` purge the previous release's cache.
-const SW_VERSION = '4.0.3';
+const SW_VERSION = '4.0.4';
 const CACHE_NAME = `exeviewer-v${SW_VERSION}`;
 
 // IndexedDB configuration

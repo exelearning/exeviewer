@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## v4.0.4 – 2026-09-10
+
+- Make the application work fully offline.
+- Show a notice offering to update when a new version is available.
+- Fix the loaded content sometimes not being ready right after updating or reopening the application.
+
+---
+
 ## v4.0.3 – 2026-08-06
 
 - Maintenance release with no functional changes: version bumped to keep numbering aligned with eXeLearning for consistency across related projects.
