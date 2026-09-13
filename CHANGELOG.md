@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## v4.0.4 – 2026-09-10
+## v4.0.4 – 2026-09-15
 
 - Make the application work fully offline.
 - Show a notice offering to update when a new version is available.
