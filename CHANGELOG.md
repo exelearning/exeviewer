@@ -1,10 +1,16 @@
 # CHANGELOG
 
-## v4.0.4 – 2026-09-15
+## v4.0.5 – 2026-09-16
 
 - Make the application work fully offline.
 - Show a notice offering to update when a new version is available.
 - Fix the loaded content sometimes not being ready right after updating or reopening the application.
+
+---
+
+## v4.0.4
+
+- 404 Not Found. The requested release was not found in this project.
 
 ---
 
