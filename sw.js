@@ -50,13 +50,14 @@ const APP_SHELL_FILES = [
 const APP_SHELL_URLS = new Set(APP_SHELL_FILES.map(file => new URL(file, self.location).href));
 
 /**
- * Whether a URL is an app shell file, ignoring its query string
+ * Whether a URL is an app shell file, ignoring its query string and fragment
  * @param {string} href
  * @returns {boolean}
  */
 function isAppShellUrl(href) {
     const url = new URL(href);
     url.search = '';
+    url.hash = '';
     return APP_SHELL_URLS.has(url.href);
 }
 
@@ -639,14 +640,14 @@ self.addEventListener('fetch', (event) => {
         return;
     }
 
-    // Requests made with fetch() from the page (e.g. a package loaded with ?url=
-    // from inside the scope) are data, not app shell: go straight to the network
-    // so they always reflect the server and honour its Cache-Control.
-    if (event.request.destination === '') {
+    // Anything else that is not an app shell file (e.g. a package loaded with
+    // ?url= from inside the scope) goes straight to the network, so it always
+    // reflects the server and honours its Cache-Control.
+    if (!isAppShellUrl(event.request.url)) {
         return;
     }
 
-    // For other requests, use cache-first strategy
+    // For app shell files, use cache-first strategy
     event.respondWith(
         matchCache(event.request)
             .then(cachedResponse => {
