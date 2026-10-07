@@ -341,6 +341,22 @@ self.addEventListener('install', (event) => {
 });
 
 /**
+ * Remove every cross-origin entry from the current cache
+ * @returns {Promise<void>}
+ */
+async function purgeCrossOriginEntries() {
+    try {
+        const cache = await caches.open(CACHE_NAME);
+        const requests = await cache.keys();
+        await Promise.all(requests
+            .filter(request => new URL(request.url).origin !== self.location.origin)
+            .map(request => cache.delete(request)));
+    } catch (err) {
+        console.warn('[SW] Failed to purge cross-origin cache entries:', err);
+    }
+}
+
+/**
  * Activate event - clean up old caches, restore content from IndexedDB, and claim clients
  */
 self.addEventListener('activate', (event) => {
@@ -357,6 +373,12 @@ self.addEventListener('activate', (event) => {
                         }
                     })
                 );
+            })
+            .then(() => {
+                // Drop cross-origin responses that earlier workers stored in
+                // this cache (package downloads through the CORS proxies); the
+                // fetch handler no longer caches them.
+                return purgeCrossOriginEntries();
             })
             .then(() => {
                 // Restore content from IndexedDB BEFORE claiming any client, so
@@ -510,6 +532,15 @@ self.addEventListener('fetch', (event) => {
             event.respondWith(handleViewerRequest(pathname, viewerIndex));
             return;
         }
+    }
+
+    // Cross-origin requests are not part of the app shell: let them go to the
+    // network untouched. Caching them breaks package downloads through the CORS
+    // proxies, which differ only in the query string (?url=...): matchCache's
+    // ignoreSearch fallback served the first downloaded package for any later
+    // URL, and each package was stored in the cache for nothing.
+    if (url.origin !== self.location.origin) {
+        return;
     }
 
     // For navigation requests, use cache-first with network fallback
