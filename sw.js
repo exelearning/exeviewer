@@ -6,7 +6,13 @@
 // Keep in sync with the version in package.json. The cache name derives from it,
 // so bumping this is what makes `activate` purge the previous release's cache.
 const SW_VERSION = '4.0.5';
-const CACHE_NAME = `exeviewer-v${SW_VERSION}`;
+
+// The cache name also carries the scope path, so several installations on the
+// same origin (e.g. `/` and `/exeviewer/`) never share or delete each other's
+// cache. Versions never contain '/', and scope paths always start with it.
+const CACHE_PREFIX = 'exeviewer-v';
+const SCOPE_PATH = new URL(self.registration.scope).pathname;
+const CACHE_NAME = `${CACHE_PREFIX}${SW_VERSION}-${SCOPE_PATH}`;
 
 // IndexedDB configuration
 const DB_NAME = 'exeviewer-content';
@@ -45,6 +51,25 @@ const APP_SHELL_FILES = [
     './vendor/bootstrap-icons/fonts/bootstrap-icons.woff',
     './vendor/fflate/fflate.min.js'
 ];
+
+// Absolute URLs of the app shell files, without query string
+const APP_SHELL_URLS = new Set(APP_SHELL_FILES.map(file => new URL(file, self.location).href));
+
+// Path of the virtual folder that serves the extracted package. Relative to the
+// scope, so an installation under a folder that itself contains /viewer/ works.
+const VIEWER_PATH_PREFIX = new URL('viewer/', self.registration.scope).pathname;
+
+/**
+ * Whether a URL is an app shell file, ignoring its query string and fragment
+ * @param {string} href
+ * @returns {boolean}
+ */
+function isAppShellUrl(href) {
+    const url = new URL(href);
+    url.search = '';
+    url.hash = '';
+    return APP_SHELL_URLS.has(url.href);
+}
 
 // In-memory storage for the extracted ZIP contents
 let contentFiles = new Map();
@@ -222,9 +247,6 @@ async function clearIndexedDB() {
     }
 }
 
-// The base path will be determined from the registration scope
-let basePath = '/';
-
 /**
  * MIME types for common file extensions
  */
@@ -270,24 +292,6 @@ const MIME_TYPES = {
 function getMimeType(filename) {
     const ext = filename.substring(filename.lastIndexOf('.')).toLowerCase();
     return MIME_TYPES[ext] || 'application/octet-stream';
-}
-
-/**
- * Get the viewer path prefix based on the registration scope
- * @returns {string} The viewer path prefix
- */
-function getViewerPathPrefix() {
-    // Extract base path from the service worker's registration scope
-    try {
-        const scopeUrl = new URL(self.registration.scope);
-        basePath = scopeUrl.pathname;
-        if (!basePath.endsWith('/')) {
-            basePath += '/';
-        }
-    } catch (e) {
-        basePath = '/';
-    }
-    return basePath + 'viewer/';
 }
 
 /**
@@ -341,19 +345,18 @@ self.addEventListener('install', (event) => {
 });
 
 /**
- * Remove every cross-origin entry from the current cache
- * @returns {Promise<void>}
+ * Whether a cache is an outdated one that belongs to this installation: an
+ * older version for this scope, or a cache from before the name carried the
+ * scope (`exeviewer-v4.0.5`), which also held package downloads.
+ * @param {string} cacheName
+ * @returns {boolean}
  */
-async function purgeCrossOriginEntries() {
-    try {
-        const cache = await caches.open(CACHE_NAME);
-        const requests = await cache.keys();
-        await Promise.all(requests
-            .filter(request => new URL(request.url).origin !== self.location.origin)
-            .map(request => cache.delete(request)));
-    } catch (err) {
-        console.warn('[SW] Failed to purge cross-origin cache entries:', err);
+function isObsoleteOwnCache(cacheName) {
+    if (cacheName === CACHE_NAME || !cacheName.startsWith(CACHE_PREFIX)) {
+        return false;
     }
+    const scopeStart = cacheName.indexOf('-/');
+    return scopeStart === -1 || cacheName.substring(scopeStart + 1) === SCOPE_PATH;
 }
 
 /**
@@ -367,18 +370,12 @@ self.addEventListener('activate', (event) => {
             .then(cacheNames => {
                 return Promise.all(
                     cacheNames.map(cacheName => {
-                        if (cacheName !== CACHE_NAME) {
+                        if (isObsoleteOwnCache(cacheName)) {
                             console.log(`[SW] Deleting old cache: ${cacheName}`);
                             return caches.delete(cacheName);
                         }
                     })
                 );
-            })
-            .then(() => {
-                // Drop cross-origin responses that earlier workers stored in
-                // this cache (package downloads through the CORS proxies); the
-                // fetch handler no longer caches them.
-                return purgeCrossOriginEntries();
             })
             .then(() => {
                 // Restore content from IndexedDB BEFORE claiming any client, so
@@ -499,13 +496,17 @@ self.addEventListener('message', (event) => {
 });
 
 /**
- * Look a request up in the cache, falling back to a query-string-insensitive
- * match.
+ * Look an app shell request up in the cache, falling back to a
+ * query-string-insensitive match.
  *
  * The app shell is precached by plain path, but some assets are requested with
- * a cache-busting query string that the precache cannot know in advance - the
- * bootstrap-icons stylesheet asks for `fonts/bootstrap-icons.woff2?2820a385...`.
- * Without the second attempt those requests miss the cache and fail offline.
+ * a query string that the precache cannot know in advance - the bootstrap-icons
+ * stylesheet asks for `fonts/bootstrap-icons.woff2?2820a385...`, and navigations
+ * carry ?url=, ?fullscreen=1, etc. Without the second attempt those requests
+ * miss the cache and fail offline. The fetch handler only calls this for app
+ * shell URLs, so other URLs differing only in the query string (e.g.
+ * `read.php?file=a.elpx` and `read.php?file=b.zip`) are never treated as the
+ * same resource.
  *
  * @param {Request} request
  * @returns {Promise<Response|undefined>}
@@ -522,24 +523,28 @@ async function matchCache(request) {
  * Fetch event - intercept requests and serve from cache or memory
  */
 self.addEventListener('fetch', (event) => {
+    // Only the app shell and the virtual viewer/ folder are handled. Packages
+    // loaded with ?url= and any other resource outside the Service Worker scope,
+    // same-origin or not, go straight to the network: caching them served the
+    // first downloaded package for later URLs and stored each package for nothing.
+    if (!event.request.url.startsWith(self.registration.scope)) {
+        return;
+    }
+
     const url = new URL(event.request.url);
     const pathname = url.pathname;
 
     // Handle viewer requests (from extracted ZIP)
-    if (pathname.includes('/viewer/')) {
-        const viewerIndex = pathname.indexOf('/viewer/');
-        if (viewerIndex !== -1) {
-            event.respondWith(handleViewerRequest(pathname, viewerIndex));
-            return;
-        }
+    if (pathname.startsWith(VIEWER_PATH_PREFIX)) {
+        event.respondWith(handleViewerRequest(pathname.substring(VIEWER_PATH_PREFIX.length)));
+        return;
     }
 
-    // Cross-origin requests are not part of the app shell: let them go to the
-    // network untouched. Caching them breaks package downloads through the CORS
-    // proxies, which differ only in the query string (?url=...): matchCache's
-    // ignoreSearch fallback served the first downloaded package for any later
-    // URL, and each package was stored in the cache for nothing.
-    if (url.origin !== self.location.origin) {
+    // Anything else that is not an app shell file (e.g. a package loaded with
+    // ?url= from inside the scope, or the download button pointing at it) goes
+    // straight to the network, so it always reflects the server and honours its
+    // Cache-Control. Only app shell files are ever cached.
+    if (!isAppShellUrl(event.request.url)) {
         return;
     }
 
@@ -614,7 +619,7 @@ self.addEventListener('fetch', (event) => {
         return;
     }
 
-    // For other requests, use cache-first strategy
+    // For other app shell files, use cache-first strategy
     event.respondWith(
         matchCache(event.request)
             .then(cachedResponse => {
@@ -719,15 +724,10 @@ function injectExternalLinkHandler(body) {
 
 /**
  * Handle requests to the viewer path
- * @param {string} pathname - The request pathname
- * @param {number} viewerIndex - Index where /viewer/ starts in pathname
+ * @param {string} filePath - The request path relative to the viewer folder
  * @returns {Promise<Response>} The response
  */
-async function handleViewerRequest(pathname, viewerIndex) {
-    // Extract the file path from the viewer URL
-    // Skip past "/viewer/"
-    let filePath = pathname.substring(viewerIndex + 8);
-
+async function handleViewerRequest(filePath) {
     // Handle root path
     if (filePath === '' || filePath === '/') {
         filePath = 'index.html';

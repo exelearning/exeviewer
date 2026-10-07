@@ -52,8 +52,9 @@ The version string lives in **exactly these five files**. Verify with
 | `sw.js` | `SW_VERSION` constant (~line 6) |
 | `CHANGELOG.md` | new entry at the top |
 
-`SW_VERSION` **must** be bumped with the release. `CACHE_NAME` derives from it,
-and the `activate` handler purges every cache whose name differs — so if
+`SW_VERSION` **must** be bumped with the release. `CACHE_NAME` derives from it
+(plus the installation's scope path), and the `activate` handler purges every
+older cache of the same installation — so if
 `SW_VERSION` does not change, the previous release's app shell is never evicted
 and users keep being served stale files. It also means the precache list can be
 edited safely: the new list only takes effect for existing users once the cache

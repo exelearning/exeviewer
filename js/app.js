@@ -299,11 +299,23 @@
     }
 
     /**
-     * Wait for Service Worker to be controlling the page
+     * Whether the page is controlled by this installation's own Service Worker,
+     * not by one registered by another installation with a broader scope on the
+     * same origin (e.g. `/` when this one is `/exeviewer/`)
+     * @returns {boolean}
+     */
+    function isControlledByOwnWorker() {
+        const controller = navigator.serviceWorker.controller;
+        return !!controller &&
+            controller.scriptURL === new URL(getBasePath() + 'sw.js', window.location.href).href;
+    }
+
+    /**
+     * Wait for this installation's Service Worker to be controlling the page
      */
     function waitForController(timeout = 5000) {
         return new Promise((resolve, reject) => {
-            if (navigator.serviceWorker.controller) {
+            if (isControlledByOwnWorker()) {
                 resolve(navigator.serviceWorker.controller);
                 return;
             }
@@ -314,6 +326,9 @@
             }, timeout);
 
             const onControllerChange = () => {
+                if (!isControlledByOwnWorker()) {
+                    return;
+                }
                 clearTimeout(timeoutId);
                 navigator.serviceWorker.removeEventListener('controllerchange', onControllerChange);
                 resolve(navigator.serviceWorker.controller);
@@ -386,7 +401,7 @@
         registration.__exeUpdateWatched = true;
 
         // A worker may already be waiting from a previous page load
-        if (registration.waiting && navigator.serviceWorker.controller) {
+        if (registration.waiting && isControlledByOwnWorker()) {
             showUpdateBanner(registration.waiting);
         }
 
@@ -399,7 +414,7 @@
             newWorker.addEventListener('statechange', () => {
                 // 'installed' with an existing controller means this is an
                 // update, not the very first install.
-                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                if (newWorker.state === 'installed' && isControlledByOwnWorker()) {
                     showUpdateBanner(newWorker);
                 }
             });
@@ -423,8 +438,12 @@
         console.log('[App] Registering Service Worker at:', swPath);
 
         try {
-            // Check for existing registration first
-            const existingReg = await navigator.serviceWorker.getRegistration(basePath);
+            // Check for existing registration first. getRegistration() returns the
+            // closest matching one, which may belong to another installation with
+            // a broader scope on the same origin: only reuse our own.
+            const scopeUrl = new URL(basePath, window.location.href).href;
+            const matchingReg = await navigator.serviceWorker.getRegistration(basePath);
+            const existingReg = matchingReg && matchingReg.scope === scopeUrl ? matchingReg : null;
 
             if (existingReg) {
                 console.log('[App] Found existing Service Worker registration');
@@ -438,7 +457,7 @@
                     console.log('[App] Service Worker is active');
 
                     // Make sure it claims clients
-                    if (!navigator.serviceWorker.controller) {
+                    if (!isControlledByOwnWorker()) {
                         existingReg.active.postMessage({ type: 'CLAIM_CLIENTS' });
                         await waitForController();
                     }
@@ -504,7 +523,7 @@
             }
 
             // Wait for the SW to control the page
-            if (!navigator.serviceWorker.controller) {
+            if (!isControlledByOwnWorker()) {
                 console.log('[App] Waiting for controller...');
                 if (registration.active) {
                     registration.active.postMessage({ type: 'CLAIM_CLIENTS' });
@@ -528,7 +547,7 @@
      */
     async function sendContentToServiceWorker(files) {
         // Ensure we have a controller
-        if (!navigator.serviceWorker.controller) {
+        if (!isControlledByOwnWorker()) {
             console.log('[App] No controller, waiting...');
             await waitForController();
         }
@@ -606,7 +625,7 @@
      * Clear content from the Service Worker
      */
     async function clearServiceWorkerContent() {
-        if (!navigator.serviceWorker.controller) {
+        if (!isControlledByOwnWorker()) {
             return;
         }
 
@@ -1825,9 +1844,9 @@
         try {
             const urlObj = new URL(url);
             const pathname = urlObj.pathname;
-            const viewerIndex = pathname.indexOf('/viewer/');
-            if (viewerIndex !== -1) {
-                return pathname.substring(viewerIndex + 8) || 'index.html';
+            const viewerPrefix = getBasePath() + 'viewer/';
+            if (urlObj.origin === window.location.origin && pathname.startsWith(viewerPrefix)) {
+                return pathname.substring(viewerPrefix.length) || 'index.html';
             }
             return 'index.html';
         } catch (e) {
@@ -2006,7 +2025,7 @@
      * Check if there's saved content in the Service Worker and display it
      */
     async function checkSavedContent() {
-        if (!state.serviceWorkerReady || !navigator.serviceWorker.controller) {
+        if (!state.serviceWorkerReady || !isControlledByOwnWorker()) {
             return;
         }
 
