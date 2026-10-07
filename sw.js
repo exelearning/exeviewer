@@ -6,7 +6,13 @@
 // Keep in sync with the version in package.json. The cache name derives from it,
 // so bumping this is what makes `activate` purge the previous release's cache.
 const SW_VERSION = '4.0.5';
-const CACHE_NAME = `exeviewer-v${SW_VERSION}`;
+
+// The cache name also carries the scope path, so several installations on the
+// same origin (e.g. `/` and `/exeviewer/`) never share or delete each other's
+// cache. Versions never contain '/', and scope paths always start with it.
+const CACHE_PREFIX = 'exeviewer-v';
+const SCOPE_PATH = new URL(self.registration.scope).pathname;
+const CACHE_NAME = `${CACHE_PREFIX}${SW_VERSION}-${SCOPE_PATH}`;
 
 // IndexedDB configuration
 const DB_NAME = 'exeviewer-content';
@@ -339,19 +345,18 @@ self.addEventListener('install', (event) => {
 });
 
 /**
- * Remove every entry that is not an app shell file from the current cache
- * @returns {Promise<void>}
+ * Whether a cache is an outdated one that belongs to this installation: an
+ * older version for this scope, or a cache from before the name carried the
+ * scope (`exeviewer-v4.0.5`), which also held package downloads.
+ * @param {string} cacheName
+ * @returns {boolean}
  */
-async function purgeNonShellEntries() {
-    try {
-        const cache = await caches.open(CACHE_NAME);
-        const requests = await cache.keys();
-        await Promise.all(requests
-            .filter(request => !isAppShellUrl(request.url))
-            .map(request => cache.delete(request)));
-    } catch (err) {
-        console.warn('[SW] Failed to purge non-shell cache entries:', err);
+function isObsoleteOwnCache(cacheName) {
+    if (cacheName === CACHE_NAME || !cacheName.startsWith(CACHE_PREFIX)) {
+        return false;
     }
+    const scopeStart = cacheName.indexOf('-/');
+    return scopeStart === -1 || cacheName.substring(scopeStart + 1) === SCOPE_PATH;
 }
 
 /**
@@ -365,19 +370,12 @@ self.addEventListener('activate', (event) => {
             .then(cacheNames => {
                 return Promise.all(
                     cacheNames.map(cacheName => {
-                        if (cacheName !== CACHE_NAME) {
+                        if (isObsoleteOwnCache(cacheName)) {
                             console.log(`[SW] Deleting old cache: ${cacheName}`);
                             return caches.delete(cacheName);
                         }
                     })
                 );
-            })
-            .then(() => {
-                // Drop responses that earlier workers stored in this cache and
-                // that are not part of the app shell (package downloads, directly
-                // or through the CORS proxies); the fetch handler no longer
-                // caches them.
-                return purgeNonShellEntries();
             })
             .then(() => {
                 // Restore content from IndexedDB BEFORE claiming any client, so
@@ -545,8 +543,7 @@ self.addEventListener('fetch', (event) => {
     // Anything else that is not an app shell file (e.g. a package loaded with
     // ?url= from inside the scope, or the download button pointing at it) goes
     // straight to the network, so it always reflects the server and honours its
-    // Cache-Control. Only app shell files are ever cached, which is exactly what
-    // purgeNonShellEntries() keeps.
+    // Cache-Control. Only app shell files are ever cached.
     if (!isAppShellUrl(event.request.url)) {
         return;
     }

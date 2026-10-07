@@ -401,7 +401,7 @@
         registration.__exeUpdateWatched = true;
 
         // A worker may already be waiting from a previous page load
-        if (registration.waiting && navigator.serviceWorker.controller) {
+        if (registration.waiting && isControlledByOwnWorker()) {
             showUpdateBanner(registration.waiting);
         }
 
@@ -414,7 +414,7 @@
             newWorker.addEventListener('statechange', () => {
                 // 'installed' with an existing controller means this is an
                 // update, not the very first install.
-                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                if (newWorker.state === 'installed' && isControlledByOwnWorker()) {
                     showUpdateBanner(newWorker);
                 }
             });
@@ -547,7 +547,7 @@
      */
     async function sendContentToServiceWorker(files) {
         // Ensure we have a controller
-        if (!navigator.serviceWorker.controller) {
+        if (!isControlledByOwnWorker()) {
             console.log('[App] No controller, waiting...');
             await waitForController();
         }
@@ -625,7 +625,7 @@
      * Clear content from the Service Worker
      */
     async function clearServiceWorkerContent() {
-        if (!navigator.serviceWorker.controller) {
+        if (!isControlledByOwnWorker()) {
             return;
         }
 
@@ -2025,7 +2025,7 @@
      * Check if there's saved content in the Service Worker and display it
      */
     async function checkSavedContent() {
-        if (!state.serviceWorkerReady || !navigator.serviceWorker.controller) {
+        if (!state.serviceWorkerReady || !isControlledByOwnWorker()) {
             return;
         }
 
