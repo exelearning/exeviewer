@@ -49,6 +49,10 @@ const APP_SHELL_FILES = [
 // Absolute URLs of the app shell files, without query string
 const APP_SHELL_URLS = new Set(APP_SHELL_FILES.map(file => new URL(file, self.location).href));
 
+// Path of the virtual folder that serves the extracted package. Relative to the
+// scope, so an installation under a folder that itself contains /viewer/ works.
+const VIEWER_PATH_PREFIX = new URL('viewer/', self.registration.scope).pathname;
+
 /**
  * Whether a URL is an app shell file, ignoring its query string and fragment
  * @param {string} href
@@ -237,9 +241,6 @@ async function clearIndexedDB() {
     }
 }
 
-// The base path will be determined from the registration scope
-let basePath = '/';
-
 /**
  * MIME types for common file extensions
  */
@@ -285,24 +286,6 @@ const MIME_TYPES = {
 function getMimeType(filename) {
     const ext = filename.substring(filename.lastIndexOf('.')).toLowerCase();
     return MIME_TYPES[ext] || 'application/octet-stream';
-}
-
-/**
- * Get the viewer path prefix based on the registration scope
- * @returns {string} The viewer path prefix
- */
-function getViewerPathPrefix() {
-    // Extract base path from the service worker's registration scope
-    try {
-        const scopeUrl = new URL(self.registration.scope);
-        basePath = scopeUrl.pathname;
-        if (!basePath.endsWith('/')) {
-            basePath += '/';
-        }
-    } catch (e) {
-        basePath = '/';
-    }
-    return basePath + 'viewer/';
 }
 
 /**
@@ -515,16 +498,17 @@ self.addEventListener('message', (event) => {
 });
 
 /**
- * Look a request up in the cache, falling back to a query-string-insensitive
- * match for app shell files.
+ * Look an app shell request up in the cache, falling back to a
+ * query-string-insensitive match.
  *
  * The app shell is precached by plain path, but some assets are requested with
  * a query string that the precache cannot know in advance - the bootstrap-icons
  * stylesheet asks for `fonts/bootstrap-icons.woff2?2820a385...`, and navigations
  * carry ?url=, ?fullscreen=1, etc. Without the second attempt those requests
- * miss the cache and fail offline. The fallback is limited to the app shell so
- * that other URLs differing only in the query string (e.g. `read.php?file=a.elpx`
- * and `read.php?file=b.zip`) are never treated as the same resource.
+ * miss the cache and fail offline. The fetch handler only calls this for app
+ * shell URLs, so other URLs differing only in the query string (e.g.
+ * `read.php?file=a.elpx` and `read.php?file=b.zip`) are never treated as the
+ * same resource.
  *
  * @param {Request} request
  * @returns {Promise<Response|undefined>}
@@ -533,9 +517,6 @@ async function matchCache(request) {
     const exact = await caches.match(request);
     if (exact) {
         return exact;
-    }
-    if (!isAppShellUrl(request.url)) {
-        return undefined;
     }
     return caches.match(request, { ignoreSearch: true });
 }
@@ -555,22 +536,23 @@ self.addEventListener('fetch', (event) => {
     const url = new URL(event.request.url);
     const pathname = url.pathname;
 
-    // Handle viewer requests (from extracted ZIP). Relative to the scope, so an
-    // installation under a folder that itself contains /viewer/ still works.
-    const viewerPrefix = getViewerPathPrefix();
-    if (pathname.startsWith(viewerPrefix)) {
-        event.respondWith(handleViewerRequest(pathname.substring(viewerPrefix.length)));
+    // Handle viewer requests (from extracted ZIP)
+    if (pathname.startsWith(VIEWER_PATH_PREFIX)) {
+        event.respondWith(handleViewerRequest(pathname.substring(VIEWER_PATH_PREFIX.length)));
+        return;
+    }
+
+    // Anything else that is not an app shell file (e.g. a package loaded with
+    // ?url= from inside the scope, or the download button pointing at it) goes
+    // straight to the network, so it always reflects the server and honours its
+    // Cache-Control. Only app shell files are ever cached, which is exactly what
+    // purgeNonShellEntries() keeps.
+    if (!isAppShellUrl(event.request.url)) {
         return;
     }
 
     // For navigation requests, use cache-first with network fallback
     if (event.request.mode === 'navigate') {
-        // Only the app shell is cached: any other navigation inside the scope
-        // (e.g. the download button pointing at a package URL) goes straight
-        // to the network.
-        if (!isAppShellUrl(event.request.url)) {
-            return;
-        }
         event.respondWith(
             // ignoreSearch so ?url=, ?fullscreen=1 and ?download=1 navigations
             // are served from the cached shell instead of waiting for a network
@@ -640,14 +622,7 @@ self.addEventListener('fetch', (event) => {
         return;
     }
 
-    // Anything else that is not an app shell file (e.g. a package loaded with
-    // ?url= from inside the scope) goes straight to the network, so it always
-    // reflects the server and honours its Cache-Control.
-    if (!isAppShellUrl(event.request.url)) {
-        return;
-    }
-
-    // For app shell files, use cache-first strategy
+    // For other app shell files, use cache-first strategy
     event.respondWith(
         matchCache(event.request)
             .then(cachedResponse => {

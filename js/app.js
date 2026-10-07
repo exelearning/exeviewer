@@ -299,11 +299,23 @@
     }
 
     /**
-     * Wait for Service Worker to be controlling the page
+     * Whether the page is controlled by this installation's own Service Worker,
+     * not by one registered by another installation with a broader scope on the
+     * same origin (e.g. `/` when this one is `/exeviewer/`)
+     * @returns {boolean}
+     */
+    function isControlledByOwnWorker() {
+        const controller = navigator.serviceWorker.controller;
+        return !!controller &&
+            controller.scriptURL === new URL(getBasePath() + 'sw.js', window.location.href).href;
+    }
+
+    /**
+     * Wait for this installation's Service Worker to be controlling the page
      */
     function waitForController(timeout = 5000) {
         return new Promise((resolve, reject) => {
-            if (navigator.serviceWorker.controller) {
+            if (isControlledByOwnWorker()) {
                 resolve(navigator.serviceWorker.controller);
                 return;
             }
@@ -314,6 +326,9 @@
             }, timeout);
 
             const onControllerChange = () => {
+                if (!isControlledByOwnWorker()) {
+                    return;
+                }
                 clearTimeout(timeoutId);
                 navigator.serviceWorker.removeEventListener('controllerchange', onControllerChange);
                 resolve(navigator.serviceWorker.controller);
@@ -423,8 +438,12 @@
         console.log('[App] Registering Service Worker at:', swPath);
 
         try {
-            // Check for existing registration first
-            const existingReg = await navigator.serviceWorker.getRegistration(basePath);
+            // Check for existing registration first. getRegistration() returns the
+            // closest matching one, which may belong to another installation with
+            // a broader scope on the same origin: only reuse our own.
+            const scopeUrl = new URL(basePath, window.location.href).href;
+            const matchingReg = await navigator.serviceWorker.getRegistration(basePath);
+            const existingReg = matchingReg && matchingReg.scope === scopeUrl ? matchingReg : null;
 
             if (existingReg) {
                 console.log('[App] Found existing Service Worker registration');
@@ -438,7 +457,7 @@
                     console.log('[App] Service Worker is active');
 
                     // Make sure it claims clients
-                    if (!navigator.serviceWorker.controller) {
+                    if (!isControlledByOwnWorker()) {
                         existingReg.active.postMessage({ type: 'CLAIM_CLIENTS' });
                         await waitForController();
                     }
@@ -504,7 +523,7 @@
             }
 
             // Wait for the SW to control the page
-            if (!navigator.serviceWorker.controller) {
+            if (!isControlledByOwnWorker()) {
                 console.log('[App] Waiting for controller...');
                 if (registration.active) {
                     registration.active.postMessage({ type: 'CLAIM_CLIENTS' });
