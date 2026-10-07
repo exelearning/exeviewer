@@ -49,6 +49,17 @@ const APP_SHELL_FILES = [
 // Absolute URLs of the app shell files, without query string
 const APP_SHELL_URLS = new Set(APP_SHELL_FILES.map(file => new URL(file, self.location).href));
 
+/**
+ * Whether a URL is an app shell file, ignoring its query string
+ * @param {string} href
+ * @returns {boolean}
+ */
+function isAppShellUrl(href) {
+    const url = new URL(href);
+    url.search = '';
+    return APP_SHELL_URLS.has(url.href);
+}
+
 // In-memory storage for the extracted ZIP contents
 let contentFiles = new Map();
 let contentReady = false;
@@ -344,18 +355,18 @@ self.addEventListener('install', (event) => {
 });
 
 /**
- * Remove every entry outside the Service Worker scope from the current cache
+ * Remove every entry that is not an app shell file from the current cache
  * @returns {Promise<void>}
  */
-async function purgeOutOfScopeEntries() {
+async function purgeNonShellEntries() {
     try {
         const cache = await caches.open(CACHE_NAME);
         const requests = await cache.keys();
         await Promise.all(requests
-            .filter(request => !request.url.startsWith(self.registration.scope))
+            .filter(request => !isAppShellUrl(request.url))
             .map(request => cache.delete(request)));
     } catch (err) {
-        console.warn('[SW] Failed to purge out-of-scope cache entries:', err);
+        console.warn('[SW] Failed to purge non-shell cache entries:', err);
     }
 }
 
@@ -378,10 +389,11 @@ self.addEventListener('activate', (event) => {
                 );
             })
             .then(() => {
-                // Drop responses outside the scope that earlier workers stored
-                // in this cache (package downloads, directly or through the CORS
-                // proxies); the fetch handler no longer caches them.
-                return purgeOutOfScopeEntries();
+                // Drop responses that earlier workers stored in this cache and
+                // that are not part of the app shell (package downloads, directly
+                // or through the CORS proxies); the fetch handler no longer
+                // caches them.
+                return purgeNonShellEntries();
             })
             .then(() => {
                 // Restore content from IndexedDB BEFORE claiming any client, so
@@ -521,9 +533,7 @@ async function matchCache(request) {
     if (exact) {
         return exact;
     }
-    const url = new URL(request.url);
-    url.search = '';
-    if (!APP_SHELL_URLS.has(url.href)) {
+    if (!isAppShellUrl(request.url)) {
         return undefined;
     }
     return caches.match(request, { ignoreSearch: true });
@@ -554,6 +564,12 @@ self.addEventListener('fetch', (event) => {
 
     // For navigation requests, use cache-first with network fallback
     if (event.request.mode === 'navigate') {
+        // Only the app shell is cached: any other navigation inside the scope
+        // (e.g. the download button pointing at a package URL) goes straight
+        // to the network.
+        if (!isAppShellUrl(event.request.url)) {
+            return;
+        }
         event.respondWith(
             // ignoreSearch so ?url=, ?fullscreen=1 and ?download=1 navigations
             // are served from the cached shell instead of waiting for a network
@@ -739,7 +755,6 @@ function injectExternalLinkHandler(body) {
  * @returns {Promise<Response>} The response
  */
 async function handleViewerRequest(filePath) {
-
     // Handle root path
     if (filePath === '' || filePath === '/') {
         filePath = 'index.html';
