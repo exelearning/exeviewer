@@ -46,6 +46,9 @@ const APP_SHELL_FILES = [
     './vendor/fflate/fflate.min.js'
 ];
 
+// Absolute URLs of the app shell files, without query string
+const APP_SHELL_URLS = new Set(APP_SHELL_FILES.map(file => new URL(file, self.location).href));
+
 // In-memory storage for the extracted ZIP contents
 let contentFiles = new Map();
 let contentReady = false;
@@ -341,18 +344,18 @@ self.addEventListener('install', (event) => {
 });
 
 /**
- * Remove every cross-origin entry from the current cache
+ * Remove every entry outside the Service Worker scope from the current cache
  * @returns {Promise<void>}
  */
-async function purgeCrossOriginEntries() {
+async function purgeOutOfScopeEntries() {
     try {
         const cache = await caches.open(CACHE_NAME);
         const requests = await cache.keys();
         await Promise.all(requests
-            .filter(request => new URL(request.url).origin !== self.location.origin)
+            .filter(request => !request.url.startsWith(self.registration.scope))
             .map(request => cache.delete(request)));
     } catch (err) {
-        console.warn('[SW] Failed to purge cross-origin cache entries:', err);
+        console.warn('[SW] Failed to purge out-of-scope cache entries:', err);
     }
 }
 
@@ -375,10 +378,10 @@ self.addEventListener('activate', (event) => {
                 );
             })
             .then(() => {
-                // Drop cross-origin responses that earlier workers stored in
-                // this cache (package downloads through the CORS proxies); the
-                // fetch handler no longer caches them.
-                return purgeCrossOriginEntries();
+                // Drop responses outside the scope that earlier workers stored
+                // in this cache (package downloads, directly or through the CORS
+                // proxies); the fetch handler no longer caches them.
+                return purgeOutOfScopeEntries();
             })
             .then(() => {
                 // Restore content from IndexedDB BEFORE claiming any client, so
@@ -500,12 +503,15 @@ self.addEventListener('message', (event) => {
 
 /**
  * Look a request up in the cache, falling back to a query-string-insensitive
- * match.
+ * match for app shell files.
  *
  * The app shell is precached by plain path, but some assets are requested with
- * a cache-busting query string that the precache cannot know in advance - the
- * bootstrap-icons stylesheet asks for `fonts/bootstrap-icons.woff2?2820a385...`.
- * Without the second attempt those requests miss the cache and fail offline.
+ * a query string that the precache cannot know in advance - the bootstrap-icons
+ * stylesheet asks for `fonts/bootstrap-icons.woff2?2820a385...`, and navigations
+ * carry ?url=, ?fullscreen=1, etc. Without the second attempt those requests
+ * miss the cache and fail offline. The fallback is limited to the app shell so
+ * that other URLs differing only in the query string (e.g. `read.php?file=a.elpx`
+ * and `read.php?file=b.zip`) are never treated as the same resource.
  *
  * @param {Request} request
  * @returns {Promise<Response|undefined>}
@@ -515,6 +521,11 @@ async function matchCache(request) {
     if (exact) {
         return exact;
     }
+    const url = new URL(request.url);
+    url.search = '';
+    if (!APP_SHELL_URLS.has(url.href)) {
+        return undefined;
+    }
     return caches.match(request, { ignoreSearch: true });
 }
 
@@ -522,24 +533,22 @@ async function matchCache(request) {
  * Fetch event - intercept requests and serve from cache or memory
  */
 self.addEventListener('fetch', (event) => {
+    // Only the app shell and the virtual viewer/ folder are handled. Packages
+    // loaded with ?url= and any other resource outside the Service Worker scope,
+    // same-origin or not, go straight to the network: caching them served the
+    // first downloaded package for later URLs and stored each package for nothing.
+    if (!event.request.url.startsWith(self.registration.scope)) {
+        return;
+    }
+
     const url = new URL(event.request.url);
     const pathname = url.pathname;
 
-    // Handle viewer requests (from extracted ZIP)
-    if (pathname.includes('/viewer/')) {
-        const viewerIndex = pathname.indexOf('/viewer/');
-        if (viewerIndex !== -1) {
-            event.respondWith(handleViewerRequest(pathname, viewerIndex));
-            return;
-        }
-    }
-
-    // Cross-origin requests are not part of the app shell: let them go to the
-    // network untouched. Caching them breaks package downloads through the CORS
-    // proxies, which differ only in the query string (?url=...): matchCache's
-    // ignoreSearch fallback served the first downloaded package for any later
-    // URL, and each package was stored in the cache for nothing.
-    if (url.origin !== self.location.origin) {
+    // Handle viewer requests (from extracted ZIP). Relative to the scope, so an
+    // installation under a folder that itself contains /viewer/ still works.
+    const viewerPrefix = getViewerPathPrefix();
+    if (pathname.startsWith(viewerPrefix)) {
+        event.respondWith(handleViewerRequest(pathname.substring(viewerPrefix.length)));
         return;
     }
 
@@ -611,6 +620,13 @@ self.addEventListener('fetch', (event) => {
                 return networkFetch;
             })
         );
+        return;
+    }
+
+    // Requests made with fetch() from the page (e.g. a package loaded with ?url=
+    // from inside the scope) are data, not app shell: go straight to the network
+    // so they always reflect the server and honour its Cache-Control.
+    if (event.request.destination === '') {
         return;
     }
 
@@ -719,14 +735,10 @@ function injectExternalLinkHandler(body) {
 
 /**
  * Handle requests to the viewer path
- * @param {string} pathname - The request pathname
- * @param {number} viewerIndex - Index where /viewer/ starts in pathname
+ * @param {string} filePath - The request path relative to the viewer folder
  * @returns {Promise<Response>} The response
  */
-async function handleViewerRequest(pathname, viewerIndex) {
-    // Extract the file path from the viewer URL
-    // Skip past "/viewer/"
-    let filePath = pathname.substring(viewerIndex + 8);
+async function handleViewerRequest(filePath) {
 
     // Handle root path
     if (filePath === '' || filePath === '/') {

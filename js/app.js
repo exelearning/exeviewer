@@ -1825,9 +1825,9 @@
         try {
             const urlObj = new URL(url);
             const pathname = urlObj.pathname;
-            const viewerIndex = pathname.indexOf('/viewer/');
-            if (viewerIndex !== -1) {
-                return pathname.substring(viewerIndex + 8) || 'index.html';
+            const viewerPrefix = getBasePath() + 'viewer/';
+            if (urlObj.origin === window.location.origin && pathname.startsWith(viewerPrefix)) {
+                return pathname.substring(viewerPrefix.length) || 'index.html';
             }
             return 'index.html';
         } catch (e) {
