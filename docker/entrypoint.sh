@@ -10,7 +10,9 @@ window.exeViewerConfig = {
     openExternalLinksInNewWindow: ${OPEN_EXTERNAL_LINKS_IN_NEW_WINDOW:-true},
     validateExeContent: ${VALIDATE_EXE_CONTENT:-true},
     allowDownloadByDefault: ${ALLOW_DOWNLOAD_BY_DEFAULT:-true},
-    teacherMode: ${TEACHER_MODE:-false}
+    teacherMode: ${TEACHER_MODE:-false},
+    embedMode: ${EMBED_MODE:-false},
+    embedLanguage: '${EMBED_LANGUAGE:-}'
 };
 EOF
 

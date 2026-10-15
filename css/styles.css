@@ -311,6 +311,20 @@ body.fullscreen-mode .viewer-container {
     margin-top: 0;
 }
 
+/* Embed mode: only the loading indicator or error, centred in the viewport */
+.embed-mode .welcome-content > :not(#statusArea) {
+    display: none !important;
+}
+
+.embed-mode .status-area {
+    min-height: 0;
+    margin-top: 0 !important;
+}
+
+.embed-mode .status-area .alert {
+    margin-bottom: 0;
+}
+
 .content-frame {
     width: 100%;
     height: 100%;
@@ -584,15 +598,20 @@ input:focus,
     transform: translateX(-50%);
     max-width: 560px;
     width: calc(100% - 24px);
-    background: rgba(13, 110, 253, 0.95);
+    background: var(--navbar-bg);
     color: #fff;
     padding: 10px 14px;
     border-radius: 6px;
+    box-shadow: var(--shadow-md);
     font-size: 0.85rem;
     z-index: 1050;
     display: flex;
     align-items: center;
     gap: 8px;
+}
+
+.update-banner > .bi-arrow-clockwise {
+    color: var(--primary-color);
 }
 
 .update-banner-action {
@@ -603,13 +622,18 @@ input:focus,
     margin-left: auto;
     flex-shrink: 0;
     cursor: pointer;
-    color: #0d6efd;
+    color: var(--navbar-bg);
     font-size: 0.8rem;
     font-weight: 600;
 }
 
 .update-banner-action:hover {
     background: #fff;
+}
+
+.update-banner-action:disabled {
+    cursor: default;
+    opacity: 0.8;
 }
 
 .update-banner-dismiss {
@@ -625,6 +649,18 @@ input:focus,
 
 .update-banner-dismiss:hover {
     opacity: 1;
+}
+
+/* On a dark page the banner needs a lighter surface and a border to stand out */
+@media (prefers-color-scheme: dark) {
+    .update-banner {
+        background: var(--dark-bg-modal);
+        border: 1px solid var(--dark-border-color);
+    }
+
+    .update-banner-action {
+        color: var(--dark-bg-modal);
+    }
 }
 
 /* Utility Classes */

@@ -27,8 +27,14 @@ const i18n = (function() {
      * Detect the user's preferred language
      */
     function detectLanguage() {
-        // Check localStorage first
-        const stored = localStorage.getItem(STORAGE_KEY);
+        // Check localStorage first. It throws where storage is blocked
+        // (e.g. some cross-site iframes), which must not stop the app.
+        let stored = null;
+        try {
+            stored = localStorage.getItem(STORAGE_KEY);
+        } catch (e) {
+            console.warn('[i18n] Could not read the language preference:', e.message);
+        }
         if (stored && availableLanguages.includes(stored)) {
             return stored;
         }
@@ -47,8 +53,9 @@ const i18n = (function() {
     /**
      * Load language file
      * @param {string} lang - Language code (e.g., 'en', 'es')
+     * @param {boolean} persist - Whether to save it as the user's preference
      */
-    async function loadLanguage(lang) {
+    async function loadLanguage(lang, persist = true) {
         if (!availableLanguages.includes(lang)) {
             console.warn(`[i18n] Language '${lang}' not available, using default`);
             lang = DEFAULT_LANGUAGE;
@@ -67,7 +74,13 @@ const i18n = (function() {
             isLoaded = true;
 
             // Save preference
-            localStorage.setItem(STORAGE_KEY, lang);
+            if (persist) {
+                try {
+                    localStorage.setItem(STORAGE_KEY, lang);
+                } catch (e) {
+                    console.warn('[i18n] Could not save the language preference:', e.message);
+                }
+            }
 
             // Update HTML lang attribute
             document.documentElement.lang = lang;
@@ -80,7 +93,7 @@ const i18n = (function() {
 
             // Fallback to default if not already trying default
             if (lang !== DEFAULT_LANGUAGE) {
-                return loadLanguage(DEFAULT_LANGUAGE);
+                return loadLanguage(DEFAULT_LANGUAGE, persist);
             }
 
             return false;
@@ -118,6 +131,15 @@ const i18n = (function() {
         });
 
         return text;
+    }
+
+    /**
+     * Whether a translation exists for a key
+     * @param {string} key - Translation key (e.g., 'errors.invalidFile')
+     * @returns {boolean}
+     */
+    function has(key) {
+        return typeof getNestedValue(translations, key) === 'string';
     }
 
     /**
@@ -295,8 +317,10 @@ const i18n = (function() {
     /**
      * Initialize the i18n system
      * @param {string[]} languages - Array of available language codes
+     * @param {string} [forcedLanguage] - Language to use regardless of the stored
+     *     preference and the browser language. It is not saved as the preference.
      */
-    async function init(languages) {
+    async function init(languages, forcedLanguage) {
         // Set available languages from config
         if (languages && Array.isArray(languages) && languages.length > 0) {
             availableLanguages = languages;
@@ -308,9 +332,17 @@ const i18n = (function() {
         // Generate language dropdown menus
         generateLanguageDropdowns();
 
-        // Load the detected/preferred language
-        const lang = detectLanguage();
-        await loadLanguage(lang);
+        if (forcedLanguage && !availableLanguages.includes(forcedLanguage)) {
+            console.warn(`[i18n] Forced language '${forcedLanguage}' not available, detecting instead`);
+            forcedLanguage = null;
+        }
+
+        // Load the forced, or else the detected/preferred, language
+        if (forcedLanguage) {
+            await loadLanguage(forcedLanguage, false);
+        } else {
+            await loadLanguage(detectLanguage());
+        }
         updateDOM();
 
         return currentLanguage;
@@ -320,6 +352,7 @@ const i18n = (function() {
     return {
         init,
         t,
+        has,
         setLanguage,
         getCurrentLanguage,
         getAvailableLanguages,

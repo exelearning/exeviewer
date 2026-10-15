@@ -25,6 +25,14 @@
         // When enabled, eXeViewer appends ?exe-teacher=1 to the embedded package
         // so its in-page selector becomes available (still OFF until toggled).
         teacherMode: false,
+        // Embed mode: show only the package given by ?url=, with no eXeViewer
+        // interface (no navbar, welcome screen, footer or update notice).
+        // For deployments that only show content, in an <iframe> or a full window.
+        embedMode: false,
+        // Language of the embed mode messages (loading, errors), e.g. 'es'.
+        // A ?lang= URL parameter takes precedence. Leave empty to detect it
+        // automatically. Only applies in embed mode.
+        embedLanguage: '',
         // Google Apps Script proxy URL for Google Drive downloads
         // Set this to your deployed GAS web app URL to enable Google Drive support
         // Example: 'https://script.google.com/macros/s/XXXX/exec'
@@ -47,6 +55,14 @@
         updateBannerShown: false,  // True once the "new version" banner has been shown
         reloadingForUpdate: false  // Guards against a double reload on controllerchange
     };
+
+    // Embed mode implies fullscreen. index.html already sets .embed-mode on
+    // <html> from <head>, so the welcome screen is never painted.
+    if (config.embedMode) {
+        state.fullscreenMode = true;
+        document.documentElement.classList.add('embed-mode');
+        document.body.classList.add('fullscreen-mode');
+    }
 
     // DOM Elements
     const elements = {
@@ -129,6 +145,24 @@
             return url;
         }
         return url + (url.includes('?') ? '&' : '?') + 'exe-teacher=1';
+    }
+
+    /**
+     * Language forced in embed mode: the ?lang= parameter (e.g. `es` or `es-ES`,
+     * so a page can pass its own language), else config.embedLanguage
+     * @returns {string} A language code, or '' to detect it automatically
+     */
+    function getEmbedLanguage() {
+        // Accept a region (es-ES) and any case (ES), as in a page's own lang
+        const normalize = (value) => (value || '').split('-')[0].toLowerCase();
+        const param = normalize(new URLSearchParams(window.location.search).get('lang'));
+        if (param && config.availableLanguages.includes(param)) {
+            return param;
+        }
+        if (param) {
+            console.warn(`[App] ?lang=${param} not available, ignoring it`);
+        }
+        return normalize(config.embedLanguage);
     }
 
     /**
@@ -322,7 +356,7 @@
 
             const timeoutId = setTimeout(() => {
                 navigator.serviceWorker.removeEventListener('controllerchange', onControllerChange);
-                reject(new Error(i18n.t('errors.swTimeout')));
+                reject(new Error('errors.swTimeout'));
             }, timeout);
 
             const onControllerChange = () => {
@@ -343,6 +377,11 @@
      * @param {ServiceWorker} waitingWorker - The worker sitting in 'waiting'
      */
     function showUpdateBanner(waitingWorker) {
+        // Embed mode never interrupts the content: the waiting worker is
+        // applied on a later load instead (see applyWaitingWorker)
+        if (config.embedMode) {
+            return;
+        }
         const banner = document.getElementById('updateBanner');
         if (!banner || state.updateBannerShown) {
             return;
@@ -390,6 +429,56 @@
     }
 
     /**
+     * Activate a worker left in 'waiting' by a previous visit, then reload so
+     * this load already runs the new app shell. Used in embed mode, which has no
+     * update notice, before any content is shown. The worker only activates when
+     * no other page of this installation is open, so it never takes over a page
+     * whose JS is still running; otherwise it keeps waiting.
+     * @param {ServiceWorkerRegistration} registration
+     * @returns {Promise<void>} Never settles when the page is reloading
+     */
+    function applyWaitingWorker(registration) {
+        const waitingWorker = registration && registration.waiting;
+        if (!waitingWorker) {
+            return Promise.resolve();
+        }
+        console.log('[App] Applying waiting Service Worker before loading content');
+        return new Promise((resolve) => {
+            const channel = new MessageChannel();
+            const reload = () => {
+                clearTimeout(timeoutId);
+                if (state.reloadingForUpdate) {
+                    return;
+                }
+                state.reloadingForUpdate = true;
+                console.log('[App] New Service Worker applied, reloading');
+                window.location.reload();
+            };
+            const onControllerChange = reload;
+            const keepWaiting = () => {
+                clearTimeout(timeoutId);
+                navigator.serviceWorker.removeEventListener('controllerchange', onControllerChange);
+                resolve();
+            };
+            // Never block the content on an unanswered request
+            let timeoutId = setTimeout(keepWaiting, 5000);
+            channel.port1.onmessage = (event) => {
+                if (!(event.data && event.data.applied)) {
+                    console.log('[App] Other pages are open, leaving the update waiting');
+                    keepWaiting();
+                    return;
+                }
+                // The worker is switching: never go on to load content under the
+                // old one. Nothing is shown yet, so reloading anyway is safe.
+                clearTimeout(timeoutId);
+                timeoutId = setTimeout(reload, 5000);
+            };
+            navigator.serviceWorker.addEventListener('controllerchange', onControllerChange);
+            waitingWorker.postMessage({ type: 'SKIP_WAITING_IF_ALONE' }, [channel.port2]);
+        });
+    }
+
+    /**
      * Watch a registration for an updated worker and surface it to the user.
      * The new worker is left in 'waiting' so it never takes over mid-session.
      * @param {ServiceWorkerRegistration} registration
@@ -426,11 +515,11 @@
      */
     async function registerServiceWorker() {
         if (!('serviceWorker' in navigator)) {
-            throw new Error(i18n.t('errors.swNotSupported'));
+            throw new Error('errors.swNotSupported');
         }
 
         if (!isSecureContext()) {
-            throw new Error(i18n.t('errors.swSecureContext'));
+            throw new Error('errors.swSecureContext');
         }
 
         const basePath = getBasePath();
@@ -460,6 +549,10 @@
                     if (!isControlledByOwnWorker()) {
                         existingReg.active.postMessage({ type: 'CLAIM_CLIENTS' });
                         await waitForController();
+                    }
+
+                    if (config.embedMode) {
+                        await applyWaitingWorker(existingReg);
                     }
 
                     state.serviceWorkerReady = true;
@@ -553,7 +646,8 @@
         }
 
         // Request persistent storage so the browser does not evict IndexedDB content
-        if (config.autoRestoreContent && navigator.storage && navigator.storage.persist) {
+        // Not in embed mode: it never restores content, and Firefox may prompt
+        if (config.autoRestoreContent && !config.embedMode && navigator.storage && navigator.storage.persist) {
             navigator.storage.persist().then(granted => {
                 console.log(`[App] Persistent storage ${granted ? 'granted' : 'not granted'}`);
             }).catch(err => {
@@ -694,7 +788,7 @@
                 console.error('[App] Worker crashed:', error);
                 state.zipWorker.terminate();
                 state.zipWorker = null;
-                reject(new Error(i18n.t('errors.processingFailed')));
+                reject(new Error('errors.processingFailed'));
             };
 
             // Send file to worker for processing
@@ -823,12 +917,13 @@
 
         const response = await fetch(endpoint);
         if (!response.ok) {
-            throw new Error(i18n.t('errors.gasProxyFailed'));
+            throw new Error('errors.gasProxyFailed');
         }
 
         const data = await response.json();
         if (data.error) {
-            throw new Error(data.error);
+            console.warn('[App] GAS proxy error:', data.error);
+            throw new Error('errors.gasProxyFailed');
         }
 
         // Convert base64 to Blob
@@ -1100,11 +1195,11 @@
 
                 if (!response.ok) {
                     if (response.status === 401 || response.status === 403) {
-                        throw new Error(i18n.t('errors.urlAccessDenied'));
+                        throw new Error('errors.urlAccessDenied');
                     } else if (response.status === 404) {
-                        throw new Error(i18n.t('errors.urlNotFound'));
+                        throw new Error('errors.urlNotFound');
                     } else {
-                        throw new Error(i18n.t('errors.downloadFailed'));
+                        throw new Error('errors.downloadFailed');
                     }
                 }
 
@@ -1121,7 +1216,7 @@
                 // Validate file extension or content type
                 const lowerFilename = filename.toLowerCase();
                 if (!lowerFilename.endsWith('.zip') && !lowerFilename.endsWith('.elpx') && !isValidType) {
-                    throw new Error(i18n.t('errors.invalidFileType'));
+                    throw new Error('errors.invalidFileType');
                 }
 
                 // Get content length for progress tracking
@@ -1160,7 +1255,7 @@
             }
 
             if (blob.size === 0) {
-                throw new Error(i18n.t('errors.emptyZip'));
+                throw new Error('errors.emptyZip');
             }
 
             // Create a File object from the blob
@@ -1186,7 +1281,7 @@
                 // Handle network errors
                 showError('errors.networkError');
             } else {
-                showError(error.message || 'errors.downloadFailed', !!error.message);
+                showErrorFor(error, 'errors.downloadFailed');
             }
             hideLoading();
         }
@@ -1221,12 +1316,12 @@
             const files = await extractZipContents(file);
 
             if (Object.keys(files).length === 0) {
-                throw new Error(i18n.t('errors.emptyZip'));
+                throw new Error('errors.emptyZip');
             }
 
             // Validate eXeLearning content (if enabled)
             if (config.validateExeContent && !isValidExeContent(files)) {
-                throw new Error(i18n.t('errors.notExeContent'));
+                throw new Error('errors.notExeContent');
             }
 
             // Check if index.html exists
@@ -1239,7 +1334,7 @@
                 );
 
                 if (!htmlFile) {
-                    throw new Error(i18n.t('errors.noHtmlFiles'));
+                    throw new Error('errors.noHtmlFiles');
                 }
 
                 console.log(`[App] Using ${htmlFile} as entry point`);
@@ -1274,10 +1369,11 @@
             console.error('[App] Error processing file:', error);
 
             // Check for fflate error (not a valid ZIP file)
-            if (error.message && error.message.includes('central directory')) {
+            if (error.message && (error.message.includes('central directory') ||
+                    error.message.includes('invalid zip data'))) {
                 showError('errors.notAZipFile');
             } else {
-                showError(error.message || 'errors.processingFailed', !!error.message);
+                showErrorFor(error, 'errors.processingFailed');
             }
             hideLoading();
         }
@@ -1326,10 +1422,15 @@
         const welcomeState = { isWelcome: true };
         const viewerState = { iframePath: 'index.html', isViewer: true };
 
-        // Replace current state with welcome state (so going back returns here)
-        history.replaceState(welcomeState, '', window.location.pathname + window.location.search);
-        // Push the viewer state
-        history.pushState(viewerState, '', window.location.pathname + window.location.search);
+        if (config.embedMode) {
+            // No welcome screen to go back to: going back leaves the embed
+            history.replaceState(viewerState, '', window.location.pathname + window.location.search);
+        } else {
+            // Replace current state with welcome state (so going back returns here)
+            history.replaceState(welcomeState, '', window.location.pathname + window.location.search);
+            // Push the viewer state
+            history.pushState(viewerState, '', window.location.pathname + window.location.search);
+        }
 
         // Increment counter to ignore the upcoming iframe load event
         state.historyNavigationCount++;
@@ -1408,24 +1509,50 @@
 
     /**
      * Show error message
-     * @param {string} key - Error translation key (e.g., 'errors.invalidFile') or raw message
-     * @param {boolean} isRaw - If true, the key is treated as a raw message (not translated)
+     * @param {string} key - Error translation key (e.g., 'errors.invalidFile')
      */
-    function showError(key, isRaw = false) {
-        if (isRaw) {
-            elements.errorMessage.textContent = key;
-            state.currentErrorKey = null;  // Don't update raw messages on language change
-        } else {
-            elements.errorMessage.textContent = i18n.t(key);
-            state.currentErrorKey = key;  // Save for language updates
+    function showError(key) {
+        // Embed mode has no interface to act on detailed load errors (or hints
+        // such as "drag it here"): show a plain message, except for the ones
+        // addressed to whoever set up the deployment or the link,
+        // and the ones about the browser rather than the URL
+        const setupErrors = [
+            'errors.embedNoUrl',
+            'errors.secureContextRequired',
+            'errors.swNotSupported',
+            'errors.swSecureContext'
+        ];
+        if (config.embedMode && !setupErrors.includes(key)) {
+            key = 'errors.contentLoadFailed';
         }
+        elements.errorMessage.textContent = i18n.t(key);
+        state.currentErrorKey = key;  // Save for language updates
         elements.errorAlert.classList.remove('d-none');
+        // An error ends whatever was loading
+        hideLoading();
+    }
+
+    /**
+     * Show the error for a caught exception. Our own errors carry a translation
+     * key as their message (new Error('errors.x')); anything else (browser,
+     * library or proxy messages) is technical and untranslated, so it is only
+     * logged and the fallback key is shown instead.
+     * @param {Error} error - The caught error
+     * @param {string} fallbackKey - Translation key shown for foreign errors
+     */
+    function showErrorFor(error, fallbackKey) {
+        const key = error && error.message;
+        showError(key && i18n.has(key) ? key : fallbackKey);
     }
 
     /**
      * Show a non-fatal storage warning banner (visible during viewer mode)
      */
     function showStorageWarning(key) {
+        // Embed mode never restores content, so "will not be restored" does not apply
+        if (config.embedMode) {
+            return;
+        }
         state.currentStorageWarningKey = key;
         elements.storageWarningMessage.textContent = i18n.t(key);
         elements.storageWarningBanner.classList.remove('d-none');
@@ -1619,8 +1746,10 @@
         // Setup iframe history tracking for browser back/forward navigation
         setupIframeHistoryTracking();
 
-        // Setup offline/online status indicator
-        setupOfflineIndicator();
+        // Setup offline/online status indicator (no eXeViewer interface in embed mode)
+        if (!config.embedMode) {
+            setupOfflineIndicator();
+        }
     }
 
     /**
@@ -1968,7 +2097,8 @@
         initElements();
 
         // Initialize i18n with available languages from config
-        await i18n.init(config.availableLanguages);
+        // Embed mode has no language selector: the link or the deployment may fix the language
+        await i18n.init(config.availableLanguages, config.embedMode ? getEmbedLanguage() : null);
 
         // Update footer with dynamic links (after i18n is ready)
         updateFooter();
@@ -1987,6 +2117,12 @@
 
         // Set up event listeners
         setupEventListeners();
+
+        // Embed mode shows nothing else: show progress while the Service
+        // Worker is set up, before the download itself starts
+        if (config.embedMode && new URLSearchParams(window.location.search).get('url')) {
+            showLoading(i18n.t('loading.loadingContent'));
+        }
 
         // Check for secure context
         if (!isSecureContext()) {
@@ -2015,6 +2151,9 @@
 
         if (urlParams.get('url')) {
             await checkUrlParameter();
+        } else if (config.embedMode) {
+            // Embed mode only shows ?url= content, never a restored package
+            showError('errors.embedNoUrl');
         } else if (config.autoRestoreContent) {
             // Check for saved content in IndexedDB
             await checkSavedContent();

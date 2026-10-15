@@ -162,6 +162,8 @@ En lugar de editar `js/config.js`, los despliegues con Docker se configuran medi
 | `VALIDATE_EXE_CONTENT` | `true` | Rechazar ZIP que no sean paquetes eXeLearning válidos |
 | `ALLOW_DOWNLOAD_BY_DEFAULT` | `true` | Mostrar el botón de descarga activado por defecto en el diálogo de compartir |
 | `TEACHER_MODE` | `false` | Ofrecer el selector de capa docente de eXeLearning por defecto (cuando no hay parámetro `?exe-teacher` en la URL) |
+| `EMBED_MODE` | `false` | Mostrar solo el paquete indicado con `?url=`, sin la interfaz de eXeViewer (ver "Modo incrustado") |
+| `EMBED_LANGUAGE` | _(vacío)_ | Idioma de los mensajes del modo incrustado (p. ej. `es`), salvo que el enlace lleve `?lang=`. Vacío lo detecta automáticamente |
 
 Las variables no definidas en `.env` conservan sus valores por defecto; solo es necesario incluir las que se quieran cambiar.
 
@@ -301,6 +303,38 @@ Firefox no soporta la instalación de PWA de forma nativa. Usa la extensión [PW
       };
       ```
     Al compartir contenido cargado desde una URL, el diálogo de compartir incluye una casilla "Selector docente" que añade `&exe-teacher=1` al enlace generado.
+
+11. **Modo incrustado**: para instalaciones que solo muestran contenido, sin la interfaz de eXeViewer, activa `embedMode` en `js/config.js` (`EMBED_MODE=true` en Docker):
+    ```javascript
+    window.exeViewerConfig = {
+        embedMode: true
+    };
+    ```
+    Después abre `index.html?url=<URL del paquete>` directamente en una ventana completa, o incrústalo con un `<iframe>`:
+    ```html
+    <iframe src="https://visor.example.com/?url=https%3A%2F%2Fexample.com%2Fcontenido.elpx"
+            width="100%" height="600" allowfullscreen></iframe>
+    ```
+    En modo incrustado:
+    - La barra superior nunca se muestra, como con `?fullscreen=1`.
+    - Solo `?url=` carga contenido: no hay logotipo, descripción, zona para soltar archivos, selector de archivos, campo "Cargar desde URL", pie ni selector de idioma.
+    - Mientras se descarga y procesa el paquete solo se ve el indicador de carga, centrado. Los errores aparecen en el mismo lugar: la falta de `?url=`, o un simple "No se ha podido cargar el contenido de la URL." para todo lo demás (una URL mal formada o inaccesible, o un fallo de descarga o procesamiento).
+    - No se restaura el contenido anterior guardado en el navegador.
+    - No se muestra el aviso de "nueva versión disponible". La nueva versión se aplica en la siguiente carga sin otras páginas de la instalación abiertas (así nunca se cambia de versión una página en uso).
+    - No hay selector de idioma. El idioma de los mensajes (carga, errores) es, por orden de prioridad:
+      - el parámetro `lang` del enlace, p. ej. `?url=…&lang=es` (se admite una región como `es-ES`). Útil en sitios en varios idiomas, donde cada página pasa el suyo;
+      - el ajuste `embedLanguage` (`EMBED_LANGUAGE` en Docker):
+        ```javascript
+        window.exeViewerConfig = {
+            embedMode: true,
+            embedLanguage: 'es'
+        };
+        ```
+      - si no, se detecta automáticamente (el último idioma elegido en eXeViewer o, si no, el del navegador).
+
+      Se ignoran los idiomas que no estén en `availableLanguages`. Un idioma fijado por el enlace o por `embedLanguage` no cambia la preferencia de idioma guardada por el usuario.
+
+    **Un solo paquete a la vez por navegador**: dos contenidos incrustados de la misma instalación abiertos a la vez (aunque sea en pestañas distintas) se interfieren; gana el último cargado. Si hace falta, usa instalaciones distintas.
 
 ### Añadir un nuevo idioma
 

@@ -488,6 +488,30 @@ self.addEventListener('message', (event) => {
             self.skipWaiting();
             break;
 
+        case 'SKIP_WAITING_IF_ALONE':
+            // Embed mode, before showing content: activate only when the page
+            // asking is the only page of this installation, so no running page
+            // is taken over. The reply tells it whether to expect the switch.
+            // Only eXeViewer pages count (the scope itself or its index.html),
+            // not other pages of the site, such as one embedding eXeViewer when
+            // it is installed at the root, nor the content shown in its iframe.
+            event.waitUntil(
+                self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(clients => {
+                    const appPages = [SCOPE_PATH, SCOPE_PATH + 'index.html'];
+                    const others = clients.filter(client =>
+                        appPages.includes(new URL(client.url).pathname) &&
+                        (!event.source || client.id !== event.source.id));
+                    const applied = others.length === 0;
+                    if (applied) {
+                        self.skipWaiting();
+                    }
+                    if (event.ports && event.ports[0]) {
+                        event.ports[0].postMessage({ applied });
+                    }
+                })
+            );
+            break;
+
         default:
             if (type) {
                 console.warn(`[SW] Unknown message type: ${type}`);
