@@ -97,7 +97,7 @@
         "confirm": "Exit"
     },
     "update": {
-        "available": "A new version is available",
+        "available": "A new version is available.",
         "action": "Update",
         "applying": "Updating..."
     }

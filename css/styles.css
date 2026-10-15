@@ -610,10 +610,6 @@ input:focus,
     gap: 8px;
 }
 
-.update-banner > .bi-arrow-clockwise {
-    color: var(--primary-color);
-}
-
 .update-banner-action {
     background: rgba(255, 255, 255, 0.9);
     border: none;
