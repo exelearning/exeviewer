@@ -37,6 +37,15 @@
 
     <!-- Custom CSS -->
     <link href="css/styles.css" rel="stylesheet">
+
+    <!-- Deployment Configuration (override defaults in app.js). Loaded here so
+         embed mode hides the welcome screen before it is first painted. -->
+    <script src="js/config.js"></script>
+    <script>
+        if (window.exeViewerConfig && window.exeViewerConfig.embedMode) {
+            document.documentElement.classList.add('embed-mode');
+        }
+    </script>
 </head>
 <body>
 
@@ -59,7 +68,7 @@
     <!-- Update Available Banner -->
     <div id="updateBanner" class="update-banner d-none" role="status" aria-live="polite">
         <i class="bi bi-arrow-clockwise flex-shrink-0" aria-hidden="true"></i>
-        <span data-i18n="update.available">A new version is available</span>
+        <span data-i18n="update.available">A new version is available.</span>
         <button type="button" id="updateReloadBtn" class="update-banner-action"
                 data-i18n="update.action">Update</button>
         <button type="button" id="updateDismissBtn" class="update-banner-dismiss"
@@ -110,7 +119,7 @@
                 <!-- Language Selector (always visible, fixed position) -->
                 <div class="dropdown">
                     <button id="languageDropdownBtn" class="btn btn-outline-light btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Select language" data-i18n-aria="accessibility.languageSelector">
-                        <i class="bi bi-globe me-1"></i><span data-i18n="language.en">English</span>
+                        <i class="bi bi-globe me-1"></i><span data-i18n="language.name">English</span>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end">
                         <li><a class="dropdown-item" href="#" data-lang="en">English</a></li>
@@ -131,7 +140,7 @@
                 <div class="language-selector-welcome">
                     <div class="dropdown">
                         <button id="welcomeLanguageBtn" class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Select language" data-i18n-aria="accessibility.languageSelector">
-                            <i class="bi bi-globe me-1"></i><span data-i18n="language.en">English</span>
+                            <i class="bi bi-globe me-1"></i><span data-i18n="language.name">English</span>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li><a class="dropdown-item" href="#" data-lang="en">English</a></li>
@@ -321,9 +330,6 @@
 
     <!-- Internationalization Module -->
     <script src="js/i18n.js"></script>
-
-    <!-- Deployment Configuration (override defaults in app.js) -->
-    <script src="js/config.js"></script>
 
     <!-- Main Application Script -->
     <script src="js/app.js"></script>

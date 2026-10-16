@@ -162,6 +162,8 @@ Instead of editing `js/config.js`, Docker deployments are configured through env
 | `VALIDATE_EXE_CONTENT` | `true` | Reject ZIPs that are not valid eXeLearning packages |
 | `ALLOW_DOWNLOAD_BY_DEFAULT` | `true` | Show download button enabled by default in share dialog |
 | `TEACHER_MODE` | `false` | Offer the eXeLearning teacher-layer selector by default (when no `?exe-teacher` URL parameter is present) |
+| `EMBED_MODE` | `false` | Show only the package given by `?url=`, with no eXeViewer interface (see "Embed mode") |
+| `EMBED_LANGUAGE` | _(empty)_ | Language of the embed mode messages (e.g. `es`), unless the link has `?lang=`. Empty detects it automatically |
 
 Variables not set in `.env` keep their default values. You only need to include the ones you want to change.
 
@@ -301,6 +303,38 @@ Firefox doesn't support PWA installation natively. Use the [PWAs for Firefox](ht
       };
       ```
     When sharing content loaded from a URL, the share dialog includes a "Teacher selector" checkbox that adds `&exe-teacher=1` to the generated link.
+
+11. **Embed mode**: for deployments that only show content, with no eXeViewer interface, enable `embedMode` in `js/config.js` (`EMBED_MODE=true` in Docker):
+    ```javascript
+    window.exeViewerConfig = {
+        embedMode: true
+    };
+    ```
+    Then open `index.html?url=<package URL>` directly in a full window, or embed it with an `<iframe>`:
+    ```html
+    <iframe src="https://viewer.example.com/?url=https%3A%2F%2Fexample.com%2Fcontent.elpx"
+            width="100%" height="600" allowfullscreen></iframe>
+    ```
+    In embed mode:
+    - The navbar is always hidden, as with `?fullscreen=1`.
+    - Only `?url=` loads content: there is no logo, description, drop zone, file picker, "Load from URL" field, footer or language selector.
+    - While the package is downloaded and processed, only the loading indicator is shown, centred. Errors appear in the same place: a missing `?url=`, or a plain "The content could not be loaded from the URL." for anything else (a malformed or inaccessible URL, or a download or processing failure).
+    - Previous content is not restored from the browser storage.
+    - The "new version available" notice is not shown. The new version applies on the next load with no other page of the deployment open (so no page in use is ever switched to it mid-session).
+    - There is no language selector. The language of the messages (loading, errors) is, in order of precedence:
+      - the `lang` parameter of the link, e.g. `?url=…&lang=es` (a region such as `es-ES` is accepted). Useful for sites in several languages, where each page passes its own;
+      - the `embedLanguage` setting (`EMBED_LANGUAGE` in Docker):
+        ```javascript
+        window.exeViewerConfig = {
+            embedMode: true,
+            embedLanguage: 'es'
+        };
+        ```
+      - otherwise, it is detected automatically (the language last chosen in eXeViewer, or else the browser's).
+
+      Languages not in `availableLanguages` are ignored. A language set by the link or by `embedLanguage` does not change the user's saved language preference.
+
+    **One package at a time per browser**: two embeds of the same deployment open at once (even in different tabs) interfere; the last one loaded wins. Use separate deployments if needed.
 
 ### Adding a new language
 
