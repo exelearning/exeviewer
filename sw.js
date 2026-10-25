@@ -5,7 +5,7 @@
 
 // Keep in sync with the version in package.json. The cache name derives from it,
 // so bumping this is what makes `activate` purge the previous release's cache.
-const SW_VERSION = '4.0.5';
+const SW_VERSION = '4.0.6';
 
 // The cache name also carries the scope path, so several installations on the
 // same origin (e.g. `/` and `/exeviewer/`) never share or delete each other's

@@ -1,5 +1,16 @@
 # CHANGELOG
 
+## v4.0.6 – 2026-10-29
+
+- Add embed mode to display content only, with the default language configurable and overridable via `?lang=`.
+- Fix opening a package from a link sometimes showing a previously opened package instead.
+- Stop keeping an extra copy of packages opened from a link in the browser's offline storage.
+- Support installations under a `/viewer/` path and several installations on the same website.
+- Fix untranslated messages and inconsistent punctuation.
+- Fix the application failing to start when the browser blocks local storage.
+
+---
+
 ## v4.0.5 – 2026-09-16
 
 - Make the application work fully offline.
