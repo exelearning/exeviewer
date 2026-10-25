@@ -49,7 +49,7 @@ The version string lives in **exactly these five files**. Verify with
 | `package.json` | top-level `"version"` |
 | `package-lock.json` | top-level `"version"` **and** `packages[""].version` (two occurrences) |
 | `js/app.js` | `version: '<x.y.z>'` inside the `config` defaults block (~line 12) |
-| `sw.js` | `SW_VERSION` constant (~line 6) |
+| `sw.js` | `SW_VERSION` constant (~line 8) |
 | `CHANGELOG.md` | new entry at the top |
 
 `SW_VERSION` **must** be bumped with the release. `CACHE_NAME` derives from it
@@ -63,6 +63,9 @@ name changes.
 Do **not** touch:
 
 - `DB_VERSION` in `sw.js` — IndexedDB schema version, unrelated to the release.
+- The `exeviewer-v4.0.5` cache name in the `isObsoleteOwnCache` comment in
+  `sw.js` — it names the legacy pre-scope cache format, not the current version,
+  so `git grep` will keep finding it after the bump.
 - Do not run `npm version`; it creates a git tag and commit as a side effect.
 
 ## Step 3 — Write the CHANGELOG entry

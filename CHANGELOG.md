@@ -1,5 +1,16 @@
 # CHANGELOG
 
+## v4.0.6 – 2026-10-29
+
+- Add an embed mode setting that turns the deployment into a content-only player, with the language selectable via `?lang=`.
+- Fix the same content being shown for every package downloaded from a URL through a proxy.
+- Stop storing downloaded packages in the offline cache.
+- Support installations under a `/viewer/` path and several installations on the same domain.
+- Show every message translated and with consistent punctuation.
+- Keep working when the browser blocks access to local storage.
+
+---
+
 ## v4.0.5 – 2026-09-16
 
 - Make the application work fully offline.
