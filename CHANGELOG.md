@@ -2,12 +2,12 @@
 
 ## v4.0.6 – 2026-10-29
 
-- Add an embed mode setting that turns the deployment into a content-only player, with the language selectable via `?lang=`.
-- Fix the same content being shown for every package downloaded from a URL through a proxy.
-- Stop storing downloaded packages in the offline cache.
-- Support installations under a `/viewer/` path and several installations on the same domain.
-- Show every message translated and with consistent punctuation.
-- Keep working when the browser blocks access to local storage.
+- Add embed mode to display content only, with the default language configurable and overridable via `?lang=`.
+- Fix opening a package from a link sometimes showing a previously opened package instead.
+- Stop keeping an extra copy of packages opened from a link in the browser's offline storage.
+- Support installations under a `/viewer/` path and several installations on the same website.
+- Fix untranslated messages and inconsistent punctuation.
+- Fix the application failing to start when the browser blocks local storage.
 
 ---
 
