@@ -114,6 +114,8 @@ La aplicación funcionará en:
 - Vercel
 - Cualquier servidor que pueda servir ficheros estáticos por HTTP/HTTPS
 
+La [versión online](https://exelearning.github.io/exeviewer/) se despliega en GitHub Pages automáticamente al publicar una versión (_release_).
+
 Para que la opción de compartir funcione, la aplicación se debe servir por HTTPS (o HTTP en localhost).
 
 ### Docker

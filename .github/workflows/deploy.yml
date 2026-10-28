@@ -1,9 +1,11 @@
 name: Deploy to GitHub Pages
 
 on:
-  push:
-    branches:
-      - main
+  # Deploy released versions only: the service worker refreshes the app when
+  # SW_VERSION changes, which happens in releases
+  release:
+    types: [published]
+  workflow_dispatch:
 
 permissions:
   contents: read
