@@ -304,6 +304,8 @@ Firefox no soporta la instalación de PWA de forma nativa. Usa la extensión [PW
       ```
     Al compartir contenido cargado desde una URL, el diálogo de compartir incluye una casilla "Selector docente" que añade `&exe-teacher=1` al enlace generado.
 
+    **Modo presentación**: la casilla "Modo presentación" del diálogo de compartir añade `&exe-presentation=1` al enlace, y el contenido se abrirá en el modo presentación de eXeLearning: `←`/`RePág` y `→`/`AvPág` cambian de página y `M` muestra u oculta el menú. Si la página tiene contenido para docentes y se ha marcado "Mostrar contenido para docentes" (`exe-teacher=1`), `T` lo muestra u oculta. Se puede combinar con otros parámetros, como `fullscreen=1`. Solo lo admiten los sitios web exportados con eXeLearning 4.0.6 o posterior; el resto de paquetes lo ignoran.
+
 11. **Modo incrustado**: para instalaciones que solo muestran contenido, sin la interfaz de eXeViewer, activa `embedMode` en `js/config.js` (`EMBED_MODE=true` en Docker):
     ```javascript
     window.exeViewerConfig = {

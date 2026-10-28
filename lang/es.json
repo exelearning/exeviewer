@@ -85,7 +85,9 @@
         "allowDownload": "Botón de descarga",
         "allowDownloadDesc": "Los usuarios que accedan al enlace verán un botón para descargar el fichero original.",
         "allowTeacher": "Mostrar contenido para docentes",
-        "allowTeacherDesc": "Habilita un selector para mostrar/ocultar el contenido del docente en la página."
+        "allowTeacherDesc": "Habilita un selector para mostrar/ocultar el contenido del docente en la página.",
+        "presentation": "Modo presentación",
+        "presentationDesc": "Las flechas (← y →) y RePág y AvPág cambian de página. M muestra u oculta el menú. Si la página tiene contenido para docentes y se ha marcado «Mostrar contenido para docentes», T lo muestra u oculta. Requiere un sitio web exportado con eXeLearning 4.0.6 o posterior."
     },
     "download": {
         "tooltip": "Descargar fichero original"

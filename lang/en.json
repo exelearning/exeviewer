@@ -85,7 +85,9 @@
         "allowDownload": "Download button",
         "allowDownloadDesc": "Users accessing the link will see a button to download the original file.",
         "allowTeacher": "Show teacher content",
-        "allowTeacherDesc": "Enables a selector to show or hide teacher content on the page."
+        "allowTeacherDesc": "Enables a selector to show or hide teacher content on the page.",
+        "presentation": "Presentation mode",
+        "presentationDesc": "The arrow keys (← and →) and Page Up and Page Down change page. M shows or hides the menu. If the page has teacher content and “Show teacher content” is checked, T shows or hides it. Requires a website exported with eXeLearning 4.0.6 or later."
     },
     "download": {
         "tooltip": "Download original file"
