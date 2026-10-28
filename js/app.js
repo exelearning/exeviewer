@@ -2124,10 +2124,12 @@
             setTimeout(handleIframeNavigation, 50);
             // Presentation mode: let the keys reach the content without clicking it first,
             // unless the user is working in eXeViewer's own interface (a hidden element
-            // does not count) or, when embedded, in the host page
+            // does not count) or, when embedded, in the host page. Not when the viewer is
+            // hidden (resetApplication() loads about:blank)
             const active = document.activeElement;
             const ownsFocus = window.top === window || document.hasFocus();
             if (isPresentationModeRequested() && ownsFocus &&
+                    !elements.viewerContainer.classList.contains('d-none') &&
                     (!active || active === document.body || active === elements.contentFrame ||
                      active.getClientRects().length === 0)) {
                 elements.contentFrame.focus({ preventScroll: true });
