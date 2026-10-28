@@ -1,9 +1,11 @@
 name: Deploy to GitHub Pages
 
 on:
-  push:
-    branches:
-      - main
+  # Released versions only, at the same time as the Docker image (see docker.yml):
+  # the service worker refreshes the app when SW_VERSION changes, in releases
+  release:
+    types: [released]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -16,6 +18,8 @@ concurrency:
 
 jobs:
   deploy:
+    # A manual run must be started from a version tag
+    if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
     environment:
       name: github-pages

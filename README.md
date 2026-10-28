@@ -114,6 +114,8 @@ The application will work on:
 - Vercel
 - Any server that can serve static files over HTTP/HTTPS
 
+The [online version](https://exelearning.github.io/exeviewer/) is deployed to GitHub Pages automatically when a release is published.
+
 For the share functionality to work, the application must be served over HTTPS (or HTTP on localhost).
 
 ### Docker
