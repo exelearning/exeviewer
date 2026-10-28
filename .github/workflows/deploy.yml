@@ -4,7 +4,7 @@ on:
   # Released versions only, at the same time as the Docker image (see docker.yml):
   # the service worker refreshes the app when SW_VERSION changes, in releases
   release:
-    types: [published]
+    types: [released]
   workflow_dispatch:
 
 permissions:

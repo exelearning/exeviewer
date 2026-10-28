@@ -3,7 +3,7 @@ name: Publish Docker image
 on:
   # Released versions only, at the same time as GitHub Pages (see deploy.yml)
   release:
-    types: [published]
+    types: [released]
   workflow_dispatch:
 
 permissions:
