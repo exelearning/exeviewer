@@ -96,6 +96,7 @@
         navbarOptions: null,
         allowDownloadCheck: null,
         allowTeacherCheck: null,
+        presentationCheck: null,
         // Footer element
         footerInfo: null,
         // URL label element
@@ -145,6 +146,38 @@
             return url;
         }
         return url + (url.includes('?') ? '&' : '?') + 'exe-teacher=1';
+    }
+
+    /**
+     * The ?exe-presentation value of the eXeViewer page, or null when it is absent.
+     * @returns {string|null}
+     */
+    function getPresentationParam() {
+        return new URLSearchParams(window.location.search).get('exe-presentation');
+    }
+
+    /**
+     * Whether the eXeViewer page asks for eXeLearning's presentation mode
+     * (?exe-presentation=1|true|yes, the values eXeLearning accepts).
+     * @returns {boolean}
+     */
+    function isPresentationModeRequested() {
+        return ['1', 'true', 'yes'].includes(getPresentationParam());
+    }
+
+    /**
+     * Pass ?exe-presentation from the eXeViewer page on to a viewer URL. Web site exports
+     * of eXeLearning v4.0.6+ read it: 1/true/yes enter presentation mode, 0 only offers its
+     * toggle. The package then carries it in its own links from page to page.
+     * @param {string} url - The viewer URL (e.g. ".../viewer/index.html")
+     * @returns {string} The URL, with ?exe-presentation appended when applicable
+     */
+    function withPresentationParam(url) {
+        const value = getPresentationParam();
+        if (value === null || /[?&]exe-presentation=/.test(url)) {
+            return url;
+        }
+        return url + (url.includes('?') ? '&' : '?') + 'exe-presentation=' + encodeURIComponent(value);
     }
 
     /**
@@ -259,6 +292,7 @@
         elements.navbarOptions = document.getElementById('navbarOptions');
         elements.allowDownloadCheck = document.getElementById('allowDownloadCheck');
         elements.allowTeacherCheck = document.getElementById('allowTeacherCheck');
+        elements.presentationCheck = document.getElementById('presentationCheck');
         // Footer element
         elements.footerInfo = document.getElementById('footerInfo');
         // URL label element
@@ -1386,7 +1420,7 @@
         const basePath = getBasePath();
 
         // Set up the iframe URL
-        const viewerUrl = withTeacherParam(basePath + 'viewer/index.html');
+        const viewerUrl = withPresentationParam(withTeacherParam(basePath + 'viewer/index.html'));
         console.log('[App] Loading viewer URL:', viewerUrl);
 
         // Update UI
@@ -1789,9 +1823,10 @@
      * @param {boolean} allowDownload - Whether to include the download parameter
      * @param {boolean} includeTeacher - Whether to offer the teacher-layer selector (?exe-teacher=1)
      * @param {boolean} fullscreen - Whether to hide the toolbar (fullscreen mode)
+     * @param {boolean} presentation - Whether to open the package in presentation mode (?exe-presentation=1)
      * @returns {string} The share URL
      */
-    function generateShareUrl(allowDownload = false, includeTeacher = false, fullscreen = false) {
+    function generateShareUrl(allowDownload = false, includeTeacher = false, fullscreen = false, presentation = false) {
         const baseUrl = window.location.origin + window.location.pathname;
         const resourceUrl = state.contentFromUrl;
         let url = `${baseUrl}?url=${encodeURIComponent(resourceUrl)}`;
@@ -1803,6 +1838,9 @@
         }
         if (fullscreen) {
             url += '&fullscreen=1';
+        }
+        if (presentation) {
+            url += '&exe-presentation=1';
         }
         return url;
     }
@@ -1876,6 +1914,7 @@
         elements.navbarOptions.classList.remove('d-none');
         elements.allowDownloadCheck.checked = config.allowDownloadByDefault;
         elements.allowTeacherCheck.checked = isTeacherModeEnabled();
+        elements.presentationCheck.checked = isPresentationModeRequested();
 
         // Regenerate the share URL from the current checkbox states
         const refreshShareUrl = (showUpdated) => {
@@ -1883,7 +1922,8 @@
             elements.shareUrlInput.value = generateShareUrl(
                 navbarOn && elements.allowDownloadCheck.checked,
                 navbarOn && elements.allowTeacherCheck.checked,
-                !navbarOn
+                !navbarOn,
+                elements.presentationCheck.checked
             );
             if (showUpdated) {
                 elements.copySuccess.classList.add('d-none');
@@ -1902,7 +1942,7 @@
         elements.linkUpdated.classList.add('d-none');
 
         // Re-bind change listeners, cloning each checkbox to avoid duplicate handlers
-        ['navbarCheck', 'allowDownloadCheck', 'allowTeacherCheck'].forEach((key) => {
+        ['navbarCheck', 'allowDownloadCheck', 'allowTeacherCheck', 'presentationCheck'].forEach((key) => {
             const fresh = elements[key].cloneNode(true);
             elements[key].parentNode.replaceChild(fresh, elements[key]);
             elements[key] = fresh;
@@ -1925,6 +1965,7 @@
         });
         elements.allowDownloadCheck.addEventListener('change', () => refreshShareUrl(true));
         elements.allowTeacherCheck.addEventListener('change', () => refreshShareUrl(true));
+        elements.presentationCheck.addEventListener('change', () => refreshShareUrl(true));
 
         // Initialize tooltips for the info icons (idempotent)
         elements.shareModal.querySelectorAll('.share-info-icon').forEach((el) => {
@@ -1965,7 +2006,9 @@
     }
 
     /**
-     * Get the relative path from the iframe URL (relative to /viewer/)
+     * Get the relative path from the iframe URL (relative to /viewer/), with its query string
+     * so that going back or forward keeps the parameters the package carries in its links
+     * (exe-presentation, nav, exe-teacher)
      * @param {string} url - The full iframe URL
      * @returns {string} The relative path within the viewer
      */
@@ -1975,7 +2018,7 @@
             const pathname = urlObj.pathname;
             const viewerPrefix = getBasePath() + 'viewer/';
             if (urlObj.origin === window.location.origin && pathname.startsWith(viewerPrefix)) {
-                return pathname.substring(viewerPrefix.length) || 'index.html';
+                return (pathname.substring(viewerPrefix.length) || 'index.html') + urlObj.search;
             }
             return 'index.html';
         } catch (e) {
@@ -2042,7 +2085,7 @@
             // Increment counter to ignore the upcoming iframe load event
             state.historyNavigationCount++;
             const basePath = getBasePath();
-            const targetUrl = withTeacherParam(basePath + 'viewer/' + historyState.iframePath);
+            const targetUrl = withPresentationParam(withTeacherParam(basePath + 'viewer/' + historyState.iframePath));
             console.log('[App] Navigating iframe to:', targetUrl);
             elements.contentFrame.src = targetUrl;
         } else if (historyState && historyState.isWelcome) {
@@ -2079,6 +2122,16 @@
         elements.contentFrame.addEventListener('load', () => {
             // Small delay to ensure the iframe URL is updated
             setTimeout(handleIframeNavigation, 50);
+            // Presentation mode: let the keys reach the content without clicking it first,
+            // unless the user is working in eXeViewer's own interface (a hidden element
+            // does not count) or, when embedded, in the host page
+            const active = document.activeElement;
+            const ownsFocus = window.top === window || document.hasFocus();
+            if (isPresentationModeRequested() && ownsFocus &&
+                    (!active || active === document.body || active === elements.contentFrame ||
+                     active.getClientRects().length === 0)) {
+                elements.contentFrame.focus({ preventScroll: true });
+            }
         });
 
         // Listen for browser back/forward buttons

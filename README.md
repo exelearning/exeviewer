@@ -304,6 +304,8 @@ Firefox doesn't support PWA installation natively. Use the [PWAs for Firefox](ht
       ```
     When sharing content loaded from a URL, the share dialog includes a "Teacher selector" checkbox that adds `&exe-teacher=1` to the generated link.
 
+    **Presentation mode**: the "Presentation mode" checkbox of the share dialog adds `&exe-presentation=1` to the link, and the content will open in eXeLearning's presentation mode: `←`/`PageUp` and `→`/`PageDown` change page and `M` shows or hides the menu. If the page has teacher content and "Show teacher content" (`exe-teacher=1`) is checked, `T` shows or hides it. It can be combined with other parameters, such as `fullscreen=1`. Only websites exported with eXeLearning 4.0.6 or later support it; other packages ignore it.
+
 11. **Embed mode**: for deployments that only show content, with no eXeViewer interface, enable `embedMode` in `js/config.js` (`EMBED_MODE=true` in Docker):
     ```javascript
     window.exeViewerConfig = {

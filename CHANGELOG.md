@@ -3,6 +3,7 @@
 ## v4.0.6 – 2026-10-29
 
 - Add embed mode to display content only, with the default language configurable and overridable via `?lang=`.
+- Add a "Presentation mode" option to share links (`exe-presentation=1`), for websites exported with eXeLearning 4.0.6 or later.
 - Fix opening a package from a link sometimes showing a previously opened package instead.
 - Stop keeping an extra copy of packages opened from a link in the browser's offline storage.
 - Support installations under a `/viewer/` path and several installations on the same website.

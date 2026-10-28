@@ -10,7 +10,7 @@
     --primary-rgb: 11, 161, 161;    /* Primary RGB: for transparent backgrounds */
     --success-text: #0a7a5a;        /* Success text: confirmation messages */
     --navbar-bg: #1a1d21;           /* Top navbar background */
-    --tooltip-bg: #34373B;          /* Tooltip background */
+    --tooltip-bg: #101214;          /* Tooltip background: darker than the navbar and the dark modal */
 
     /* === Interface colors === */
     --bg-light: #f8f9fa;            /* Light background */
@@ -490,7 +490,7 @@ body.fullscreen-mode .viewer-container {
 }
 
 .modal-body {
-    min-height: 262px;
+    min-height: 294px;
 }
 
 .share-info-icon {
@@ -517,6 +517,11 @@ body.fullscreen-mode .viewer-container {
 /* Override Bootstrap tooltip colors */
 .tooltip {
   --bs-tooltip-bg: var(--tooltip-bg);
+}
+
+/* Long tooltips read better left-aligned */
+.tooltip-inner {
+  text-align: start;
 }
 
 /* Fix arrow for bottom-placed tooltips */
