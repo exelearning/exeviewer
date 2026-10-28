@@ -1,11 +1,10 @@
 name: Publish Docker image
 
 on:
-  push:
-    branches:
-      - main
-    tags:
-      - 'v*'
+  # Released versions only, at the same time as GitHub Pages (see deploy.yml)
+  release:
+    types: [published]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -13,6 +12,8 @@ permissions:
 
 jobs:
   build-and-push:
+    # A manual run must be started from a version tag
+    if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
 
     steps:
@@ -43,7 +44,7 @@ jobs:
             ghcr.io/${{ github.repository }}
             docker.io/exelearning/exeviewer
           tags: |
-            type=raw,value=latest,enable={{is_default_branch}}
+            type=raw,value=latest
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
 
